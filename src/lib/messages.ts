@@ -3,7 +3,7 @@
  */
 
 export interface MessageLike {
-	role?: string;
+	role?: 'system' | 'user' | 'assistant';
 	content?: string | any;
 	parts?: Array<{ type: string; text?: string; [key: string]: any }>;
 	[key: string]: any;
@@ -30,7 +30,7 @@ export function extractMessageText(msg?: MessageLike | null): string {
 /**
  * Normalizes message array into structured parts format expected by AI model conversion.
  */
-export function normalizeMessages(messages: MessageLike[] = []): MessageLike[] {
+export function normalizeMessages(messages: any[] = []): any[] {
 	return messages.map((m) => {
 		if (!m.parts && m.content !== undefined) {
 			return {
@@ -41,3 +41,4 @@ export function normalizeMessages(messages: MessageLike[] = []): MessageLike[] {
 		return m;
 	});
 }
+
