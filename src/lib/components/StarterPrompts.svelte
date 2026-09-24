@@ -21,7 +21,7 @@
 	}
 </script>
 
-<div class="intro-container w-full max-w-2xl mx-auto my-auto px-4 py-8 sm:py-12 flex flex-col items-start text-left">
+<div class="intro-container w-full max-w-2xl mx-auto my-auto py-8 sm:py-12 flex flex-col items-start text-left">
 	<!-- Headline with Google Sans Flex -->
 	<h1 class="intro-title text-3xl sm:text-4xl font-semibold text-white tracking-tight leading-[1.15]">
 		How can I help you with <span class="bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">CCS today?</span>

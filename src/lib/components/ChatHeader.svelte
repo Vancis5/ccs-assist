@@ -4,14 +4,14 @@
 	let { onReset, hasMessages = false }: { onReset: () => void; hasMessages?: boolean } = $props();
 </script>
 
-<header class="fixed top-0 left-0 right-0 z-30 pointer-events-none w-full">
+<header class="fixed top-0 left-0 right-0 z-30 pointer-events-none w-full px-5 sm:px-6">
 	<!-- Progressive Blur Gradient Layer (only when messages exist) -->
 	{#if hasMessages}
 		<div class="header-blur-surface absolute inset-x-0 top-0 h-24 -z-10 pointer-events-none"></div>
 	{/if}
 
 	<!-- Header Content -->
-	<div class="w-full max-w-2xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between pointer-events-auto">
+	<div class="w-full max-w-2xl mx-auto h-14 flex items-center justify-between pointer-events-auto">
 		<div class="flex items-center">
 			<span class="font-medium text-white text-sm tracking-tight">CCS Assist</span>
 		</div>
