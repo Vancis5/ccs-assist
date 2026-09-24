@@ -6,7 +6,30 @@
 		<meta name="text-scale" content="scale" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,100..1000&display=swap" as="style" />
 		<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,100..1000&display=swap" rel="stylesheet" />
+		<style>
+			html:not(.fonts-loaded) body {
+				visibility: hidden;
+			}
+		</style>
+		<script>
+			if ("fonts" in document) {
+				Promise.all([
+					document.fonts.load('400 1em "Google Sans Flex"'),
+					document.fonts.ready
+				]).then(() => {
+					document.documentElement.classList.add("fonts-loaded");
+				}).catch(() => {
+					document.documentElement.classList.add("fonts-loaded");
+				});
+				setTimeout(() => {
+					document.documentElement.classList.add("fonts-loaded");
+				}, 2000);
+			} else {
+				document.documentElement.classList.add("fonts-loaded");
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover" class="bg-[#090a0d] text-zinc-100 antialiased selection:bg-[#FA4615]/30 selection:text-white">
