@@ -1,38 +1,20 @@
 <script lang="ts">
 	import { GraduationCap, Award, MapPin, Monitor, ArrowUpRight } from 'lucide-svelte';
+	import { getStarterSuggestions } from '$lib/data/ccsKnowledge';
 
 	let { onSelect }: { onSelect: (prompt: string) => void } = $props();
 
-	const prompts = [
-		{
-			tag: 'Academics',
-			title: 'Academic Programs & Degrees',
-			desc: 'BSCS, BSIT, and ACT specializations & careers',
-			query: 'What programs are offered by the College of Computer Studies?',
-			icon: GraduationCap
-		},
-		{
-			tag: 'Policy',
-			title: 'Retention & Grading Standards',
-			desc: 'Required GPAs and major subject passing marks',
-			query: 'What are the retention policies and grade requirements for CCS students?',
-			icon: Award
-		},
-		{
-			tag: 'Directory',
-			title: "Dean's Office & Schedule",
-			desc: 'Office hours, building floor, and consultations',
-			query: "Where is the CCS Dean's office located and what are the office hours?",
-			icon: MapPin
-		},
-		{
-			tag: 'Campus',
-			title: 'Computer Lab Guidelines',
-			desc: 'CISCO network, software labs, and studio rules',
-			query: 'What facilities and computer laboratories are available in CCS?',
-			icon: Monitor
-		}
-	];
+	const iconMap: Record<string, any> = {
+		GraduationCap,
+		Award,
+		MapPin,
+		Monitor
+	};
+
+	const prompts = getStarterSuggestions().map((p) => ({
+		...p,
+		icon: iconMap[p.iconName] || ArrowUpRight
+	}));
 </script>
 
 <div class="w-full max-w-2xl mx-auto my-auto px-4 py-8 sm:py-12 flex flex-col items-start text-left">

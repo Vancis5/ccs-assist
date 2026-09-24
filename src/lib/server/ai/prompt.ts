@@ -1,7 +1,7 @@
-import { ccsKnowledge } from '$lib/data/ccsKnowledge';
+import { getKnowledgePromptContext } from '$lib/data/ccsKnowledge';
 
 export function getSystemPrompt(): string {
-	const knowledgeJson = JSON.stringify(ccsKnowledge, null, 2);
+	const knowledgeJson = getKnowledgePromptContext();
 
 	return `You are "CCS Assist", the information assistant for the College of Computer Studies (CCS) at Saint Joseph College (SJC) in Maasin City, Southern Leyte, Philippines.
 

@@ -1,23 +1,13 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import { Copy, Check } from 'lucide-svelte';
+	import { extractMessageText } from '$lib/messages';
 
 	let { message }: { message: any } = $props();
 
 	let copied = $state(false);
 
-	function getMessageText(msg: any): string {
-		if (msg.content && typeof msg.content === 'string') return msg.content;
-		if (Array.isArray(msg.parts)) {
-			return msg.parts
-				.filter((p: any) => p.type === 'text')
-				.map((p: any) => p.text)
-				.join('');
-		}
-		return '';
-	}
-
-	const text = $derived(getMessageText(message));
+	const text = $derived(extractMessageText(message));
 	const isUser = $derived(message.role === 'user');
 
 	const htmlContent = $derived.by(() => {

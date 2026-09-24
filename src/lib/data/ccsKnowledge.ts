@@ -162,5 +162,51 @@ export const ccsKnowledge = {
 			question: "Who can I contact for tuition and scholarship questions?",
 			answer: "Tuition assessments and scholarship grants (CHED, UniFAST, Institutional Scholarships) are administered by the SJC Finance Office and Student Affairs Services (SAS) Office."
 		}
+	],
+	starterPrompts: [
+		{
+			tag: 'Academics',
+			title: 'Academic Programs & Degrees',
+			desc: 'BSCS, BSIT, and ACT specializations & careers',
+			query: 'What programs are offered by the College of Computer Studies?',
+			iconName: 'GraduationCap'
+		},
+		{
+			tag: 'Policy',
+			title: 'Retention & Grading Standards',
+			desc: 'Required GPAs and major subject passing marks',
+			query: 'What are the retention policies and grade requirements for CCS students?',
+			iconName: 'Award'
+		},
+		{
+			tag: 'Directory',
+			title: "Dean's Office & Schedule",
+			desc: 'Office hours, building floor, and consultations',
+			query: "Where is the CCS Dean's office located and what are the office hours?",
+			iconName: 'MapPin'
+		},
+		{
+			tag: 'Campus',
+			title: 'Computer Lab Guidelines',
+			desc: 'CISCO network, software labs, and studio rules',
+			query: 'What facilities and computer laboratories are available in CCS?',
+			iconName: 'Monitor'
+		}
 	]
 };
+
+// Cached serialized prompt string to avoid redundant JSON.stringify calls
+let cachedPromptContext: string | null = null;
+
+export function getKnowledgePromptContext(): string {
+	if (!cachedPromptContext) {
+		const { starterPrompts, ...knowledgeForModel } = ccsKnowledge;
+		cachedPromptContext = JSON.stringify(knowledgeForModel, null, 2);
+	}
+	return cachedPromptContext;
+}
+
+export function getStarterSuggestions() {
+	return ccsKnowledge.starterPrompts;
+}
+

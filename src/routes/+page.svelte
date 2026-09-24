@@ -6,6 +6,7 @@
 	import ChatHeader from '$lib/components/ChatHeader.svelte';
 	import ChatMessage from '$lib/components/ChatMessage.svelte';
 	import StarterPrompts from '$lib/components/StarterPrompts.svelte';
+	import { extractMessageText } from '$lib/messages';
 
 	const chat = new Chat({
 		transport: new DefaultChatTransport({
@@ -86,13 +87,7 @@
 	}
 
 	const lastMessage = $derived(chat.messages[chat.messages.length - 1]);
-	const lastMessageContent = $derived(
-		lastMessage
-			? (typeof lastMessage.content === 'string'
-				? lastMessage.content
-				: JSON.stringify(lastMessage.parts ?? ''))
-			: ''
-	);
+	const lastMessageContent = $derived(extractMessageText(lastMessage));
 
 	$effect(() => {
 		const currentCount = chat.messages.length;
