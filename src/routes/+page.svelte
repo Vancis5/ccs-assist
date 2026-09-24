@@ -215,7 +215,9 @@
 	<div class="ambient-top-glow pointer-events-none absolute top-0 left-1/2 -z-0"></div>
 
 	<!-- Top Navigation (Edge-to-Edge Progressive Blur) -->
-	<ChatHeader onReset={handleReset} hasMessages={chat.messages.length > 0} />
+	<div class="intro-fade-in-header contents">
+		<ChatHeader onReset={handleReset} hasMessages={chat.messages.length > 0} />
+	</div>
 
 	<!-- Chat History Area (Edge-to-Edge) -->
 	<main
@@ -270,7 +272,7 @@
 	</main>
 
 	<!-- Edge-to-Edge Floating Input Dock -->
-	<footer class="pointer-events-none absolute bottom-0 left-0 right-0 w-full pt-12 pb-4 sm:pb-6 px-5 sm:px-6 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/90 to-transparent flex flex-col items-center justify-end z-20">
+	<footer class="intro-fade-in-footer pointer-events-none absolute bottom-0 left-0 right-0 w-full pt-12 pb-4 sm:pb-6 px-5 sm:px-6 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/90 to-transparent flex flex-col items-center justify-end z-20">
 		<div class="pointer-events-auto w-full max-w-2xl mx-auto relative">
 			<!-- Glow & color burst behind prompt dock on send -->
 			{#if isBursting}
@@ -329,6 +331,47 @@
 </div>
 
 <style>
+	:global(.intro-fade-in-header header) {
+		animation: visitFadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+		animation-delay: 500ms;
+		will-change: opacity, transform;
+	}
+
+	.intro-fade-in-footer {
+		animation: visitFadeInUp 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+		animation-delay: 550ms;
+		will-change: opacity, transform;
+	}
+
+	@keyframes visitFadeIn {
+		from {
+			opacity: 0;
+			transform: translate3d(0, -6px, 0);
+		}
+		to {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+
+	@keyframes visitFadeInUp {
+		from {
+			opacity: 0;
+			transform: translate3d(0, 10px, 0);
+		}
+		to {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.intro-fade-in-header header),
+		.intro-fade-in-footer {
+			animation: none !important;
+		}
+	}
+
 	.ambient-top-glow {
 		width: 1000px;
 		height: 480px;
