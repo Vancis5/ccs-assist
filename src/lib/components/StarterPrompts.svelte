@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { ArrowUpRight, Shuffle } from 'lucide-svelte';
 	import { getRandomStarterSuggestions, getStarterSuggestions, type StarterPrompt } from '$lib/data/ccsKnowledge';
+	import type { Greeting } from '$lib/data/greetings';
 
-	let { onSelect }: { onSelect: (prompt: string) => void } = $props();
+	let { onSelect, greeting }: { onSelect: (prompt: string) => void; greeting: Greeting } = $props();
 
 	let prompts = $state<StarterPrompt[]>(getStarterSuggestions().slice(0, 4));
 	let isShuffling = $state(false);
@@ -24,11 +25,11 @@
 <div class="intro-container w-full max-w-2xl mx-auto my-auto py-8 sm:py-12 flex flex-col items-start text-left">
 	<!-- Headline with Google Sans Flex -->
 	<h1 class="intro-title text-3xl sm:text-4xl font-semibold text-white tracking-tight leading-[1.15]">
-		How can I help you with <span class="bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">CCS today?</span>
+		{greeting.title} <span class="bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">{greeting.highlight}</span>
 	</h1>
 
 	<p class="intro-subtitle mt-3 text-sm sm:text-base text-zinc-400 max-w-xl font-normal leading-relaxed">
-		Ask anything regarding the College of Computer Studies — academic programs, retention rules, faculty directory, or lab guidelines.
+		{greeting.subtitle}
 	</p>
 
 	<!-- Suggestions header with shuffle button -->

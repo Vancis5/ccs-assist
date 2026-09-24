@@ -8,6 +8,9 @@
 	import ChatMessage from '$lib/components/ChatMessage.svelte';
 	import StarterPrompts from '$lib/components/StarterPrompts.svelte';
 	import { extractMessageText } from '$lib/messages';
+	import { getRandomGreeting } from '$lib/data/greetings';
+
+	const currentGreeting = getRandomGreeting().greeting;
 
 	const STORAGE_KEY = 'ccs_assist_messages';
 
@@ -232,7 +235,7 @@
 	>
 		<div class="max-w-2xl w-full mx-auto flex-1 flex flex-col">
 			{#if chat.messages.length === 0}
-				<StarterPrompts onSelect={handleStarterSelect} />
+				<StarterPrompts onSelect={handleStarterSelect} greeting={currentGreeting} />
 			{:else}
 				<div class="w-full">
 					{#each chat.messages as msg (msg.id)}
@@ -327,7 +330,7 @@
 				</div>
 			</form>
 
-			<div class="flex items-center justify-between text-[11px] text-zinc-500 px-2 mt-2">
+			<div class="flex items-center justify-center sm:justify-between text-[11px] text-zinc-500 px-2 mt-2 text-center sm:text-left">
 				<span>Saint Joseph College • College of Computer Studies</span>
 				<span class="hidden sm:inline">Enter to send, Shift+Enter for newline</span>
 			</div>
