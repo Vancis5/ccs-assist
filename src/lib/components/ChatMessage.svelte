@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { marked } from 'marked';
-	import { Copy, Check } from 'lucide-svelte';
+	import { Copy, Check, RotateCcw } from 'lucide-svelte';
 	import { extractMessageText } from '$lib/messages';
 
-	let { message }: { message: any } = $props();
+	let {
+		message,
+		onRegenerate,
+		isStreaming = false
+	}: {
+		message: any;
+		onRegenerate?: (messageId: string) => void;
+		isStreaming?: boolean;
+	} = $props();
 
 	let copied = $state(false);
 
@@ -32,7 +40,7 @@
 	}
 </script>
 
-<div class="w-full {isUser ? 'flex justify-end user-msg-container' : 'flex justify-start assistant-msg-container'} group mb-6 scroll-mt-20">
+<div class="w-full {isUser ? 'flex justify-end user-msg-container mt-12 mb-6' : 'flex justify-start assistant-msg-container mb-6'} group scroll-mt-20">
 	{#if isUser}
 		<!-- User Message Bubble -->
 		<div class="max-w-[85%] sm:max-w-[75%] flex flex-col items-end user-bubble-wrapper">
@@ -48,10 +56,10 @@
 			<!-- Message Content -->
 			<div class="w-full text-zinc-200 text-[15px] leading-relaxed">
 				{#if text.length === 0}
-					<div class="flex items-center gap-1.5 py-2">
-						<span class="w-1.5 h-1.5 rounded-full bg-[#FA4615] animate-pulse will-change-opacity"></span>
-						<span class="w-1.5 h-1.5 rounded-full bg-[#FA4615] animate-pulse [animation-delay:150ms] will-change-opacity"></span>
-						<span class="w-1.5 h-1.5 rounded-full bg-[#FA4615] animate-pulse [animation-delay:300ms] will-change-opacity"></span>
+					<div class="flex items-center gap-1.5 py-2.5">
+						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]"></span>
+						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:180ms]"></span>
+						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:360ms]"></span>
 					</div>
 				{:else}
 					<div class="prose-minimal w-full">
@@ -66,7 +74,7 @@
 					<button
 						type="button"
 						onclick={copyToClipboard}
-						class="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white hover:animate-pulse transition-colors cursor-pointer active:scale-95 py-1"
+						class="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer active:scale-95 py-1"
 						title="Copy response"
 					>
 						{#if copied}
@@ -77,6 +85,18 @@
 							<span>Copy</span>
 						{/if}
 					</button>
+
+					{#if onRegenerate && !isStreaming}
+						<button
+							type="button"
+							onclick={() => onRegenerate(message.id)}
+							class="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer active:scale-95 py-1"
+							title="Regenerate response"
+						>
+							<RotateCcw class="w-3.5 h-3.5" />
+							<span>Retry</span>
+						</button>
+					{/if}
 				</div>
 			{/if}
 		</div>

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { tick } from 'svelte';
+	import { tick, onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import { Chat } from '@ai-sdk/svelte';
 	import { DefaultChatTransport } from 'ai';
 	import { ArrowUp, Square, AlertCircle } from 'lucide-svelte';
@@ -7,6 +8,8 @@
 	import ChatMessage from '$lib/components/ChatMessage.svelte';
 	import StarterPrompts from '$lib/components/StarterPrompts.svelte';
 	import { extractMessageText } from '$lib/messages';
+
+	const STORAGE_KEY = 'ccs_assist_messages';
 
 	const chat = new Chat({
 		transport: new DefaultChatTransport({
@@ -47,8 +50,8 @@
 			if (latestUserEl) {
 				const containerRect = messagesContainer.getBoundingClientRect();
 				const elRect = latestUserEl.getBoundingClientRect();
-				// Position ~24px below header for a spacious breather
-				const targetTop = messagesContainer.scrollTop + (elRect.top - containerRect.top) - 24;
+				// Position message cleanly below header
+				const targetTop = messagesContainer.scrollTop + (elRect.top - containerRect.top) - 85;
 				messagesContainer.scrollTo({
 					top: Math.max(0, targetTop),
 					behavior: 'smooth'
@@ -107,6 +110,40 @@
 		}
 	});
 
+	onMount(async () => {
+		try {
+			const saved = localStorage.getItem(STORAGE_KEY);
+			if (saved) {
+				const parsed = JSON.parse(saved);
+				if (Array.isArray(parsed) && parsed.length > 0) {
+					chat.messages = parsed;
+					prevMessageCount = parsed.length;
+					await tick();
+					if (messagesContainer) {
+						messagesContainer.scrollTop = messagesContainer.scrollHeight;
+					}
+				}
+			}
+		} catch (e) {
+			console.error('Failed to load chat history from localStorage:', e);
+		}
+	});
+
+	$effect(() => {
+		if (!browser) return;
+		if (!isStreaming) {
+			try {
+				if (chat.messages.length > 0) {
+					localStorage.setItem(STORAGE_KEY, JSON.stringify(chat.messages));
+				} else {
+					localStorage.removeItem(STORAGE_KEY);
+				}
+			} catch (e) {
+				console.error('Failed to save chat history to localStorage:', e);
+			}
+		}
+	});
+
 	async function handleSubmit(e?: Event) {
 		if (e) e.preventDefault();
 		const trimmed = input.trim();
@@ -135,6 +172,12 @@
 		chat.sendMessage({ text: promptText });
 	}
 
+	async function handleRegenerate(messageId?: string) {
+		if (isStreaming) return;
+		autoFollowStream = true;
+		await chat.regenerate({ messageId });
+	}
+
 	function handleReset() {
 		if (isStreaming) {
 			chat.stop();
@@ -142,6 +185,9 @@
 		chat.messages = [];
 		prevMessageCount = 0;
 		autoFollowStream = true;
+		if (browser) {
+			localStorage.removeItem(STORAGE_KEY);
+		}
 	}
 
 	function handleInputResize(e: Event) {
@@ -170,8 +216,25 @@
 			{:else}
 				<div class="w-full">
 					{#each chat.messages as msg (msg.id)}
-						<ChatMessage message={msg} />
+						<ChatMessage
+							message={msg}
+							onRegenerate={handleRegenerate}
+							{isStreaming}
+						/>
 					{/each}
+					{#if isStreaming && lastMessage?.role === 'user'}
+						<div class="w-full flex justify-start assistant-msg-container group mb-6 scroll-mt-20">
+							<div class="w-full flex flex-col items-start text-left">
+								<div class="w-full text-zinc-200 text-[15px] leading-relaxed">
+									<div class="flex items-center gap-1.5 py-2.5">
+										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]"></span>
+										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:180ms]"></span>
+										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:360ms]"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					{/if}
 				</div>
 			{/if}
 
@@ -183,7 +246,7 @@
 					</div>
 					<button
 						type="button"
-						onclick={() => chat.regenerate()}
+						onclick={() => handleRegenerate()}
 						class="px-2.5 py-1 rounded bg-red-900/40 hover:bg-red-900/70 border border-red-700/40 text-white font-medium transition-colors cursor-pointer text-xs"
 					>
 						Retry

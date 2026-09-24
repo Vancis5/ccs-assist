@@ -1,24 +1,22 @@
 <script lang="ts">
-	import { GraduationCap, Award, MapPin, Monitor, ArrowUpRight } from 'lucide-svelte';
-	import { getStarterSuggestions } from '$lib/data/ccsKnowledge';
+	import { onMount } from 'svelte';
+	import { ArrowUpRight, Shuffle } from 'lucide-svelte';
+	import { getRandomStarterSuggestions, getStarterSuggestions, type StarterPrompt } from '$lib/data/ccsKnowledge';
 
 	let { onSelect }: { onSelect: (prompt: string) => void } = $props();
 
-	const iconMap: Record<string, any> = {
-		GraduationCap,
-		Award,
-		MapPin,
-		Monitor
-	};
+	let prompts = $state<StarterPrompt[]>(getStarterSuggestions().slice(0, 4));
 
-	const prompts = getStarterSuggestions().map((p) => ({
-		...p,
-		icon: iconMap[p.iconName] || ArrowUpRight
-	}));
+	function shuffle() {
+		prompts = getRandomStarterSuggestions(4);
+	}
+
+	onMount(() => {
+		shuffle();
+	});
 </script>
 
 <div class="w-full max-w-2xl mx-auto my-auto px-4 py-8 sm:py-12 flex flex-col items-start text-left">
-
 	<!-- Headline with Google Sans Flex -->
 	<h1 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight leading-[1.15]">
 		How can I help you with <span class="bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">CCS today?</span>
@@ -28,9 +26,25 @@
 		Ask anything regarding the College of Computer Studies — academic programs, retention rules, faculty directory, or lab guidelines.
 	</p>
 
+	<!-- Suggestions header with shuffle button -->
+	<div class="flex items-center justify-between w-full mt-8 mb-2.5">
+		<span class="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+			Suggested prompts
+		</span>
+		<button
+			type="button"
+			onclick={shuffle}
+			class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer group px-2 py-1 rounded-md hover:bg-white/[0.04]"
+			title="Get different suggestions"
+		>
+			<Shuffle class="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#FA4615] transition-all group-active:rotate-180" />
+			<span>Shuffle</span>
+		</button>
+	</div>
+
 	<!-- Minimal prompt grid -->
-	<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-8 w-full">
-		{#each prompts as p}
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+		{#each prompts as p (p.query)}
 			<button
 				type="button"
 				onclick={() => onSelect(p.query)}

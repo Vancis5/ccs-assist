@@ -168,32 +168,78 @@ export const ccsKnowledge = {
 			tag: 'Academics',
 			title: 'Academic Programs & Degrees',
 			desc: 'BSCS, BSIT, and ACT specializations & careers',
-			query: 'What programs are offered by the College of Computer Studies?',
-			iconName: 'GraduationCap'
+			query: 'What programs are offered by the College of Computer Studies?'
 		},
 		{
 			tag: 'Policy',
 			title: 'Retention & Grading Standards',
 			desc: 'Required GPAs and major subject passing marks',
-			query: 'What are the retention policies and grade requirements for CCS students?',
-			iconName: 'Award'
+			query: 'What are the retention policies and grade requirements for CCS students?'
 		},
 		{
 			tag: 'Directory',
 			title: "Dean's Office & Schedule",
 			desc: 'Office hours, building floor, and consultations',
-			query: "Where is the CCS Dean's office located and what are the office hours?",
-			iconName: 'MapPin'
+			query: "Where is the CCS Dean's office located and what are the office hours?"
 		},
 		{
 			tag: 'Campus',
 			title: 'Computer Lab Guidelines',
 			desc: 'CISCO network, software labs, and studio rules',
-			query: 'What facilities and computer laboratories are available in CCS?',
-			iconName: 'Monitor'
+			query: 'What facilities and computer laboratories are available in CCS?'
+		},
+		{
+			tag: 'Internship',
+			title: 'OJT & Practicum Hours',
+			desc: '486 to 500 hours industry internship requirements',
+			query: 'What are the OJT and internship requirements for BSIT and BSCS students?'
+		},
+		{
+			tag: 'Research',
+			title: 'Capstone & Thesis Projects',
+			desc: 'BSCS thesis & BSIT enterprise capstone guidelines',
+			query: 'What is the difference between BSCS thesis and BSIT capstone projects?'
+		},
+		{
+			tag: 'Hardware',
+			title: 'Recommended Laptop Specs',
+			desc: 'CPU, RAM, and SSD recommendations for coding',
+			query: 'What laptop specifications are recommended for CCS students?'
+		},
+		{
+			tag: 'Student Life',
+			title: 'CCS Student Organizations',
+			desc: 'SITE, ACSI, and CCS Student Council',
+			query: 'What student organizations and clubs can CCS students join?'
+		},
+		{
+			tag: 'Events',
+			title: 'Hackathons & Tech Summit',
+			desc: 'Annual CCS Week, coding contests, and esports',
+			query: 'What annual events, hackathons, and competitions happen in CCS?'
+		},
+		{
+			tag: 'Networking',
+			title: 'CISCO & Networking Lab',
+			desc: 'Hardware routers, switches, and patch panels',
+			query: 'What equipment and tools are available in the CISCO networking lab?'
+		},
+		{
+			tag: 'Admissions',
+			title: 'Enrollment & Evaluation',
+			desc: 'Curriculum evaluation, transferees, and requirements',
+			query: 'How does enrollment and subject crediting work for CCS students?'
+		},
+		{
+			tag: 'Careers',
+			title: 'Tech Career Pathways',
+			desc: 'Software dev, AI, cybersecurity, and DBA roles',
+			query: 'What career opportunities are available for BSCS and BSIT graduates?'
 		}
 	]
 };
+
+export type StarterPrompt = (typeof ccsKnowledge.starterPrompts)[number];
 
 // Cached serialized prompt string to avoid redundant JSON.stringify calls
 let cachedPromptContext: string | null = null;
@@ -206,7 +252,16 @@ export function getKnowledgePromptContext(): string {
 	return cachedPromptContext;
 }
 
-export function getStarterSuggestions() {
+export function getStarterSuggestions(): StarterPrompt[] {
 	return ccsKnowledge.starterPrompts;
+}
+
+export function getRandomStarterSuggestions(count = 4): StarterPrompt[] {
+	const pool = [...ccsKnowledge.starterPrompts];
+	for (let i = pool.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[pool[i], pool[j]] = [pool[j], pool[i]];
+	}
+	return pool.slice(0, count);
 }
 
