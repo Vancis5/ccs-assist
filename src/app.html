@@ -3,7 +3,68 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-		<meta name="text-scale" content="scale" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.ico" sizes="any" />
+		<link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/favicon-16x16.png" />
+		<link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
+		<link rel="manifest" href="%sveltekit.assets%/site.webmanifest" />
+		<title>CCS Assist</title>
+		<meta name="description" content="Official AI-powered student assistant for the College of Computer Studies at Saint Joseph College, Maasin City. Inquire about BSCS, BSIT, ACT, retention rules, enrollment, curriculum, and faculty." />
+		<meta name="keywords" content="CCS Assist, Saint Joseph College, SJC Maasin, College of Computer Studies, BSCS, BSIT, ACT, Southern Leyte, Computer Science Philippines, Information Technology" />
+		<meta name="author" content="Saint Joseph College - College of Computer Studies" />
+		<meta name="theme-color" content="#090a0d" />
+		<link rel="canonical" href="https://ccs-assist.pages.dev/" />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://ccs-assist.pages.dev/" />
+		<meta property="og:site_name" content="CCS Assist" />
+		<meta property="og:title" content="CCS Assist - College of Computer Studies | Saint Joseph College" />
+		<meta property="og:description" content="AI student assistant for the College of Computer Studies at Saint Joseph College, Maasin City. Explore programs, retention policies, admissions, and faculty info." />
+		<meta property="og:image" content="%sveltekit.assets%/og-image.png" />
+		<meta property="og:image:alt" content="CCS Assist - College of Computer Studies Logo" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="CCS Assist - College of Computer Studies | Saint Joseph College" />
+		<meta name="twitter:description" content="AI student assistant for the College of Computer Studies at Saint Joseph College, Maasin City. Instant answers on BSCS, BSIT, ACT, and student guides." />
+		<meta name="twitter:image" content="%sveltekit.assets%/og-image.png" />
+
+		<!-- JSON-LD Structured Data -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@graph": [
+				{
+					"@type": "CollegeOrUniversity",
+					"@id": "https://ccs-assist.pages.dev/#organization",
+					"name": "Saint Joseph College - College of Computer Studies",
+					"alternateName": "SJC CCS",
+					"url": "https://ccs-assist.pages.dev/",
+					"logo": "https://ccs-assist.pages.dev/og-image.png",
+					"address": {
+						"@type": "PostalAddress",
+						"addressLocality": "Maasin City",
+						"addressRegion": "Southern Leyte",
+						"addressCountry": "PH"
+					}
+				},
+				{
+					"@type": "WebApplication",
+					"@id": "https://ccs-assist.pages.dev/#webapp",
+					"name": "CCS Assist",
+					"applicationCategory": "EducationalApplication",
+					"operatingSystem": "All",
+					"url": "https://ccs-assist.pages.dev/",
+					"description": "Interactive AI-powered academic assistant for CCS students, applicants, and faculty at Saint Joseph College.",
+					"provider": {
+						"@id": "https://ccs-assist.pages.dev/#organization"
+					}
+				}
+			]
+		}
+		</script>
+
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,100..1000&display=swap" as="style" />

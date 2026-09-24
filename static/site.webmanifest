@@ -1,0 +1,16 @@
+{
+	"name": "CCS Assist - College of Computer Studies",
+	"short_name": "CCS Assist",
+	"description": "Student assistant for College of Computer Studies at Saint Joseph College",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#090a0d",
+	"theme_color": "#090a0d",
+	"icons": [
+		{
+			"src": "/favicon.png",
+			"sizes": "192x192 512x512",
+			"type": "image/png"
+		}
+	]
+}

@@ -214,7 +214,12 @@
 	<!-- Ambient top rotating orange glow blob -->
 	<div class="ambient-top-glow pointer-events-none absolute top-0 left-1/2 -z-0"></div>
 
-	<!-- Top Navigation (Edge-to-Edge Progressive Blur) -->
+	<!-- Progressive Blur Gradient (outside header to avoid transform breaking backdrop-filter) -->
+	{#if chat.messages.length > 0}
+		<div class="header-blur-surface fixed inset-x-0 top-0 h-24 z-[29] pointer-events-none"></div>
+	{/if}
+
+	<!-- Top Navigation -->
 	<div class="intro-fade-in-header contents">
 		<ChatHeader onReset={handleReset} hasMessages={chat.messages.length > 0} />
 	</div>
@@ -223,7 +228,7 @@
 	<main
 		bind:this={messagesContainer}
 		onwheel={handleWheel}
-		class="flex-1 overflow-y-auto px-5 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : 'pb-36'} flex flex-col justify-start relative z-10"
+		class="flex-1 overflow-y-auto [scrollbar-gutter:stable] px-5 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : 'pb-36'} flex flex-col justify-start relative z-10"
 	>
 		<div class="max-w-2xl w-full mx-auto flex-1 flex flex-col">
 			{#if chat.messages.length === 0}
@@ -331,10 +336,23 @@
 </div>
 
 <style>
+	.header-blur-surface {
+		background: linear-gradient(
+			180deg,
+			rgba(9, 10, 13, 0.95) 0%,
+			rgba(9, 10, 13, 0.8) 40%,
+			rgba(9, 10, 13, 0.35) 75%,
+			rgba(9, 10, 13, 0) 100%
+		);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+	}
+
 	:global(.intro-fade-in-header header) {
 		animation: visitFadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
 		animation-delay: 500ms;
-		will-change: opacity, transform;
 	}
 
 	.intro-fade-in-footer {
@@ -346,11 +364,11 @@
 	@keyframes visitFadeIn {
 		from {
 			opacity: 0;
-			transform: translate3d(0, -6px, 0);
+			transform: translateY(-6px);
 		}
 		to {
 			opacity: 1;
-			transform: translate3d(0, 0, 0);
+			transform: none;
 		}
 	}
 
