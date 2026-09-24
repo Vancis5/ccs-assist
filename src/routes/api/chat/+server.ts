@@ -20,14 +20,25 @@ export const POST: RequestHandler = async ({ request }) => {
 		const groq = createGroq({ apiKey });
 		const { messages } = await request.json();
 
-		const modelMessages = await convertToModelMessages(messages);
+		const normalizedMessages = (messages || []).map((m: any) => {
+			if (!m.parts && m.content) {
+				return {
+					...m,
+					parts: [{ type: 'text', text: typeof m.content === 'string' ? m.content : JSON.stringify(m.content) }]
+				};
+			}
+			return m;
+		});
+
+		const modelMessages = await convertToModelMessages(normalizedMessages);
+		const modelId = env.GROQ_MODEL || process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
 		const result = streamText({
-			model: groq('llama-3.3-70b-versatile'),
+			model: groq(modelId),
 			system: getSystemPrompt(),
 			messages: modelMessages,
-			temperature: 0.3,
-			maxOutputTokens: 1024
+			temperature: 0.6,
+			maxOutputTokens: 2048
 		});
 
 		return result.toUIMessageStreamResponse();

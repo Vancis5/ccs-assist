@@ -2,7 +2,7 @@
 	import { tick } from 'svelte';
 	import { Chat } from '@ai-sdk/svelte';
 	import { DefaultChatTransport } from 'ai';
-	import { Send, Square, AlertCircle } from 'lucide-svelte';
+	import { ArrowUp, Square, AlertCircle } from 'lucide-svelte';
 	import ChatHeader from '$lib/components/ChatHeader.svelte';
 	import ChatMessage from '$lib/components/ChatMessage.svelte';
 	import StarterPrompts from '$lib/components/StarterPrompts.svelte';
@@ -16,23 +16,99 @@
 	let input = $state('');
 	let messagesContainer: HTMLElement | null = $state(null);
 	let textareaRef: HTMLTextAreaElement | null = $state(null);
+	let isBursting = $state(false);
+	let burstKey = $state(0);
+	let autoFollowStream = $state(true);
+	let prevMessageCount = $state(0);
 
 	const isStreaming = $derived(chat.status === 'streaming' || chat.status === 'submitted');
 
-	async function scrollToBottom() {
+	function triggerBurst() {
+		burstKey++;
+		isBursting = true;
+		setTimeout(() => {
+			isBursting = false;
+		}, 850);
+	}
+
+	function handleWheel(e: WheelEvent) {
+		if (e.deltaY < 0) {
+			autoFollowStream = false;
+		}
+	}
+
+	async function putLatestUserMessageAtTop() {
 		await tick();
-		if (messagesContainer) {
-			messagesContainer.scrollTo({
-				top: messagesContainer.scrollHeight,
+		requestAnimationFrame(() => {
+			if (!messagesContainer) return;
+			const userEls = messagesContainer.querySelectorAll('.user-msg-container');
+			const latestUserEl = userEls[userEls.length - 1] as HTMLElement | undefined;
+			if (latestUserEl) {
+				const containerRect = messagesContainer.getBoundingClientRect();
+				const elRect = latestUserEl.getBoundingClientRect();
+				// Position ~24px below header for a spacious breather
+				const targetTop = messagesContainer.scrollTop + (elRect.top - containerRect.top) - 24;
+				messagesContainer.scrollTo({
+					top: Math.max(0, targetTop),
+					behavior: 'smooth'
+				});
+			} else {
+				messagesContainer.scrollTo({
+					top: messagesContainer.scrollHeight,
+					behavior: 'smooth'
+				});
+			}
+		});
+	}
+
+	function positionUserMessage() {
+		autoFollowStream = true;
+		putLatestUserMessageAtTop();
+		setTimeout(putLatestUserMessageAtTop, 50);
+		setTimeout(putLatestUserMessageAtTop, 180);
+	}
+
+	function handleStreamScroll() {
+		if (!messagesContainer || !autoFollowStream) return;
+		const assistantEls = messagesContainer.querySelectorAll('.assistant-msg-container');
+		const latestAssistantEl = assistantEls[assistantEls.length - 1] as HTMLElement | undefined;
+		if (!latestAssistantEl) return;
+
+		const rect = latestAssistantEl.getBoundingClientRect();
+		const bottomThreshold = window.innerHeight - 150;
+		if (rect.bottom > bottomThreshold) {
+			const diff = rect.bottom - bottomThreshold;
+			messagesContainer.scrollBy({
+				top: diff,
 				behavior: 'smooth'
 			});
 		}
 	}
 
+	const lastMessage = $derived(chat.messages[chat.messages.length - 1]);
+	const lastMessageContent = $derived(
+		lastMessage
+			? (typeof lastMessage.content === 'string'
+				? lastMessage.content
+				: JSON.stringify(lastMessage.parts ?? ''))
+			: ''
+	);
+
 	$effect(() => {
-		// Auto scroll on new messages or stream chunks
-		if (chat.messages.length > 0) {
-			scrollToBottom();
+		const currentCount = chat.messages.length;
+		if (currentCount > prevMessageCount) {
+			const last = chat.messages[currentCount - 1];
+			if (last?.role === 'user') {
+				positionUserMessage();
+			}
+			prevMessageCount = currentCount;
+		}
+	});
+
+	$effect(() => {
+		const _ = lastMessageContent;
+		if (isStreaming && lastMessage?.role === 'assistant') {
+			handleStreamScroll();
 		}
 	});
 
@@ -41,11 +117,13 @@
 		const trimmed = input.trim();
 		if (!trimmed || isStreaming) return;
 
+		triggerBurst();
 		input = '';
 		if (textareaRef) {
 			textareaRef.style.height = 'auto';
 		}
 
+		positionUserMessage();
 		await chat.sendMessage({ text: trimmed });
 	}
 
@@ -57,6 +135,8 @@
 	}
 
 	function handleStarterSelect(promptText: string) {
+		triggerBurst();
+		positionUserMessage();
 		chat.sendMessage({ text: promptText });
 	}
 
@@ -65,29 +145,35 @@
 			chat.stop();
 		}
 		chat.messages = [];
+		prevMessageCount = 0;
+		autoFollowStream = true;
 	}
 
 	function handleInputResize(e: Event) {
 		const target = e.target as HTMLTextAreaElement;
 		target.style.height = 'auto';
-		target.style.height = `${Math.min(target.scrollHeight, 160)}px`;
+		target.style.height = `${Math.min(target.scrollHeight, 180)}px`;
 	}
 </script>
 
-<div class="flex flex-col h-[100dvh] bg-[#0d0e11] text-zinc-100 overflow-hidden font-sans">
-	<!-- Top Navigation -->
+<div class="flex flex-col h-[100dvh] w-full bg-[#090a0d] text-zinc-100 overflow-hidden font-sans relative">
+	<!-- Ambient top light with steady subtle breathing animation -->
+	<div class="ambient-top-glow pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[320px] -z-0"></div>
+
+	<!-- Top Navigation (Edge-to-Edge Progressive Blur) -->
 	<ChatHeader onReset={handleReset} />
 
-	<!-- Chat History Area -->
+	<!-- Chat History Area (Edge-to-Edge) -->
 	<main
 		bind:this={messagesContainer}
-		class="flex-1 overflow-y-auto px-4 py-6 scroll-smooth flex flex-col justify-start"
+		onwheel={handleWheel}
+		class="flex-1 overflow-y-auto px-4 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : 'pb-36'} flex flex-col justify-start relative z-10"
 	>
-		<div class="max-w-3xl w-full mx-auto flex-1 flex flex-col">
+		<div class="max-w-2xl w-full mx-auto flex-1 flex flex-col">
 			{#if chat.messages.length === 0}
 				<StarterPrompts onSelect={handleStarterSelect} />
 			{:else}
-				<div class="space-y-1">
+				<div class="w-full">
 					{#each chat.messages as msg (msg.id)}
 						<ChatMessage message={msg} />
 					{/each}
@@ -95,7 +181,7 @@
 			{/if}
 
 			{#if chat.error}
-				<div class="my-4 p-3.5 rounded-xl bg-red-950/40 border border-red-800/40 text-red-200 text-xs flex items-center justify-between gap-3">
+				<div class="my-4 p-3 rounded-xl bg-red-950/30 border border-red-800/30 text-red-200 text-xs flex items-center justify-between gap-3">
 					<div class="flex items-center gap-2">
 						<AlertCircle class="w-4 h-4 text-red-400 shrink-0" />
 						<span>{chat.error.message || 'An error occurred while generating response.'}</span>
@@ -103,7 +189,7 @@
 					<button
 						type="button"
 						onclick={() => chat.regenerate()}
-						class="px-2.5 py-1 rounded bg-red-900/60 hover:bg-red-800 text-white font-medium transition-colors cursor-pointer"
+						class="px-2.5 py-1 rounded bg-red-900/40 hover:bg-red-900/70 border border-red-700/40 text-white font-medium transition-colors cursor-pointer text-xs"
 					>
 						Retry
 					</button>
@@ -112,12 +198,19 @@
 		</div>
 	</main>
 
-	<!-- Input Area -->
-	<footer class="w-full bg-[#121317]/90 backdrop-blur-md border-t border-white/10 p-3 sm:p-4 shrink-0">
-		<div class="max-w-3xl mx-auto">
+	<!-- Edge-to-Edge Floating Input Dock -->
+	<footer class="pointer-events-none absolute bottom-0 left-0 right-0 w-full pt-12 pb-4 sm:pb-6 px-4 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/90 to-transparent flex flex-col items-center justify-end z-20">
+		<div class="pointer-events-auto w-full max-w-2xl mx-auto relative">
+			<!-- Glow & color burst behind prompt dock on send -->
+			{#if isBursting}
+				{#key burstKey}
+					<div class="send-burst-glow pointer-events-none absolute -inset-2 sm:-inset-3 rounded-2xl -z-10"></div>
+				{/key}
+			{/if}
+
 			<form
 				onsubmit={handleSubmit}
-				class="relative flex items-end gap-2 bg-[#1b1c22] rounded-2xl border border-white/10 p-2 focus-within:border-[#FA4615]/50 focus-within:ring-1 focus-within:ring-[#FA4615]/30 transition-all shadow-lg"
+				class="relative flex flex-col bg-[#121318]/90 backdrop-blur-xl rounded-2xl border border-white/[0.08] focus-within:border-[#FA4615]/50 focus-within:ring-1 focus-within:ring-[#FA4615]/20 transition-all shadow-xl shadow-black/50 p-2 sm:p-2.5"
 			>
 				<textarea
 					bind:this={textareaRef}
@@ -125,36 +218,107 @@
 					onkeydown={handleKeydown}
 					oninput={handleInputResize}
 					rows="1"
-					placeholder="Ask CCS Assist about programs, dean's office, retention..."
-					class="w-full bg-transparent text-sm text-white placeholder-zinc-500 focus:outline-none resize-none px-2 py-1.5 max-h-40 overflow-y-auto leading-relaxed"
+					placeholder="Ask CCS Assist about curriculum, faculty, labs..."
+					class="w-full bg-transparent text-[14.5px] text-white placeholder-zinc-500 focus:outline-none resize-none px-2 py-1.5 max-h-36 overflow-y-auto leading-relaxed"
 				></textarea>
 
-				{#if isStreaming}
-					<button
-						type="button"
-						onclick={() => chat.stop()}
-						class="w-9 h-9 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white flex items-center justify-center transition-colors shrink-0 cursor-pointer"
-						title="Stop generating"
-					>
-						<Square class="w-4 h-4 fill-white" />
-					</button>
-				{:else}
-					<button
-						type="submit"
-						disabled={!input.trim()}
-						style="background-color: {input.trim() ? '#C23811' : '#27272a'};"
-						class="w-9 h-9 rounded-xl text-white flex items-center justify-center transition-all shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 active:scale-95"
-						title="Send message"
-					>
-						<Send class="w-4 h-4" />
-					</button>
-				{/if}
+				<div class="flex items-center justify-end pt-1 px-1">
+					<div class="flex items-center gap-2">
+						{#if isStreaming}
+							<button
+								type="button"
+								onclick={() => chat.stop()}
+								class="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center transition-all shrink-0 cursor-pointer active:scale-95"
+								title="Stop generating"
+							>
+								<Square class="w-3.5 h-3.5 fill-white" />
+							</button>
+						{:else}
+							<button
+								type="submit"
+								disabled={!input.trim()}
+								class="w-8 h-8 rounded-xl flex items-center justify-center transition-all shrink-0 cursor-pointer active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed {input.trim()
+									? 'bg-[#C23811] text-white hover:brightness-110 shadow-sm shadow-[#FA4615]/20'
+									: 'bg-white/[0.04] text-zinc-500'}"
+								title="Send message"
+							>
+								<ArrowUp class="w-4 h-4 stroke-[2.5]" />
+							</button>
+						{/if}
+					</div>
+				</div>
 			</form>
 
 			<div class="flex items-center justify-between text-[11px] text-zinc-500 px-2 mt-2">
-				<span>Scoped strictly to SJC College of Computer Studies</span>
-				<span class="hidden sm:inline">Press Enter to send, Shift+Enter for newline</span>
+				<span>Saint Joseph College • College of Computer Studies</span>
+				<span class="hidden sm:inline">Enter to send, Shift+Enter for newline</span>
 			</div>
 		</div>
 	</footer>
 </div>
+
+<style>
+	.ambient-top-glow {
+		background: radial-gradient(
+			ellipse 80% 60% at 50% 0%,
+			rgba(250, 70, 21, 0.24) 0%,
+			rgba(227, 205, 44, 0.08) 35%,
+			rgba(20, 122, 13, 0.03) 60%,
+			transparent 75%
+		);
+		filter: blur(52px);
+		animation: ambientBreathe 14s ease-in-out infinite alternate;
+		will-change: transform, opacity;
+		transform-origin: center top;
+	}
+
+	@keyframes ambientBreathe {
+		0% {
+			transform: translate3d(-50%, 0, 0) scale(0.95);
+			opacity: 0.6;
+		}
+		100% {
+			transform: translate3d(-50%, 8px, 0) scale(1.08);
+			opacity: 0.92;
+		}
+	}
+
+	.send-burst-glow {
+		background: radial-gradient(
+			ellipse 80% 65% at center,
+			rgba(250, 70, 21, 0.5) 0%,
+			rgba(227, 205, 44, 0.28) 35%,
+			rgba(20, 122, 13, 0.12) 65%,
+			transparent 75%
+		);
+		filter: blur(24px);
+		animation: sendBurst 850ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		will-change: transform, opacity;
+		transform-origin: center center;
+	}
+
+	@keyframes sendBurst {
+		0% {
+			opacity: 0.55;
+			transform: scale3d(0.98, 0.96, 1);
+		}
+		8% {
+			opacity: 0.65;
+			transform: scale3d(1.01, 1.02, 1);
+		}
+		35% {
+			opacity: 0.3;
+			transform: scale3d(1.03, 1.04, 1);
+		}
+		70% {
+			opacity: 0.08;
+			transform: scale3d(1.05, 1.06, 1);
+		}
+		100% {
+			opacity: 0;
+			transform: scale3d(1.07, 1.08, 1);
+		}
+	}
+</style>
+
+
