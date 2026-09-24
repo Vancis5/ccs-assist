@@ -24,6 +24,7 @@
 	let burstKey = $state(0);
 	let autoFollowStream = $state(true);
 	let prevMessageCount = $state(0);
+	let isMobile = $state(false);
 
 	const isStreaming = $derived(chat.status === 'streaming' || chat.status === 'submitted');
 
@@ -110,7 +111,14 @@
 		}
 	});
 
-	onMount(async () => {
+	onMount(() => {
+		const mql = window.matchMedia('(max-width: 639px)');
+		isMobile = mql.matches;
+		const handler = (e: MediaQueryListEvent) => {
+			isMobile = e.matches;
+		};
+		mql.addEventListener('change', handler);
+
 		try {
 			const saved = localStorage.getItem(STORAGE_KEY);
 			if (saved) {
@@ -118,15 +126,20 @@
 				if (Array.isArray(parsed) && parsed.length > 0) {
 					chat.messages = parsed;
 					prevMessageCount = parsed.length;
-					await tick();
-					if (messagesContainer) {
-						messagesContainer.scrollTop = messagesContainer.scrollHeight;
-					}
+					tick().then(() => {
+						if (messagesContainer) {
+							messagesContainer.scrollTop = messagesContainer.scrollHeight;
+						}
+					});
 				}
 			}
 		} catch (e) {
 			console.error('Failed to load chat history from localStorage:', e);
 		}
+
+		return () => {
+			mql.removeEventListener('change', handler);
+		};
 	});
 
 	$effect(() => {
@@ -198,17 +211,17 @@
 </script>
 
 <div class="flex flex-col h-[100dvh] w-full bg-[#090a0d] text-zinc-100 overflow-hidden font-sans relative">
-	<!-- Ambient top light with steady subtle breathing animation -->
-	<div class="ambient-top-glow pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[320px] -z-0"></div>
+	<!-- Ambient top rotating orange glow blob -->
+	<div class="ambient-top-glow pointer-events-none absolute top-0 left-1/2 -z-0"></div>
 
 	<!-- Top Navigation (Edge-to-Edge Progressive Blur) -->
-	<ChatHeader onReset={handleReset} />
+	<ChatHeader onReset={handleReset} hasMessages={chat.messages.length > 0} />
 
 	<!-- Chat History Area (Edge-to-Edge) -->
 	<main
 		bind:this={messagesContainer}
 		onwheel={handleWheel}
-		class="flex-1 overflow-y-auto px-4 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : 'pb-36'} flex flex-col justify-start relative z-10"
+		class="flex-1 overflow-y-auto px-5 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : 'pb-36'} flex flex-col justify-start relative z-10"
 	>
 		<div class="max-w-2xl w-full mx-auto flex-1 flex flex-col">
 			{#if chat.messages.length === 0}
@@ -257,7 +270,7 @@
 	</main>
 
 	<!-- Edge-to-Edge Floating Input Dock -->
-	<footer class="pointer-events-none absolute bottom-0 left-0 right-0 w-full pt-12 pb-4 sm:pb-6 px-4 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/90 to-transparent flex flex-col items-center justify-end z-20">
+	<footer class="pointer-events-none absolute bottom-0 left-0 right-0 w-full pt-12 pb-4 sm:pb-6 px-5 sm:px-6 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/90 to-transparent flex flex-col items-center justify-end z-20">
 		<div class="pointer-events-auto w-full max-w-2xl mx-auto relative">
 			<!-- Glow & color burst behind prompt dock on send -->
 			{#if isBursting}
@@ -276,8 +289,8 @@
 					onkeydown={handleKeydown}
 					oninput={handleInputResize}
 					rows="1"
-					placeholder="Ask CCS Assist about curriculum, faculty, labs..."
-					class="w-full bg-transparent text-[14.5px] text-white placeholder-zinc-500 focus:outline-none resize-none px-2 py-1.5 max-h-36 overflow-y-auto leading-relaxed"
+					placeholder={isMobile ? 'Ask CCS Assist anything...' : 'Ask CCS Assist about curriculum, faculty, labs...'}
+					class="w-full bg-transparent text-[14.5px] text-white placeholder-zinc-500 focus:outline-none resize-none px-2 py-1.5 max-h-36 overflow-y-auto leading-relaxed placeholder:truncate"
 				></textarea>
 
 				<div class="flex items-center justify-end pt-1 px-1">
@@ -317,27 +330,32 @@
 
 <style>
 	.ambient-top-glow {
+		width: 1000px;
+		height: 480px;
 		background: radial-gradient(
-			ellipse 80% 60% at 50% 0%,
-			rgba(250, 70, 21, 0.24) 0%,
-			rgba(227, 205, 44, 0.08) 35%,
-			rgba(20, 122, 13, 0.03) 60%,
+			ellipse 60% 50% at 50% 30%,
+			rgba(250, 70, 21, 0.22) 0%,
+			rgba(250, 70, 21, 0.12) 35%,
+			rgba(227, 205, 44, 0.04) 60%,
 			transparent 75%
 		);
-		filter: blur(52px);
-		animation: ambientBreathe 14s ease-in-out infinite alternate;
+		filter: blur(72px);
+		animation: topGlowRotate 18s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
 		will-change: transform, opacity;
-		transform-origin: center top;
+		transform-origin: 50% -120px;
 	}
 
-	@keyframes ambientBreathe {
+	@keyframes topGlowRotate {
 		0% {
-			transform: translate3d(-50%, 0, 0) scale(0.95);
-			opacity: 0.6;
+			transform: translate3d(-50%, -10%, 0) rotate(-22deg) scale(0.92);
+			opacity: 0.65;
+		}
+		50% {
+			opacity: 0.88;
 		}
 		100% {
-			transform: translate3d(-50%, 8px, 0) scale(1.08);
-			opacity: 0.92;
+			transform: translate3d(-50%, 6%, 0) rotate(22deg) scale(1.08);
+			opacity: 0.72;
 		}
 	}
 

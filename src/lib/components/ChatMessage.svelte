@@ -43,11 +43,28 @@
 <div class="w-full {isUser ? 'flex justify-end user-msg-container mt-12 mb-6' : 'flex justify-start assistant-msg-container mb-6'} group scroll-mt-20">
 	{#if isUser}
 		<!-- User Message Bubble -->
-		<div class="max-w-[85%] sm:max-w-[75%] flex flex-col items-end user-bubble-wrapper">
+		<div class="max-w-[85%] sm:max-w-[75%] flex flex-col items-end user-bubble-wrapper group/user">
 			<div
-				class="user-bubble-box px-4 py-2.5 rounded-2xl rounded-tr-sm bg-white/[0.08] text-white border border-white/[0.08] text-[14.5px] leading-relaxed break-words shadow-sm font-normal selection:bg-[#FA4615]/30"
+				class="user-bubble-box px-5 py-3 sm:py-3.5 rounded-2xl rounded-tr-sm bg-white/[0.08] text-white border border-white/[0.08] text-[14.5px] leading-relaxed break-words shadow-sm font-normal selection:bg-[#FA4615]/30"
 			>
 				<p class="whitespace-pre-wrap">{text}</p>
+			</div>
+
+			<div class="flex items-center gap-2 mt-2 text-xs text-zinc-400 opacity-60 sm:opacity-0 sm:group-hover/user:opacity-100 transition-opacity">
+				<button
+					type="button"
+					onclick={copyToClipboard}
+					class="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer active:scale-95 py-1 px-1.5"
+					title="Copy message"
+				>
+					{#if copied}
+						<Check class="w-3.5 h-3.5 text-emerald-400" />
+						<span class="text-emerald-400 font-medium">Copied</span>
+					{:else}
+						<Copy class="w-3.5 h-3.5" />
+						<span>Copy</span>
+					{/if}
+				</button>
 			</div>
 		</div>
 	{:else}
