@@ -37,10 +37,10 @@
 
 	const isStreaming = $derived(chat.status === 'streaming' || chat.status === 'submitted');
 
-	function triggerVibration(pattern: number | number[] = [40, 30, 40]) {
+	function triggerVibration(duration = 25) {
 		if (typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
 			try {
-				navigator.vibrate(pattern);
+				navigator.vibrate(duration);
 			} catch (e) {
 				console.error('Vibration failed:', e);
 			}
@@ -49,7 +49,7 @@
 
 	$effect(() => {
 		if (wasStreaming && !isStreaming) {
-			triggerVibration([50, 40, 50]);
+			triggerVibration(25);
 		}
 		wasStreaming = isStreaming;
 	});
@@ -264,7 +264,7 @@
 		const trimmed = input.trim();
 		if (!trimmed || isStreaming) return;
 
-		triggerVibration([50, 30, 50]);
+		triggerVibration();
 		responsePaddingState = 'large';
 		shortPaddingPx = null;
 		triggerBurst();
@@ -285,7 +285,7 @@
 	}
 
 	function handleStarterSelect(promptText: string) {
-		triggerVibration([50, 30, 50]);
+		triggerVibration();
 		responsePaddingState = 'large';
 		shortPaddingPx = null;
 		triggerBurst();
@@ -295,7 +295,7 @@
 
 	async function handleRegenerate(messageId?: string) {
 		if (isStreaming) return;
-		triggerVibration([50, 30, 50]);
+		triggerVibration();
 		responsePaddingState = 'large';
 		shortPaddingPx = null;
 		autoFollowStream = true;
