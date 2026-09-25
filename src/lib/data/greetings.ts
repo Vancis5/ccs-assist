@@ -136,7 +136,10 @@ export const greetings: Greeting[] = [
 
 export const defaultGreeting = greetings[0];
 
-export function getRandomGreeting(): { greeting: Greeting; index: number } {
-	const index = Math.floor(Math.random() * greetings.length);
+export function getRandomGreeting(excludeIndex = -1): { greeting: Greeting; index: number } {
+	let index = Math.floor(Math.random() * greetings.length);
+	if (greetings.length > 1 && index === excludeIndex) {
+		index = (index + 1 + Math.floor(Math.random() * (greetings.length - 1))) % greetings.length;
+	}
 	return { greeting: greetings[index], index };
 }

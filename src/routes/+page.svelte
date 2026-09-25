@@ -10,7 +10,8 @@
 	import { extractMessageText } from '$lib/messages';
 	import { getRandomGreeting } from '$lib/data/greetings';
 
-	const currentGreeting = getRandomGreeting().greeting;
+	let currentGreetingData = $state(getRandomGreeting());
+	const currentGreeting = $derived(currentGreetingData.greeting);
 
 	const STORAGE_KEY = 'ccs_assist_messages';
 
@@ -31,8 +32,38 @@
 	let isInputFocused = $state(false);
 	let responsePaddingState = $state<'large' | 'short' | 'dock'>('dock');
 	let shortPaddingPx = $state<number | null>(null);
+	let isScrolledToBottom = $state(true);
+	let wasStreaming = $state(false);
 
 	const isStreaming = $derived(chat.status === 'streaming' || chat.status === 'submitted');
+
+	function triggerVibration(pattern: number | number[] = [40, 30, 40]) {
+		if (typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
+			try {
+				navigator.vibrate(pattern);
+			} catch (e) {
+				console.error('Vibration failed:', e);
+			}
+		}
+	}
+
+	$effect(() => {
+		if (wasStreaming && !isStreaming) {
+			triggerVibration([50, 40, 50]);
+		}
+		wasStreaming = isStreaming;
+	});
+
+	function checkScrollBottom() {
+		if (!messagesContainer) return;
+		const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
+		// Within 12px counts as at bottom
+		isScrolledToBottom = scrollHeight - scrollTop - clientHeight <= 12;
+	}
+
+	function handleScroll() {
+		checkScrollBottom();
+	}
 
 	function triggerBurst() {
 		burstKey++;
@@ -135,6 +166,7 @@
 			shortPaddingPx = null;
 			responsePaddingState = 'dock';
 		}
+		checkScrollBottom();
 	}
 
 	const lastMessage = $derived(chat.messages[chat.messages.length - 1]);
@@ -232,6 +264,7 @@
 		const trimmed = input.trim();
 		if (!trimmed || isStreaming) return;
 
+		triggerVibration([50, 30, 50]);
 		responsePaddingState = 'large';
 		shortPaddingPx = null;
 		triggerBurst();
@@ -252,6 +285,7 @@
 	}
 
 	function handleStarterSelect(promptText: string) {
+		triggerVibration([50, 30, 50]);
 		responsePaddingState = 'large';
 		shortPaddingPx = null;
 		triggerBurst();
@@ -261,10 +295,18 @@
 
 	async function handleRegenerate(messageId?: string) {
 		if (isStreaming) return;
+		triggerVibration([50, 30, 50]);
 		responsePaddingState = 'large';
 		shortPaddingPx = null;
 		autoFollowStream = true;
-		await chat.regenerate({ messageId });
+
+		// Ensure we target a valid message
+		const targetId = messageId ?? chat.messages[chat.messages.length - 1]?.id;
+		if (targetId) {
+			await chat.regenerate({ messageId: targetId });
+		} else {
+			await chat.regenerate();
+		}
 	}
 
 	function handleReset() {
@@ -272,10 +314,13 @@
 			chat.stop();
 		}
 		chat.messages = [];
+		(chat as any).state.error = undefined;
+		(chat as any).state.status = 'ready';
 		prevMessageCount = 0;
 		autoFollowStream = true;
 		responsePaddingState = 'dock';
 		shortPaddingPx = null;
+		currentGreetingData = getRandomGreeting(currentGreetingData.index);
 		if (browser) {
 			localStorage.removeItem(STORAGE_KEY);
 		}
@@ -305,6 +350,7 @@
 	<!-- Chat History Area (Edge-to-Edge) -->
 	<main
 		bind:this={messagesContainer}
+		onscroll={handleScroll}
 		onwheel={handleWheel}
 		onpointerdown={(e) => {
 			if (isInputFocused && textareaRef && !textareaRef.contains(e.target as Node)) {
@@ -344,7 +390,7 @@
 				</div>
 			{/if}
 
-			{#if chat.error}
+			{#if chat.error && chat.messages.length > 0}
 				{@const isRateLimit = chat.error.message?.toLowerCase().includes('rate limit') || chat.error.message?.includes('429')}
 				<div class="my-4 p-3 rounded-xl bg-red-950/30 border border-red-800/30 text-red-200 text-xs flex items-center justify-between gap-3">
 					<div class="flex items-center gap-2">
@@ -369,8 +415,15 @@
 		</div>
 	</main>
 
+	<!-- Progressive Blur Gradient (bottom dock area - fades out when scrolled all the way down) -->
+	<div
+		class="fixed inset-x-0 bottom-0 h-40 sm:h-44 z-[15] pointer-events-none transition-opacity duration-300 {isScrolledToBottom ? 'opacity-0' : 'opacity-100'}"
+	>
+		<div class="bottom-dock-blur w-full h-full"></div>
+	</div>
+
 	<!-- Edge-to-Edge Floating Input Dock -->
-	<footer class="intro-fade-in-footer pointer-events-none absolute bottom-0 left-0 right-0 w-full pt-12 pb-4 sm:pb-6 px-5 sm:px-6 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/90 to-transparent flex flex-col items-center justify-end z-20">
+	<footer class="intro-fade-in-footer pointer-events-none fixed bottom-0 left-0 right-0 w-full pt-16 pb-4 sm:pb-6 px-5 sm:px-6 flex flex-col items-center justify-end z-20">
 		<div class="pointer-events-auto w-full max-w-2xl mx-auto relative">
 			<!-- Glow & color burst behind prompt dock on send -->
 			{#if isBursting}
@@ -381,7 +434,7 @@
 
 			<form
 				onsubmit={handleSubmit}
-				class="relative flex flex-col bg-[#121318]/90 backdrop-blur-xl rounded-2xl border border-white/[0.08] focus-within:border-[#FA4615]/50 focus-within:ring-1 focus-within:ring-[#FA4615]/20 transition-all shadow-xl shadow-black/50 p-2 sm:p-2.5"
+				class="relative flex flex-col bg-[#121318] rounded-2xl border border-white/[0.08] focus-within:border-[#FA4615]/50 focus-within:ring-1 focus-within:ring-[#FA4615]/20 transition-all shadow-xl shadow-black/50 p-2 sm:p-2.5"
 			>
 				<textarea
 					bind:this={textareaRef}
@@ -447,6 +500,20 @@
 		-webkit-backdrop-filter: blur(20px);
 		mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
 		-webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+	}
+
+	.bottom-dock-blur {
+		background: linear-gradient(
+			0deg,
+			rgba(9, 10, 13, 0.95) 0%,
+			rgba(9, 10, 13, 0.75) 45%,
+			rgba(9, 10, 13, 0.3) 75%,
+			rgba(9, 10, 13, 0) 100%
+		);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		mask-image: linear-gradient(to top, black 0%, black 55%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to top, black 0%, black 55%, transparent 100%);
 	}
 
 	:global(.intro-fade-in-header header) {

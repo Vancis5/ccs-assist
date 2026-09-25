@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ArrowUpRight, Shuffle } from 'lucide-svelte';
-	import { getRandomStarterSuggestions, getStarterSuggestions, type StarterPrompt } from '$lib/data/ccsKnowledge';
+	import { getRandomStarterSuggestions, type StarterPrompt } from '$lib/data/ccsKnowledge';
 	import type { Greeting } from '$lib/data/greetings';
 
 	let {
@@ -13,7 +13,7 @@
 		isInputFocused?: boolean;
 	} = $props();
 
-	let prompts = $state<StarterPrompt[]>(getStarterSuggestions().slice(0, 4));
+	let prompts = $state<StarterPrompt[]>(getRandomStarterSuggestions(4));
 	let isShuffling = $state(false);
 	let generation = $state(0);
 

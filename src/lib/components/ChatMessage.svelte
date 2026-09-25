@@ -83,8 +83,23 @@
 	});
 
 	async function copyToClipboard() {
+		if (!text) return;
 		try {
-			await navigator.clipboard.writeText(text);
+			if (navigator.clipboard && window.isSecureContext) {
+				await navigator.clipboard.writeText(text);
+			} else {
+				// Fallback for non-HTTPS / older mobile webviews
+				const textArea = document.createElement('textarea');
+				textArea.value = text;
+				textArea.style.position = 'fixed';
+				textArea.style.left = '-999999px';
+				textArea.style.top = '-999999px';
+				document.body.appendChild(textArea);
+				textArea.focus();
+				textArea.select();
+				document.execCommand('copy');
+				textArea.remove();
+			}
 			copied = true;
 			setTimeout(() => {
 				copied = false;
@@ -108,11 +123,11 @@
 				<p class="whitespace-pre-wrap">{text}</p>
 			</div>
 
-			<div class="flex items-center gap-2 mt-2 text-xs text-zinc-400 opacity-60 sm:opacity-0 sm:group-hover/user:opacity-100 transition-opacity">
+			<div class="flex items-center gap-2 mt-2 text-xs text-zinc-400 transition-opacity {copied ? 'opacity-100' : 'opacity-70 sm:opacity-0 sm:group-hover/user:opacity-100'}">
 				<button
 					type="button"
 					onclick={copyToClipboard}
-					class="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer active:scale-95 py-1 px-1.5"
+					class="inline-flex items-center gap-1.5 text-[11px] {copied ? 'text-emerald-400' : 'text-zinc-400 hover:text-white'} transition-colors cursor-pointer active:scale-95 py-1 px-1.5"
 					title="Copy message"
 				>
 					{#if copied}
@@ -317,6 +332,12 @@
 		margin: 0.75rem 0;
 		color: #a1a1aa;
 		font-style: italic;
+	}
+	:global(.prose-minimal hr) {
+		border: 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.12);
+		margin: 1.25rem 0;
+		width: 100%;
 	}
 	:global(.prose-minimal .table-container) {
 		width: 100%;

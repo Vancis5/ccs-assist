@@ -30,6 +30,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    touch-action: pan-x pan-y;
   }
 
   body {
@@ -43,6 +44,7 @@
     min-height: 100%;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: pan-x pan-y;
   }
 
   /* Allow text selection only in user messages, assistant responses, and input textareas */
@@ -52,6 +54,15 @@
   input {
     user-select: text;
     -webkit-user-select: text;
+  }
+
+  /* Prevent iOS zoom on input focus */
+  @media (max-width: 640px) {
+    input,
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
   }
 
   /* Hardware acceleration for animated elements */
