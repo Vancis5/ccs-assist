@@ -12,7 +12,7 @@
 				? 'left-0 sm:-left-0.5 translate-x-0 duration-350 ease-[cubic-bezier(0.16,1,0.3,1)]'
 				: 'left-1/2 -translate-x-1/2 duration-700 ease-[cubic-bezier(0.87,0,0.13,1)]'}"
 		>
-			<span class="font-medium text-white text-sm tracking-tight select-none">CCS Assist</span>
+			<span class="font-bold text-white text-sm tracking-tight select-none">CCS Assist</span>
 		</div>
 
 		<div

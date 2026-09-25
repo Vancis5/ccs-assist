@@ -29,6 +29,8 @@
 	let prevMessageCount = $state(0);
 	let isMobile = $state(false);
 	let isInputFocused = $state(false);
+	let responsePaddingState = $state<'large' | 'short' | 'dock'>('dock');
+	let shortPaddingPx = $state<number | null>(null);
 
 	const isStreaming = $derived(chat.status === 'streaming' || chat.status === 'submitted');
 
@@ -94,6 +96,47 @@
 		}
 	}
 
+	function updatePaddingAfterResponse() {
+		if (!messagesContainer || isStreaming || chat.messages.length === 0) {
+			responsePaddingState = 'dock';
+			shortPaddingPx = null;
+			return;
+		}
+
+		const containerRect = messagesContainer.getBoundingClientRect();
+		const clientHeight = messagesContainer.clientHeight;
+		const userEls = messagesContainer.querySelectorAll('.user-msg-container');
+		const latestUserEl = userEls[userEls.length - 1] as HTMLElement | undefined;
+		const msgEls = messagesContainer.querySelectorAll('.user-msg-container, .assistant-msg-container');
+		const lastMsgEl = msgEls[msgEls.length - 1] as HTMLElement | undefined;
+
+		if (!latestUserEl || !lastMsgEl) {
+			responsePaddingState = 'dock';
+			shortPaddingPx = null;
+			return;
+		}
+
+		const userRect = latestUserEl.getBoundingClientRect();
+		const lastMsgRect = lastMsgEl.getBoundingClientRect();
+
+		const userTop = messagesContainer.scrollTop + (userRect.top - containerRect.top);
+		const targetTop = Math.max(0, userTop - 85);
+		const marginBottom = parseFloat(window.getComputedStyle(lastMsgEl).marginBottom) || 24;
+		const contentBottom = messagesContainer.scrollTop + (lastMsgRect.bottom - containerRect.top) + marginBottom;
+
+		const targetScroll = autoFollowStream ? messagesContainer.scrollTop : targetTop;
+		const dockHeight = 144;
+		const requiredPadding = Math.round((targetScroll + clientHeight) - contentBottom);
+
+		if (requiredPadding > dockHeight) {
+			shortPaddingPx = requiredPadding;
+			responsePaddingState = 'short';
+		} else {
+			shortPaddingPx = null;
+			responsePaddingState = 'dock';
+		}
+	}
+
 	const lastMessage = $derived(chat.messages[chat.messages.length - 1]);
 	const lastMessageContent = $derived(extractMessageText(lastMessage));
 
@@ -115,6 +158,20 @@
 		}
 	});
 
+	$effect(() => {
+		if (isStreaming) {
+			responsePaddingState = 'large';
+			shortPaddingPx = null;
+		} else if (chat.messages.length > 0) {
+			tick().then(() => {
+				updatePaddingAfterResponse();
+			});
+		} else {
+			responsePaddingState = 'dock';
+			shortPaddingPx = null;
+		}
+	});
+
 	onMount(() => {
 		const mql = window.matchMedia('(max-width: 639px)');
 		isMobile = mql.matches;
@@ -122,6 +179,13 @@
 			isMobile = e.matches;
 		};
 		mql.addEventListener('change', handler);
+
+		const handleResize = () => {
+			if (!isStreaming && chat.messages.length > 0 && responsePaddingState === 'short') {
+				updatePaddingAfterResponse();
+			}
+		};
+		window.addEventListener('resize', handleResize);
 
 		try {
 			const saved = localStorage.getItem(STORAGE_KEY);
@@ -131,6 +195,7 @@
 					chat.messages = parsed;
 					prevMessageCount = parsed.length;
 					tick().then(() => {
+						updatePaddingAfterResponse();
 						if (messagesContainer) {
 							messagesContainer.scrollTop = messagesContainer.scrollHeight;
 						}
@@ -143,6 +208,7 @@
 
 		return () => {
 			mql.removeEventListener('change', handler);
+			window.removeEventListener('resize', handleResize);
 		};
 	});
 
@@ -166,6 +232,8 @@
 		const trimmed = input.trim();
 		if (!trimmed || isStreaming) return;
 
+		responsePaddingState = 'large';
+		shortPaddingPx = null;
 		triggerBurst();
 		input = '';
 		if (textareaRef) {
@@ -184,6 +252,8 @@
 	}
 
 	function handleStarterSelect(promptText: string) {
+		responsePaddingState = 'large';
+		shortPaddingPx = null;
 		triggerBurst();
 		positionUserMessage();
 		chat.sendMessage({ text: promptText });
@@ -191,6 +261,8 @@
 
 	async function handleRegenerate(messageId?: string) {
 		if (isStreaming) return;
+		responsePaddingState = 'large';
+		shortPaddingPx = null;
 		autoFollowStream = true;
 		await chat.regenerate({ messageId });
 	}
@@ -202,6 +274,8 @@
 		chat.messages = [];
 		prevMessageCount = 0;
 		autoFollowStream = true;
+		responsePaddingState = 'dock';
+		shortPaddingPx = null;
 		if (browser) {
 			localStorage.removeItem(STORAGE_KEY);
 		}
@@ -232,7 +306,13 @@
 	<main
 		bind:this={messagesContainer}
 		onwheel={handleWheel}
-		class="flex-1 overflow-y-auto [scrollbar-gutter:stable] px-5 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : isInputFocused ? 'pb-28 sm:pb-36' : 'pb-36'} flex flex-col justify-start relative z-10"
+		onpointerdown={(e) => {
+			if (isInputFocused && textareaRef && !textareaRef.contains(e.target as Node)) {
+				textareaRef.blur();
+			}
+		}}
+		style:padding-bottom={responsePaddingState === 'short' && shortPaddingPx ? `${shortPaddingPx}px` : undefined}
+		class="flex-1 overflow-y-auto [scrollbar-gutter:stable] px-5 sm:px-6 pt-16 {chat.messages.length === 0 ? (isInputFocused ? 'pb-28 sm:pb-36' : 'pb-36') : responsePaddingState === 'dock' ? 'pb-36' : 'pb-[calc(100dvh-180px)]'} flex flex-col justify-start relative z-10"
 	>
 		<div class="max-w-2xl w-full mx-auto flex-1 flex flex-col min-w-0">
 			{#if chat.messages.length === 0}
@@ -254,8 +334,8 @@
 								<div class="w-full text-zinc-200 text-[15px] leading-relaxed">
 									<div class="flex items-center gap-1.5 py-2.5">
 										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]"></span>
-										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:180ms]"></span>
-										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:360ms]"></span>
+										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]" style="animation-delay:280ms"></span>
+										<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]" style="animation-delay:560ms"></span>
 									</div>
 								</div>
 							</div>
@@ -265,15 +345,22 @@
 			{/if}
 
 			{#if chat.error}
+				{@const isRateLimit = chat.error.message?.toLowerCase().includes('rate limit') || chat.error.message?.includes('429')}
 				<div class="my-4 p-3 rounded-xl bg-red-950/30 border border-red-800/30 text-red-200 text-xs flex items-center justify-between gap-3">
 					<div class="flex items-center gap-2">
 						<AlertCircle class="w-4 h-4 text-red-400 shrink-0" />
-						<span>{chat.error.message || 'An error occurred while generating response.'}</span>
+						<span>
+							{#if isRateLimit}
+								Groq API rate limit reached. All fallback models are currently busy. Please wait a moment and try again.
+							{:else}
+								{chat.error.message || 'An error occurred while generating response.'}
+							{/if}
+						</span>
 					</div>
 					<button
 						type="button"
 						onclick={() => handleRegenerate()}
-						class="px-2.5 py-1 rounded bg-red-900/40 hover:bg-red-900/70 border border-red-700/40 text-white font-medium transition-colors cursor-pointer text-xs"
+						class="px-2.5 py-1 rounded bg-red-900/40 hover:bg-red-900/70 border border-red-700/40 text-white font-medium transition-colors cursor-pointer text-xs shrink-0"
 					>
 						Retry
 					</button>

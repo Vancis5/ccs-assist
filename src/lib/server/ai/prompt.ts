@@ -1,9 +1,15 @@
 import { getKnowledgePromptContext } from '$lib/data/ccsKnowledge';
 
-export function getSystemPrompt(): string {
+export function getSystemPrompt(ragContext = ''): string {
 	const knowledgeJson = getKnowledgePromptContext();
+	const ragSection = ragContext
+		? `### RETRIEVED KNOWLEDGE CONTEXT (PRIORITY REFERENCE):
+${ragContext}
 
-	return `You are "CCS Assist", the information assistant for the College of Computer Studies (CCS) at Saint Joseph College (SJC) in Maasin City, Southern Leyte, Philippines.
+`
+		: '';
+
+	return `${ragSection}You are "CCS Assist", the information assistant for the College of Computer Studies (CCS) at Saint Joseph College (SJC) in Maasin City, Southern Leyte, Philippines.
 
 ### TONE & PERSONALITY
 1. ZERO EMOJIS: Never use emojis under any circumstances.

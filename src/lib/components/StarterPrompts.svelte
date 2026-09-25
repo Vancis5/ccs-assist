@@ -170,26 +170,17 @@
 	}
 
 	.prompts-collapse-wrapper {
-		display: grid;
-		grid-template-rows: 1fr;
 		opacity: 1;
-		transition:
-			grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1),
-			opacity 220ms ease,
-			transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
-		will-change: grid-template-rows, opacity, transform;
-	}
-
-	.prompts-collapse-wrapper > * {
-		min-height: 0;
+		transition: opacity 200ms ease;
+		will-change: opacity;
 	}
 
 	@media (max-width: 639px) {
 		.prompts-collapse-wrapper.prompts-collapsed {
-			grid-template-rows: 0fr;
 			opacity: 0;
-			transform: translateY(-8px);
 			pointer-events: none;
+			visibility: hidden;
+			transition: opacity 150ms ease, visibility 0s 150ms;
 		}
 	}
 </style>

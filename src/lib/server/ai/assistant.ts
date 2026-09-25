@@ -8,16 +8,26 @@ export interface AssistantStreamOptions {
 	messages: any[];
 	apiKey?: string;
 	modelId?: string;
+	ragContext?: string;
 }
 
 /**
  * Deep module encapsulating dialogue normalization, system prompt generation,
  * knowledge context injection, Groq configuration, and streaming.
  */
+const FALLBACK_MODELS = [
+	env.GROQ_MODEL || process.env.GROQ_MODEL || 'openai/gpt-oss-20b',
+	'llama-3.3-70b-versatile',
+	'llama-3.1-8b-instant',
+	'mixtral-8x7b-32768',
+	'gemma2-9b-it'
+];
+
 export async function streamAssistantResponse({
 	messages,
 	apiKey = env.GROQ_API_KEY || process.env.GROQ_API_KEY,
-	modelId = env.GROQ_MODEL || process.env.GROQ_MODEL || 'openai/gpt-oss-20b'
+	modelId,
+	ragContext
 }: AssistantStreamOptions): Promise<Response> {
 	if (!apiKey) {
 		throw new Error('GROQ_API_KEY is not configured on the server. Please add it to your .env file.');
@@ -27,13 +37,28 @@ export async function streamAssistantResponse({
 	const normalizedMessages = normalizeMessages(messages);
 	const modelMessages = await convertToModelMessages(normalizedMessages);
 
-	const result = streamText({
-		model: groq(modelId),
-		system: getSystemPrompt(),
-		messages: modelMessages,
-		temperature: 0.6,
-		maxOutputTokens: 2048
-	});
+	const modelsToTry = modelId ? [modelId, ...FALLBACK_MODELS.filter((m) => m !== modelId)] : FALLBACK_MODELS;
 
-	return result.toUIMessageStreamResponse();
+	let lastError: any = null;
+	for (const currentModel of modelsToTry) {
+		try {
+			const result = streamText({
+				model: groq(currentModel),
+				system: getSystemPrompt(ragContext),
+				messages: modelMessages,
+				temperature: 0.6,
+				maxOutputTokens: 2048,
+				onError({ error }) {
+					console.warn(`Groq stream error on model ${currentModel}:`, error);
+				}
+			});
+
+			return result.toUIMessageStreamResponse();
+		} catch (err: any) {
+			console.warn(`Groq model ${currentModel} failed:`, err?.message || err);
+			lastError = err;
+		}
+	}
+
+	throw lastError || new Error('Rate limit reached on Groq API (429).');
 }

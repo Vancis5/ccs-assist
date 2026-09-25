@@ -133,8 +133,8 @@
 				{#if text.length === 0}
 					<div class="flex items-center gap-1.5 py-2.5">
 						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]"></span>
-						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:180ms]"></span>
-						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:360ms]"></span>
+						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]" style="animation-delay:280ms"></span>
+						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]" style="animation-delay:560ms"></span>
 					</div>
 				{:else}
 					<div class="prose-minimal w-full min-w-0">

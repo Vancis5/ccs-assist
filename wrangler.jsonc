@@ -9,5 +9,21 @@
 
 	"observability": {
 		"enabled": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "ccs-assist-db",
+			"database_id": "6f8d6e91-eab3-45c2-ad3a-4d48d7685eaa"
+		}
+	],
+	"vectorize": [
+		{
+			"binding": "VECTORIZE",
+			"index_name": "ccs-assist-index"
+		}
+	],
+	"ai": {
+		"binding": "AI"
 	}
 }
