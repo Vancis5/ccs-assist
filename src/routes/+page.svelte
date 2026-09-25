@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { Chat } from '@ai-sdk/svelte';
 	import { DefaultChatTransport } from 'ai';
-	import { ArrowUp, Square, AlertCircle } from 'lucide-svelte';
+	import { ArrowUp, Square, AlertCircle, Mic, Loader2 } from 'lucide-svelte';
 	import ChatHeader from '$lib/components/ChatHeader.svelte';
 	import ChatMessage from '$lib/components/ChatMessage.svelte';
 	import StarterPrompts from '$lib/components/StarterPrompts.svelte';
@@ -326,10 +326,111 @@
 		}
 	}
 
-	function handleInputResize(e: Event) {
-		const target = e.target as HTMLTextAreaElement;
-		target.style.height = 'auto';
-		target.style.height = `${Math.min(target.scrollHeight, 180)}px`;
+	function handleInputResize(e?: Event) {
+		const target = (e?.target as HTMLTextAreaElement) || textareaRef;
+		if (target) {
+			target.style.height = 'auto';
+			target.style.height = `${Math.min(target.scrollHeight, 180)}px`;
+		}
+	}
+
+	let isRecording = $state(false);
+	let isTranscribing = $state(false);
+	let mediaRecorder: MediaRecorder | null = null;
+	let audioChunks: Blob[] = [];
+
+	async function startRecording() {
+		if (isRecording || isTranscribing || isStreaming) return;
+		try {
+			if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+				alert('Audio recording is not supported in this browser.');
+				return;
+			}
+			const stream = await navigator.mediaDevices.getUserMedia({
+				audio: { echoCancellation: true, noiseSuppression: true }
+			});
+
+			const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+				? 'audio/webm;codecs=opus'
+				: MediaRecorder.isTypeSupported('audio/webm')
+					? 'audio/webm'
+					: MediaRecorder.isTypeSupported('audio/mp4')
+						? 'audio/mp4'
+						: '';
+
+			mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+			audioChunks = [];
+
+			mediaRecorder.ondataavailable = (event) => {
+				if (event.data && event.data.size > 0) {
+					audioChunks.push(event.data);
+				}
+			};
+
+			mediaRecorder.onstop = async () => {
+				const tracks = stream.getTracks();
+				tracks.forEach((track) => track.stop());
+
+				if (audioChunks.length === 0) return;
+				const blobType = mediaRecorder?.mimeType || 'audio/webm';
+				const audioBlob = new Blob(audioChunks, { type: blobType });
+				if (audioBlob.size < 1000) return;
+
+				await handleAudioTranscription(audioBlob);
+			};
+
+			mediaRecorder.start(250);
+			isRecording = true;
+			triggerVibration(40);
+		} catch (err) {
+			console.error('Microphone access denied or error:', err);
+			isRecording = false;
+		}
+	}
+
+	function stopRecording() {
+		if (!mediaRecorder || !isRecording) return;
+		mediaRecorder.stop();
+		isRecording = false;
+		triggerVibration(30);
+	}
+
+	function toggleRecording() {
+		if (isRecording) {
+			stopRecording();
+		} else {
+			startRecording();
+		}
+	}
+
+	async function handleAudioTranscription(blob: Blob) {
+		isTranscribing = true;
+		try {
+			const formData = new FormData();
+			formData.append('file', blob, 'audio.webm');
+
+			const res = await fetch('/api/transcribe', {
+				method: 'POST',
+				body: formData
+			});
+
+			if (!res.ok) {
+				throw new Error(`Transcription failed: ${res.statusText}`);
+			}
+
+			const data = (await res.json()) as { text?: string };
+			if (data?.text?.trim()) {
+				input = (input ? input + ' ' : '') + data.text.trim();
+				setTimeout(() => {
+					handleInputResize();
+					textareaRef?.focus();
+				}, 50);
+			}
+		} catch (err) {
+			console.error('Transcription error:', err);
+		} finally {
+			isTranscribing = false;
+		}
 	}
 </script>
 
@@ -454,7 +555,23 @@
 					class="w-full bg-transparent text-[14.5px] text-white placeholder-zinc-500 focus:outline-none resize-none px-2 py-1.5 max-h-36 overflow-y-auto leading-relaxed placeholder:truncate"
 				></textarea>
 
-				<div class="flex items-center justify-end pt-1 px-1">
+				<div class="flex items-center justify-between pt-1 px-1 min-h-[36px]">
+					<!-- Left: Recording / Transcribing status indicator -->
+					<div class="flex items-center gap-1.5">
+						{#if isRecording}
+							<span class="text-[12px] text-red-400 font-medium flex items-center gap-1.5 pl-1.5 animate-pulse">
+								<span class="w-2 h-2 rounded-full bg-red-500"></span>
+								Listening...
+							</span>
+						{:else if isTranscribing}
+							<span class="text-[12px] text-amber-400/90 font-medium flex items-center gap-1.5 pl-1.5">
+								<Loader2 class="w-3.5 h-3.5 animate-spin text-amber-400" />
+								Transcribing...
+							</span>
+						{/if}
+					</div>
+
+					<!-- Right: Dynamic single action button (Mic -> Send / Stop / Recording) -->
 					<div class="flex items-center gap-2">
 						{#if isStreaming}
 							<button
@@ -465,16 +582,40 @@
 							>
 								<Square class="w-3.5 h-3.5 fill-white" />
 							</button>
-						{:else}
+						{:else if isRecording}
+							<button
+								type="button"
+								onclick={stopRecording}
+								class="w-8 h-8 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/40 flex items-center justify-center transition-all shrink-0 cursor-pointer active:scale-95 animate-pulse"
+								title="Stop recording"
+							>
+								<div class="w-2.5 h-2.5 rounded-sm bg-red-400"></div>
+							</button>
+						{:else if isTranscribing}
+							<button
+								type="button"
+								disabled
+								class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0 cursor-not-allowed"
+								title="Transcribing audio..."
+							>
+								<Loader2 class="w-3.5 h-3.5 animate-spin" />
+							</button>
+						{:else if input.trim()}
 							<button
 								type="submit"
-								disabled={!input.trim()}
-								class="w-8 h-8 rounded-xl flex items-center justify-center transition-all shrink-0 cursor-pointer active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed {input.trim()
-									? 'bg-[#C23811] text-white hover:brightness-110 shadow-sm shadow-[#FA4615]/20'
-									: 'bg-white/[0.04] text-zinc-500'}"
+								class="w-8 h-8 rounded-xl flex items-center justify-center transition-all shrink-0 cursor-pointer active:scale-95 bg-[#C23811] text-white hover:brightness-110 shadow-sm shadow-[#FA4615]/20"
 								title="Send message"
 							>
 								<ArrowUp class="w-4 h-4 stroke-[2.5]" />
+							</button>
+						{:else}
+							<button
+								type="button"
+								onclick={startRecording}
+								class="w-8 h-8 rounded-xl flex items-center justify-center transition-all shrink-0 cursor-pointer active:scale-95 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-white border border-white/[0.04]"
+								title="Speak message (Whisper Turbo)"
+							>
+								<Mic class="w-3.5 h-3.5" />
 							</button>
 						{/if}
 					</div>

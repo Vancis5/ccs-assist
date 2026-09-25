@@ -17,7 +17,7 @@ export interface AssistantStreamOptions {
  */
 const PRIMARY_MODEL = env.GROQ_MODEL || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
 const FALLBACK_MODELS = Array.from(
-	new Set([PRIMARY_MODEL, 'openai/gpt-oss-120b'])
+	new Set([PRIMARY_MODEL, 'openai/gpt-oss-20b', 'openai/gpt-oss-120b'])
 );
 
 export async function streamAssistantResponse({
@@ -32,8 +32,8 @@ export async function streamAssistantResponse({
 
 	const groq = createGroq({ apiKey });
 
-	// Keep a rolling context window (last 10 messages) to prevent token accumulation
-	const trimmedMessages = Array.isArray(messages) ? messages.slice(-10) : [];
+	// Keep a rolling context window (last 6 messages / 3 turns) to prevent token accumulation
+	const trimmedMessages = Array.isArray(messages) ? messages.slice(-6) : [];
 	const normalizedMessages = normalizeMessages(trimmedMessages);
 	const modelMessages = await convertToModelMessages(normalizedMessages);
 
