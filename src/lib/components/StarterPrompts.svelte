@@ -3,7 +3,15 @@
 	import { getRandomStarterSuggestions, getStarterSuggestions, type StarterPrompt } from '$lib/data/ccsKnowledge';
 	import type { Greeting } from '$lib/data/greetings';
 
-	let { onSelect, greeting }: { onSelect: (prompt: string) => void; greeting: Greeting } = $props();
+	let {
+		onSelect,
+		greeting,
+		isInputFocused = false
+	}: {
+		onSelect: (prompt: string) => void;
+		greeting: Greeting;
+		isInputFocused?: boolean;
+	} = $props();
 
 	let prompts = $state<StarterPrompt[]>(getStarterSuggestions().slice(0, 4));
 	let isShuffling = $state(false);
@@ -32,49 +40,52 @@
 		{greeting.subtitle}
 	</p>
 
-	<!-- Suggestions header with shuffle button -->
-	<div class="intro-header flex items-center justify-between w-full mt-8 mb-2.5">
-		<span class="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
-			Suggested prompts
-		</span>
-		<button
-			type="button"
-			onclick={shuffle}
-			disabled={isShuffling}
-			class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer group px-2 py-1 rounded-md hover:bg-white/[0.04] disabled:opacity-50"
-			title="Get different suggestions"
-		>
-			<Shuffle class="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#FA4615] transition-all group-active:rotate-180 {isShuffling ? 'rotate-180' : ''}" />
-			<span>Shuffle</span>
-		</button>
-	</div>
-
-	<!-- Minimal prompt grid -->
-	<div class="intro-grid grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
-		{#each prompts as p, i (`${generation}-${p.query}`)}
+	<!-- Suggestions Section (animated collapse on mobile keyboard focus) -->
+	<div class="prompts-collapse-wrapper w-full overflow-hidden {isInputFocused ? 'prompts-collapsed' : ''}">
+		<!-- Suggestions header with shuffle button -->
+		<div class="intro-header flex items-center justify-between w-full mt-8 mb-2.5">
+			<span class="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+				Suggested prompts
+			</span>
 			<button
 				type="button"
-				onclick={() => onSelect(p.query)}
-				style="--enter-delay: {140 + i * 55}ms; --exit-delay: {i * 45}ms;"
-				class="intro-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.07] hover:border-[#FA4615]/40 transition-all duration-200 cursor-pointer text-left active:scale-[0.99] {isShuffling ? 'is-exiting' : 'is-entering'} {i >= 2 ? 'hidden sm:flex' : ''}"
+				onclick={shuffle}
+				disabled={isShuffling}
+				class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer group px-2 py-1 rounded-md hover:bg-white/[0.04] disabled:opacity-50"
+				title="Get different suggestions"
 			>
-				<div class="flex items-center justify-between w-full mb-3">
-					<span class="text-[10px] font-medium uppercase tracking-wider text-zinc-400 group-hover:text-[#FA4615] transition-colors">
-						{p.tag}
-					</span>
-					<ArrowUpRight class="w-3.5 h-3.5 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-				</div>
-
-				<div>
-					<h2 class="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors leading-snug">
-						{p.title}
-					</h2>
-					<p class="text-xs text-zinc-400 mt-1 line-clamp-1">
-						{p.desc}
-					</p>
-				</div>
+				<Shuffle class="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#FA4615] transition-all group-active:rotate-180 {isShuffling ? 'rotate-180' : ''}" />
+				<span>Shuffle</span>
 			</button>
-		{/each}
+		</div>
+
+		<!-- Minimal prompt grid -->
+		<div class="intro-grid grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+			{#each prompts as p, i (`${generation}-${p.query}`)}
+				<button
+					type="button"
+					onclick={() => onSelect(p.query)}
+					style="--enter-delay: {140 + i * 55}ms; --exit-delay: {i * 45}ms;"
+					class="intro-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.07] hover:border-[#FA4615]/40 transition-all duration-200 cursor-pointer text-left active:scale-[0.99] {isShuffling ? 'is-exiting' : 'is-entering'} {i >= 2 ? 'hidden sm:flex' : ''}"
+				>
+					<div class="flex items-center justify-between w-full mb-3">
+						<span class="text-[10px] font-medium uppercase tracking-wider text-zinc-400 group-hover:text-[#FA4615] transition-colors">
+							{p.tag}
+						</span>
+						<ArrowUpRight class="w-3.5 h-3.5 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+					</div>
+
+					<div>
+						<h2 class="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors leading-snug">
+							{p.title}
+						</h2>
+						<p class="text-xs text-zinc-400 mt-1 line-clamp-1">
+							{p.desc}
+						</p>
+					</div>
+				</button>
+			{/each}
+		</div>
 	</div>
 </div>
 
@@ -151,8 +162,34 @@
 		.intro-header,
 		.intro-card,
 		.intro-card.is-entering,
-		.intro-card.is-exiting {
+		.intro-card.is-exiting,
+		.prompts-collapse-wrapper {
 			animation: none !important;
+			transition: none !important;
+		}
+	}
+
+	.prompts-collapse-wrapper {
+		display: grid;
+		grid-template-rows: 1fr;
+		opacity: 1;
+		transition:
+			grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1),
+			opacity 220ms ease,
+			transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+		will-change: grid-template-rows, opacity, transform;
+	}
+
+	.prompts-collapse-wrapper > * {
+		min-height: 0;
+	}
+
+	@media (max-width: 639px) {
+		.prompts-collapse-wrapper.prompts-collapsed {
+			grid-template-rows: 0fr;
+			opacity: 0;
+			transform: translateY(-8px);
+			pointer-events: none;
 		}
 	}
 </style>

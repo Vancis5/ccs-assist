@@ -1,7 +1,18 @@
 <script lang="ts">
-	import { marked } from 'marked';
+	import { Marked } from 'marked';
 	import { Copy, Check, RotateCcw } from 'lucide-svelte';
 	import { extractMessageText } from '$lib/messages';
+
+	const markdownParser = new Marked({
+		breaks: true,
+		gfm: true,
+		renderer: {
+			table(token) {
+				const html = (this.constructor as any).prototype.table.call(this, token);
+				return `<div class="table-container">${html}</div>`;
+			}
+		}
+	});
 
 	let {
 		message,
@@ -14,6 +25,50 @@
 	} = $props();
 
 	let copied = $state(false);
+	let rootEl: HTMLElement | null = $state(null);
+
+	$effect(() => {
+		if (!rootEl) return;
+		const scrollTimeouts = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
+
+		function showScrollbar(target: HTMLElement) {
+			const container = target.classList?.contains('table-container')
+				? target
+				: (target.closest?.('.table-container') as HTMLElement | null);
+			if (!container) return;
+
+			container.classList.add('is-scrolling');
+			const existing = scrollTimeouts.get(container);
+			if (existing) clearTimeout(existing);
+
+			const timeout = setTimeout(() => {
+				container.classList.remove('is-scrolling');
+				scrollTimeouts.delete(container);
+			}, 1000);
+
+			scrollTimeouts.set(container, timeout);
+		}
+
+		function handleScroll(e: Event) {
+			if (e.target instanceof HTMLElement) {
+				showScrollbar(e.target);
+			}
+		}
+
+		function handleTouchStart(e: TouchEvent) {
+			if (e.target instanceof HTMLElement) {
+				showScrollbar(e.target);
+			}
+		}
+
+		rootEl.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+		rootEl.addEventListener('touchstart', handleTouchStart, { capture: true, passive: true });
+
+		return () => {
+			rootEl?.removeEventListener('scroll', handleScroll, { capture: true });
+			rootEl?.removeEventListener('touchstart', handleTouchStart, { capture: true });
+		};
+	});
 
 	const text = $derived(extractMessageText(message));
 	const isUser = $derived(message.role === 'user');
@@ -21,7 +76,7 @@
 	const htmlContent = $derived.by(() => {
 		if (isUser) return '';
 		try {
-			return marked.parse(text || '', { breaks: true, gfm: true }) as string;
+			return markdownParser.parse(text || '') as string;
 		} catch {
 			return text;
 		}
@@ -40,7 +95,10 @@
 	}
 </script>
 
-<div class="w-full {isUser ? 'flex justify-end user-msg-container mt-12 mb-6' : 'flex justify-start assistant-msg-container mb-6'} group scroll-mt-20">
+<div
+	bind:this={rootEl}
+	class="w-full min-w-0 {isUser ? 'flex justify-end user-msg-container mt-12 mb-6' : 'flex justify-start assistant-msg-container mb-6'} group scroll-mt-20"
+>
 	{#if isUser}
 		<!-- User Message Bubble -->
 		<div class="max-w-[85%] sm:max-w-[75%] flex flex-col items-end user-bubble-wrapper group/user">
@@ -69,9 +127,9 @@
 		</div>
 	{:else}
 		<!-- Assistant Message: Fluid edge-to-edge editorial typography -->
-		<div class="w-full flex flex-col items-start text-left">
+		<div class="w-full min-w-0 flex flex-col items-start text-left">
 			<!-- Message Content -->
-			<div class="w-full text-zinc-200 text-[15px] leading-relaxed">
+			<div class="w-full min-w-0 text-zinc-200 text-[15px] leading-relaxed">
 				{#if text.length === 0}
 					<div class="flex items-center gap-1.5 py-2.5">
 						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615]"></span>
@@ -79,7 +137,7 @@
 						<span class="alive-dot w-1.5 h-1.5 rounded-full bg-[#FA4615] [animation-delay:360ms]"></span>
 					</div>
 				{:else}
-					<div class="prose-minimal w-full">
+					<div class="prose-minimal w-full min-w-0">
 						{@html htmlContent}
 					</div>
 				{/if}
@@ -260,10 +318,49 @@
 		color: #a1a1aa;
 		font-style: italic;
 	}
+	:global(.prose-minimal .table-container) {
+		width: 100%;
+		max-width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		margin: 0.875rem 0;
+		border-radius: 0.5rem;
+		scrollbar-width: thin;
+		scrollbar-color: transparent transparent;
+		transition: scrollbar-color 0.3s ease;
+	}
+	:global(.prose-minimal .table-container.is-scrolling),
+	:global(.prose-minimal .table-container:hover) {
+		scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+	}
+	:global(.prose-minimal .table-container::-webkit-scrollbar) {
+		height: 3px;
+	}
+	@media (min-width: 640px) {
+		:global(.prose-minimal .table-container::-webkit-scrollbar) {
+			height: 5px;
+		}
+	}
+	:global(.prose-minimal .table-container::-webkit-scrollbar-track) {
+		background: transparent;
+	}
+	:global(.prose-minimal .table-container::-webkit-scrollbar-thumb) {
+		background: transparent;
+		border-radius: 9999px;
+		transition: background 0.3s ease;
+	}
+	:global(.prose-minimal .table-container.is-scrolling::-webkit-scrollbar-thumb),
+	:global(.prose-minimal .table-container:hover::-webkit-scrollbar-thumb) {
+		background: rgba(255, 255, 255, 0.22);
+	}
+	:global(.prose-minimal .table-container::-webkit-scrollbar-thumb:hover) {
+		background: rgba(255, 255, 255, 0.35);
+	}
 	:global(.prose-minimal table) {
 		width: 100%;
+		min-width: 100%;
 		border-collapse: collapse;
-		margin: 0.875rem 0;
+		margin: 0;
 		font-size: 0.875rem;
 	}
 	:global(.prose-minimal th) {
@@ -272,11 +369,19 @@
 		padding: 0.5rem 0.75rem;
 		color: #ffffff;
 		font-weight: 600;
+		white-space: nowrap;
 	}
 	:global(.prose-minimal td) {
 		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 		padding: 0.5rem 0.75rem;
 		color: #d4d4d8;
+	}
+	:global(.prose-minimal > table) {
+		display: block;
+		max-width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		margin: 0.875rem 0;
 	}
 </style>
 

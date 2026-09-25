@@ -28,6 +28,7 @@
 	let autoFollowStream = $state(true);
 	let prevMessageCount = $state(0);
 	let isMobile = $state(false);
+	let isInputFocused = $state(false);
 
 	const isStreaming = $derived(chat.status === 'streaming' || chat.status === 'submitted');
 
@@ -231,13 +232,15 @@
 	<main
 		bind:this={messagesContainer}
 		onwheel={handleWheel}
-		class="flex-1 overflow-y-auto [scrollbar-gutter:stable] px-5 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : 'pb-36'} flex flex-col justify-start relative z-10"
+		class="flex-1 overflow-y-auto [scrollbar-gutter:stable] px-5 sm:px-6 pt-16 {chat.messages.length > 0 ? 'pb-[calc(100dvh-180px)]' : isInputFocused ? 'pb-28 sm:pb-36' : 'pb-36'} flex flex-col justify-start relative z-10"
 	>
-		<div class="max-w-2xl w-full mx-auto flex-1 flex flex-col">
+		<div class="max-w-2xl w-full mx-auto flex-1 flex flex-col min-w-0">
 			{#if chat.messages.length === 0}
-				<StarterPrompts onSelect={handleStarterSelect} greeting={currentGreeting} />
+				<div class="w-full flex-1 flex flex-col justify-center">
+					<StarterPrompts onSelect={handleStarterSelect} greeting={currentGreeting} {isInputFocused} />
+				</div>
 			{:else}
-				<div class="w-full">
+				<div class="w-full min-w-0">
 					{#each chat.messages as msg (msg.id)}
 						<ChatMessage
 							message={msg}
@@ -296,6 +299,12 @@
 				<textarea
 					bind:this={textareaRef}
 					bind:value={input}
+					onfocus={() => {
+						isInputFocused = true;
+					}}
+					onblur={() => {
+						isInputFocused = false;
+					}}
 					onkeydown={handleKeydown}
 					oninput={handleInputResize}
 					rows="1"
