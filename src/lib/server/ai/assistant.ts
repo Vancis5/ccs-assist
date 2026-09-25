@@ -15,10 +15,10 @@ export interface AssistantStreamOptions {
  * Deep module encapsulating dialogue normalization, system prompt generation,
  * knowledge context injection, Groq configuration, and streaming.
  */
-const FALLBACK_MODELS = [
-	env.GROQ_MODEL || process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
-	'openai/gpt-oss-20b'
-];
+const PRIMARY_MODEL = env.GROQ_MODEL || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
+const FALLBACK_MODELS = Array.from(
+	new Set([PRIMARY_MODEL, 'openai/gpt-oss-120b'])
+);
 
 export async function streamAssistantResponse({
 	messages,
@@ -31,7 +31,10 @@ export async function streamAssistantResponse({
 	}
 
 	const groq = createGroq({ apiKey });
-	const normalizedMessages = normalizeMessages(messages);
+
+	// Keep a rolling context window (last 10 messages) to prevent token accumulation
+	const trimmedMessages = Array.isArray(messages) ? messages.slice(-10) : [];
+	const normalizedMessages = normalizeMessages(trimmedMessages);
 	const modelMessages = await convertToModelMessages(normalizedMessages);
 
 	const modelsToTry = modelId ? [modelId, ...FALLBACK_MODELS.filter((m) => m !== modelId)] : FALLBACK_MODELS;

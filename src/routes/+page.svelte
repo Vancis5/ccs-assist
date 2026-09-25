@@ -335,7 +335,7 @@
 
 <div class="flex flex-col h-[100dvh] w-full bg-[#090a0d] text-zinc-100 overflow-x-hidden overflow-y-hidden font-sans relative">
 	<!-- Ambient top rotating orange glow blob container -->
-	<div class="pointer-events-none absolute inset-x-0 -top-40 h-[600px] overflow-hidden -z-0">
+	<div class="pointer-events-none absolute inset-x-0 -top-40 h-[600px] overflow-hidden z-0">
 		<div class="ambient-top-glow absolute top-40 left-1/2"></div>
 	</div>
 

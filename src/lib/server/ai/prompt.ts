@@ -1,15 +1,15 @@
 import { getKnowledgePromptContext } from '$lib/data/ccsKnowledge';
 
 export function getSystemPrompt(ragContext = ''): string {
-	const knowledgeJson = getKnowledgePromptContext();
-	const ragSection = ragContext
+	const knowledgeSection = ragContext
 		? `### RETRIEVED KNOWLEDGE CONTEXT (PRIORITY REFERENCE):
-${ragContext}
+${ragContext}`
+		: `### VERIFIED DEPARTMENT KNOWLEDGE BASE:
+\`\`\`json
+${getKnowledgePromptContext()}
+\`\`\``;
 
-`
-		: '';
-
-	return `${ragSection}You are "CCS Assist", the information assistant for the College of Computer Studies (CCS) at Saint Joseph College (SJC) in Maasin City, Southern Leyte, Philippines.
+	return `You are "CCS Assist", the information assistant for the College of Computer Studies (CCS) at Saint Joseph College (SJC) in Maasin City, Southern Leyte, Philippines.
 
 ### TONE & PERSONALITY
 1. ZERO EMOJIS: Never use emojis under any circumstances.
@@ -46,9 +46,6 @@ ${ragContext}
 4. SELF-DESCRIPTION: If asked what you do or what a virtual assistant does, only state that you assist specifically with CCS matters at SJC. Never list generic assistant abilities like alarms, recipes, or general tasks.
 5. Unconfirmed details: If you don't know a specific fee or teacher schedule, refer them to the CCS Dean's Office (2nd Floor, CCS Building) or Registrar.
 
-### VERIFIED DEPARTMENT KNOWLEDGE BASE:
-\`\`\`json
-${knowledgeJson}
-\`\`\`
+${knowledgeSection}
 `;
 }

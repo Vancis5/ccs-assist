@@ -1,8 +1,61 @@
 <!doctype html>
-<html lang="en" class="dark antialiased">
+<html lang="en" class="dark antialiased" style="background-color: #090a0d; color-scheme: dark;">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+		<meta name="color-scheme" content="dark" />
+		<style>
+			:root, html, body {
+				background-color: #090a0d !important;
+				color-scheme: dark;
+			}
+			#loading-curtain {
+				position: fixed;
+				inset: 0;
+				z-index: 99999;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: #090a0d;
+				transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+			}
+			#loading-curtain.loaded {
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+			}
+			.spinner {
+				position: relative;
+			}
+			.spinner span {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				border-radius: 999px;
+				transform-origin: center var(--r);
+				background: #FA4615;
+				opacity: 0.15;
+			}
+			.spinner.sm { width: 16px; height: 16px; }
+			.spinner.sm span { width: 2.5px; height: 5px; margin-left: -1.25px; margin-top: calc(-1 * var(--r)); --r: 8px; }
+			.spinner.md { width: 24px; height: 24px; }
+			.spinner.md span { width: 3.5px; height: 7px; margin-left: -1.75px; margin-top: calc(-1 * var(--r)); --r: 12px; }
+			.spinner.lg { width: 36px; height: 36px; }
+			.spinner.lg span { width: 5px; height: 11px; margin-left: -2.5px; margin-top: calc(-1 * var(--r)); --r: 18px; }
+			.spinner span:nth-child(1) { transform: rotate(0deg);   animation: spinner-fade 0.8s 0.000s linear infinite; }
+			.spinner span:nth-child(2) { transform: rotate(45deg);  animation: spinner-fade 0.8s 0.100s linear infinite; }
+			.spinner span:nth-child(3) { transform: rotate(90deg);  animation: spinner-fade 0.8s 0.200s linear infinite; }
+			.spinner span:nth-child(4) { transform: rotate(135deg); animation: spinner-fade 0.8s 0.300s linear infinite; }
+			.spinner span:nth-child(5) { transform: rotate(180deg); animation: spinner-fade 0.8s 0.400s linear infinite; }
+			.spinner span:nth-child(6) { transform: rotate(225deg); animation: spinner-fade 0.8s 0.500s linear infinite; }
+			.spinner span:nth-child(7) { transform: rotate(270deg); animation: spinner-fade 0.8s 0.600s linear infinite; }
+			.spinner span:nth-child(8) { transform: rotate(315deg); animation: spinner-fade 0.8s 0.700s linear infinite; }
+			@keyframes spinner-fade {
+				0%   { opacity: 1; }
+				100% { opacity: 0.15; }
+			}
+		</style>
+		<noscript><style>#loading-curtain { display: none !important; }</style></noscript>
 		<link rel="icon" href="%sveltekit.assets%/favicon.ico" sizes="any" />
 		<link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/favicon-16x16.png" />
@@ -73,11 +126,6 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,100..1000&display=swap" as="style" />
 		<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,100..1000&display=swap" rel="stylesheet" />
-		<style>
-			html:not(.fonts-loaded) body {
-				visibility: hidden;
-			}
-		</style>
 		<script>
 			if ("fonts" in document) {
 				Promise.all([
@@ -97,7 +145,13 @@
 		</script>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover" class="bg-[#090a0d] text-zinc-100 antialiased selection:bg-[#FA4615]/30 selection:text-white">
+	<body data-sveltekit-preload-data="hover" class="bg-[#090a0d] text-zinc-100 antialiased selection:bg-[#FA4615]/30 selection:text-white" style="background-color: #090a0d;">
+		<div id="loading-curtain" aria-hidden="true">
+			<div class="spinner md">
+				<span></span><span></span><span></span><span></span>
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
