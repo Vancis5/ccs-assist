@@ -72,8 +72,15 @@ export async function ingestKnowledgeChunks(env: {
 	};
 }
 
+export interface RetrievalResult {
+	context: string;
+	topScore: number;
+	matchCount: number;
+}
+
 /**
  * Query pipeline: embed query -> search Vectorize -> fetch matches from D1
+ * Returns matched context passages alongside top similarity score.
  */
 export async function retrieveRelevantContext(
 	env: {
@@ -82,27 +89,27 @@ export async function retrieveRelevantContext(
 		AI?: any;
 	},
 	query: string,
-	topK = 3
-): Promise<string> {
+	topK = 5
+): Promise<RetrievalResult> {
 	if (!env?.DB || !env?.VECTORIZE || !env?.AI) {
-		// Fallback when running without Cloudflare bindings
-		return '';
+		return { context: '', topScore: 0, matchCount: 0 };
 	}
 
 	try {
 		// 1. Embed user query with Workers AI
 		const queryVector = await getEmbedding(env.AI, query);
 
-		// 2. Search Vectorize
+		// 2. Search Vectorize with topK = 5
 		const matches = (await env.VECTORIZE.query(queryVector, {
 			topK,
 			returnMetadata: 'all'
 		})) as any;
 
 		if (!matches?.matches || matches.matches.length === 0) {
-			return '';
+			return { context: '', topScore: 0, matchCount: 0 };
 		}
 
+		const topScore: number = matches.matches[0]?.score ?? 0;
 		const ids: string[] = matches.matches.map((m: any) => m.id as string);
 
 		// 3. Fetch matched rows from D1
@@ -113,7 +120,7 @@ export async function retrieveRelevantContext(
 		const { results } = await stmt.bind(...ids).all<{ id: string; category: string; content: string }>();
 
 		if (!results || results.length === 0) {
-			return '';
+			return { context: '', topScore, matchCount: 0 };
 		}
 
 		// Keep order aligned with Vectorize ranking score
@@ -124,11 +131,17 @@ export async function retrieveRelevantContext(
 			.map((id: string) => chunkMap.get(id))
 			.filter((c): c is { id: string; category: string; content: string } => Boolean(c));
 
-		return orderedChunks
+		const context = orderedChunks
 			.map((c: { id: string; category: string; content: string }) => `[Category: ${c.category}]\n${c.content}`)
 			.join('\n\n---\n\n');
+
+		return {
+			context,
+			topScore,
+			matchCount: orderedChunks.length
+		};
 	} catch (err) {
 		console.warn('RAG retrieval failed, continuing with default prompt context:', err);
-		return '';
+		return { context: '', topScore: 0, matchCount: 0 };
 	}
 }

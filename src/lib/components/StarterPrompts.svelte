@@ -41,7 +41,10 @@
 	</p>
 
 	<!-- Suggestions Section (animated collapse on mobile keyboard focus) -->
-	<div class="prompts-collapse-wrapper w-full overflow-hidden {isInputFocused ? 'prompts-collapsed' : ''}">
+	<div
+		class="prompts-collapse-wrapper w-full overflow-hidden {isInputFocused ? 'prompts-collapsed pointer-events-none sm:pointer-events-auto' : ''}"
+		aria-hidden={isInputFocused ? 'true' : 'false'}
+	>
 		<!-- Suggestions header with shuffle button -->
 		<div class="intro-header flex items-center justify-between w-full mt-8 mb-2.5">
 			<span class="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
@@ -50,7 +53,8 @@
 			<button
 				type="button"
 				onclick={shuffle}
-				disabled={isShuffling}
+				disabled={isShuffling || isInputFocused}
+				tabindex={isInputFocused ? -1 : 0}
 				class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer group px-2 py-1 rounded-md hover:bg-white/[0.04] disabled:opacity-50"
 				title="Get different suggestions"
 			>
@@ -65,8 +69,10 @@
 				<button
 					type="button"
 					onclick={() => onSelect(p.query)}
+					disabled={isInputFocused}
+					tabindex={isInputFocused ? -1 : 0}
 					style="--enter-delay: {140 + i * 55}ms; --exit-delay: {i * 45}ms;"
-					class="intro-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.07] hover:border-[#FA4615]/40 transition-all duration-200 cursor-pointer text-left active:scale-[0.99] {isShuffling ? 'is-exiting' : 'is-entering'} {i >= 2 ? 'hidden sm:flex' : ''}"
+					class="intro-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.07] hover:border-[#FA4615]/40 transition-all duration-200 cursor-pointer text-left active:scale-[0.99] {isShuffling ? 'is-exiting' : 'is-entering'} {i >= 2 ? 'hidden sm:flex' : ''} {isInputFocused ? 'pointer-events-none' : ''}"
 				>
 					<div class="flex items-center justify-between w-full mb-3">
 						<span class="text-[10px] font-medium uppercase tracking-wider text-zinc-400 group-hover:text-[#FA4615] transition-colors">

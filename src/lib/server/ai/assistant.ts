@@ -1,7 +1,7 @@
 import { createGroq } from '@ai-sdk/groq';
-import { streamText, convertToModelMessages } from 'ai';
+import { streamText, convertToModelMessages, createUIMessageStream, createUIMessageStreamResponse } from 'ai';
 import { env } from '$env/dynamic/private';
-import { normalizeMessages } from '$lib/messages';
+import { normalizeMessages, extractMessageText } from '$lib/messages';
 import { getSystemPrompt } from './prompt';
 
 export interface AssistantStreamOptions {
@@ -9,56 +9,151 @@ export interface AssistantStreamOptions {
 	apiKey?: string;
 	modelId?: string;
 	ragContext?: string;
+	ai?: any; // Cloudflare Workers AI binding
+}
+
+const PRIMARY_MODEL = env.GROQ_MODEL || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
+const FALLBACK_MODELS = Array.from(
+	new Set([PRIMARY_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b'])
+);
+
+const WORKERS_AI_MODEL = '@cf/meta/llama-3.1-8b-instruct';
+
+/**
+ * Return a fixed response instantly as a standard UI message stream.
+ * Used for deterministic out-of-scope refusals without incurring LLM cost or latency.
+ */
+export function createFixedRefusalResponse(message: string): Response {
+	const messageId = crypto.randomUUID();
+	return createUIMessageStreamResponse({
+		stream: createUIMessageStream({
+			execute({ writer }) {
+				writer.write({ type: 'text-delta', delta: message, id: messageId });
+			}
+		})
+	});
 }
 
 /**
- * Deep module encapsulating dialogue normalization, system prompt generation,
- * knowledge context injection, Groq configuration, and streaming.
+ * Streams assistant response with multi-tier failover:
+ * 1. Groq primary model (qwen/qwen3.8-27b)
+ * 2. Groq fallback models (openai/gpt-oss-120b, openai/gpt-oss-20b)
+ * 3. Cloudflare Workers AI binding (@cf/meta/llama-3.1-8b-instruct)
  */
-const PRIMARY_MODEL = env.GROQ_MODEL || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
-const FALLBACK_MODELS = Array.from(
-	new Set([PRIMARY_MODEL, 'openai/gpt-oss-20b', 'openai/gpt-oss-120b'])
-);
-
 export async function streamAssistantResponse({
 	messages,
 	apiKey = env.GROQ_API_KEY || process.env.GROQ_API_KEY,
 	modelId,
-	ragContext
+	ragContext = '',
+	ai
 }: AssistantStreamOptions): Promise<Response> {
-	if (!apiKey) {
-		throw new Error('GROQ_API_KEY is not configured on the server. Please add it to your .env file.');
-	}
-
-	const groq = createGroq({ apiKey });
-
-	// Keep a rolling context window (last 6 messages / 3 turns) to prevent token accumulation
+	// Keep rolling context window (last 6 messages / 3 turns)
 	const trimmedMessages = Array.isArray(messages) ? messages.slice(-6) : [];
 	const normalizedMessages = normalizeMessages(trimmedMessages);
-	const modelMessages = await convertToModelMessages(normalizedMessages);
+	const systemPrompt = getSystemPrompt(ragContext);
 
 	const modelsToTry = modelId ? [modelId, ...FALLBACK_MODELS.filter((m) => m !== modelId)] : FALLBACK_MODELS;
+	const messageId = crypto.randomUUID();
 
-	let lastError: any = null;
-	for (const currentModel of modelsToTry) {
-		try {
-			const result = streamText({
-				model: groq(currentModel),
-				system: getSystemPrompt(ragContext),
-				messages: modelMessages,
-				temperature: 0.6,
-				maxOutputTokens: 2048,
-				onError({ error }) {
-					console.warn(`Groq stream error on model ${currentModel}:`, error);
+	const stream = createUIMessageStream({
+		async execute({ writer }) {
+			let streamedAnyChunk = false;
+
+			// 1. Try Groq provider models first (if API key available)
+			if (apiKey) {
+				const groq = createGroq({ apiKey });
+				const modelMessages = await convertToModelMessages(normalizedMessages);
+
+				for (const currentModel of modelsToTry) {
+					try {
+						const result = streamText({
+							model: groq(currentModel),
+							system: systemPrompt,
+							messages: modelMessages,
+							temperature: 0.6,
+							maxOutputTokens: 2048
+						});
+
+						for await (const chunk of result.textStream) {
+							writer.write({ type: 'text-delta', delta: chunk, id: messageId });
+							streamedAnyChunk = true;
+						}
+
+						// Successfully finished streaming
+						return;
+					} catch (err: any) {
+						console.warn(`Groq model ${currentModel} error (attempting fallback):`, err?.message || err);
+						if (streamedAnyChunk) {
+							// If already sent tokens to client, cannot switch models mid-flight
+							return;
+						}
+					}
 				}
-			});
+			}
 
-			return result.toUIMessageStreamResponse();
-		} catch (err: any) {
-			console.warn(`Groq model ${currentModel} failed:`, err?.message || err);
-			lastError = err;
+			// 2. Cloudflare Workers AI Fallback (protects demo against 429 rate limits or key exhaustion)
+			if (ai) {
+				try {
+					console.log(`Flipping to Workers AI backup (${WORKERS_AI_MODEL})...`);
+					const cfMessages = [
+						{ role: 'system', content: systemPrompt },
+						...trimmedMessages.map((m: any) => ({
+							role: m.role === 'assistant' ? 'assistant' : 'user',
+							content: extractMessageText(m)
+						}))
+					];
+
+					const aiStream = (await ai.run(WORKERS_AI_MODEL, {
+						messages: cfMessages,
+						stream: true
+					})) as ReadableStream<Uint8Array>;
+
+					const reader = aiStream.getReader();
+					const decoder = new TextDecoder();
+					let buffer = '';
+
+					while (true) {
+						const { done, value } = await reader.read();
+						if (done) break;
+
+						buffer += decoder.decode(value, { stream: true });
+						const lines = buffer.split('\n');
+						buffer = lines.pop() || '';
+
+						for (const line of lines) {
+							const trimmed = line.trim();
+							if (trimmed.startsWith('data: ')) {
+								const dataStr = trimmed.slice(6).trim();
+								if (dataStr === '[DONE]') break;
+								try {
+									const parsed = JSON.parse(dataStr);
+									if (parsed.response) {
+										writer.write({ type: 'text-delta', delta: parsed.response, id: messageId });
+										streamedAnyChunk = true;
+									}
+								} catch {
+									// Ignore non-JSON or partial keep-alive frames
+								}
+							}
+						}
+					}
+
+					return;
+				} catch (cfErr: any) {
+					console.error('Workers AI backup fallback error:', cfErr?.message || cfErr);
+				}
+			}
+
+			// 3. Final safety refusal if both Groq and Workers AI failed
+			if (!streamedAnyChunk) {
+				writer.write({
+					type: 'text-delta',
+					delta: "I'm experiencing high server traffic at the moment. Please try again shortly or visit the CCS Dean's Office on the 2nd Floor.",
+					id: messageId
+				});
+			}
 		}
-	}
+	});
 
-	throw lastError || new Error('Rate limit reached on Groq API (429).');
+	return createUIMessageStreamResponse({ stream });
 }

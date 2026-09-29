@@ -551,6 +551,7 @@
 					onkeydown={handleKeydown}
 					oninput={handleInputResize}
 					rows="1"
+					maxlength="1000"
 					placeholder={isMobile ? 'Ask CCS Assist anything...' : 'Ask CCS Assist about curriculum, faculty, labs...'}
 					class="w-full bg-transparent text-[14.5px] text-white placeholder-zinc-500 focus:outline-none resize-none px-2 py-1.5 max-h-36 overflow-y-auto leading-relaxed placeholder:truncate"
 				></textarea>

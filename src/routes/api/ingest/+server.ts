@@ -1,8 +1,19 @@
 import { json } from '@sveltejs/kit';
 import { ingestKnowledgeChunks } from '$lib/server/rag';
+import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ platform }) => {
+export const POST: RequestHandler = async ({ request, platform }) => {
+	// Secure unauthenticated access
+	const authHeader = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
+	const secretHeader = request.headers.get('x-ingest-secret');
+	const providedKey = secretHeader || authHeader;
+	const requiredKey = env.INGEST_SECRET || (platform?.env as any)?.INGEST_SECRET;
+
+	if (requiredKey && providedKey !== requiredKey) {
+		return json({ error: 'Unauthorized: Invalid ingestion secret' }, { status: 401 });
+	}
+
 	if (!platform?.env?.DB || !platform?.env?.VECTORIZE || !platform?.env?.AI) {
 		return json(
 			{

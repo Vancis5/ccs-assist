@@ -139,7 +139,11 @@ async function run() {
 	console.log('Ingestion completed successfully!');
 }
 
-run().catch((err) => {
-	console.error('Ingestion failed:', err);
-	process.exit(1);
-});
+import { fileURLToPath } from 'node:url';
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+	run().catch((err) => {
+		console.error('Ingestion failed:', err);
+		process.exit(1);
+	});
+}

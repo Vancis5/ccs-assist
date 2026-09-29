@@ -1,5 +1,5 @@
 {
-	"name": "test-proj",
+	"name": "ccs-assist",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -27,7 +27,6 @@
 	"dependencies": {
 		"@ai-sdk/groq": "^4.0.48",
 		"@ai-sdk/svelte": "^5.0.113",
-		"@lucide/svelte": "^1.48.0",
 		"@tailwindcss/vite": "^4.3.3",
 		"ai": "^7.0.113",
 		"lucide-svelte": "^1.0.1",
