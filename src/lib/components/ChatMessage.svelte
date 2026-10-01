@@ -1,8 +1,9 @@
-<script lang="ts">
+<script module lang="ts">
 	import { Marked } from 'marked';
-	import { Copy, Check, RotateCcw } from 'lucide-svelte';
-	import { extractMessageText } from '$lib/messages';
 
+	// Extracting the markdown parser to a module block ensures it is instantiated
+	// as a singleton across all ChatMessage instances. This reduces memory footprint
+	// and improves rendering performance when displaying a large list of messages.
 	const markdownParser = new Marked({
 		breaks: true,
 		gfm: true,
@@ -13,6 +14,11 @@
 			}
 		}
 	});
+</script>
+
+<script lang="ts">
+	import { Copy, Check, RotateCcw } from 'lucide-svelte';
+	import { extractMessageText } from '$lib/messages';
 
 	let {
 		message,
