@@ -28,7 +28,9 @@ export function createFixedRefusalResponse(message: string): Response {
 	return createUIMessageStreamResponse({
 		stream: createUIMessageStream({
 			execute({ writer }) {
+				writer.write({ type: 'text-start', id: messageId });
 				writer.write({ type: 'text-delta', delta: message, id: messageId });
+				writer.write({ type: 'text-end', id: messageId });
 			}
 		})
 	});
@@ -58,6 +60,21 @@ export async function streamAssistantResponse({
 	const stream = createUIMessageStream({
 		async execute({ writer }) {
 			let streamedAnyChunk = false;
+			let startedTextPart = false;
+
+			const startText = () => {
+				if (!startedTextPart) {
+					writer.write({ type: 'text-start', id: messageId });
+					startedTextPart = true;
+				}
+			};
+
+			const endText = () => {
+				if (startedTextPart) {
+					writer.write({ type: 'text-end', id: messageId });
+					startedTextPart = false;
+				}
+			};
 
 			// 1. Try Groq provider models first (if API key available)
 			if (apiKey) {
@@ -75,16 +92,19 @@ export async function streamAssistantResponse({
 						});
 
 						for await (const chunk of result.textStream) {
+							startText();
 							writer.write({ type: 'text-delta', delta: chunk, id: messageId });
 							streamedAnyChunk = true;
 						}
 
+						endText();
 						// Successfully finished streaming
 						return;
 					} catch (err: any) {
 						console.warn(`Groq model ${currentModel} error (attempting fallback):`, err?.message || err);
 						if (streamedAnyChunk) {
 							// If already sent tokens to client, cannot switch models mid-flight
+							endText();
 							return;
 						}
 					}
@@ -128,6 +148,7 @@ export async function streamAssistantResponse({
 								try {
 									const parsed = JSON.parse(dataStr);
 									if (parsed.response) {
+										startText();
 										writer.write({ type: 'text-delta', delta: parsed.response, id: messageId });
 										streamedAnyChunk = true;
 									}
@@ -138,19 +159,26 @@ export async function streamAssistantResponse({
 						}
 					}
 
+					endText();
 					return;
 				} catch (cfErr: any) {
 					console.error('Workers AI backup fallback error:', cfErr?.message || cfErr);
+					if (streamedAnyChunk) {
+						endText();
+						return;
+					}
 				}
 			}
 
 			// 3. Final safety refusal if both Groq and Workers AI failed
 			if (!streamedAnyChunk) {
+				startText();
 				writer.write({
 					type: 'text-delta',
 					delta: "I'm experiencing high server traffic at the moment. Please try again shortly or visit the CCS Dean's Office on the 2nd Floor.",
 					id: messageId
 				});
+				endText();
 			}
 		}
 	});
