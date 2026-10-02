@@ -12,9 +12,9 @@ export interface AssistantStreamOptions {
 	ai?: any; // Cloudflare Workers AI binding
 }
 
-const PRIMARY_MODEL = env.GROQ_MODEL || process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
+const PRIMARY_MODEL = env.GROQ_MODEL || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 const FALLBACK_MODELS = Array.from(
-	new Set([PRIMARY_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b'])
+	new Set([PRIMARY_MODEL, 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant'])
 );
 
 const WORKERS_AI_MODEL = '@cf/meta/llama-3.1-8b-instruct';

@@ -1,9 +1,9 @@
 import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, platform }) => {
 	try {
-		const apiKey = env.GROQ_API_KEY || process.env.GROQ_API_KEY;
+		const apiKey = platform?.env?.GROQ_API_KEY || env.GROQ_API_KEY || process.env.GROQ_API_KEY;
 		if (!apiKey) {
 			return new Response(JSON.stringify({ error: 'GROQ_API_KEY not configured' }), {
 				status: 500,

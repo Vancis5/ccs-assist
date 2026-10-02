@@ -1,6 +1,7 @@
 import { streamAssistantResponse, createFixedRefusalResponse } from '$lib/server/ai/assistant';
 import { retrieveRelevantContext } from '$lib/server/rag';
 import { extractMessageText } from '$lib/messages';
+import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 
 const MAX_MESSAGE_LENGTH = 1000;
@@ -49,7 +50,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 		let ragContext = '';
 		let topScore = 0;
 
-		if (queryText && platform?.env) {
+		if (queryText && platform?.env && !isGreeting(queryText)) {
 			// Include immediate prior user turn to resolve conversational pronouns (e.g. "what about the second one?")
 			const prevUserMessage = userMessages.length > 1 ? userMessages[userMessages.length - 2] : null;
 			const contextAwareQuery = prevUserMessage
@@ -61,8 +62,8 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 			topScore = result.topScore;
 
 			// 3. Strict deterministic scope enforcement via Vectorize similarity score
-			// If not a brief casual greeting and top similarity score is below threshold, reject immediately without calling LLM
-			if (!isGreeting(queryText) && result.matchCount > 0 && topScore < SIMILARITY_THRESHOLD) {
+			// If top similarity score is below threshold, reject immediately without calling LLM
+			if (result.matchCount > 0 && topScore < SIMILARITY_THRESHOLD) {
 				return createFixedRefusalResponse(
 					"I only answer questions regarding the College of Computer Studies at Saint Joseph College, including our BSCS, BSIT, and ACT programs, faculty, curriculum, enrollment, lab policies, and student organizations."
 				);
@@ -72,6 +73,8 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 		// 4. Stream response with failover
 		return await streamAssistantResponse({
 			messages,
+			apiKey: platform?.env?.GROQ_API_KEY || env.GROQ_API_KEY || process.env.GROQ_API_KEY,
+			modelId: platform?.env?.GROQ_MODEL || env.GROQ_MODEL || process.env.GROQ_MODEL,
 			ragContext,
 			ai: platform?.env?.AI
 		});
