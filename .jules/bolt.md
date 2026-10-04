@@ -1,0 +1,3 @@
+## 2024-05-24 - Svelte 5 Singletons with `<script module>`
+**Learning:** In Svelte 5 (and earlier), code placed inside a normal `<script>` block executes once for *each instance* of the component. This causes a significant performance bottleneck when initializing heavy, stateless objects (like `Marked` markdown parsers) inside a component like `ChatMessage`, which is rendered many times on the screen.
+**Action:** Extract heavy, stateless object instantiations into `<script module>` blocks. Code inside `<script module>` runs only once per module (i.e., it behaves as a singleton), drastically improving memory usage and rendering speed for list items or frequently reused components.
