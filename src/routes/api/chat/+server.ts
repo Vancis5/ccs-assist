@@ -81,11 +81,11 @@ export const POST: RequestHandler = async ({ request, platform, getClientAddress
 					? `${extractMessageText(prevUserMessage).slice(-150)} ${queryText}`
 					: queryText;
 
-			let result = await retrieveRelevantContext(platform.env, retrievalQuery, 3);
+			let result = await retrieveRelevantContext(platform.env, retrievalQuery, 5);
 
 			// If contextualized search didn't clear threshold, try standalone query as fallback
 			if (result.ok && result.topScore < SIMILARITY_THRESHOLD && retrievalQuery !== queryText) {
-				const standaloneResult = await retrieveRelevantContext(platform.env, queryText, 3);
+				const standaloneResult = await retrieveRelevantContext(platform.env, queryText, 5);
 				if (standaloneResult.ok && standaloneResult.topScore > result.topScore) {
 					result = standaloneResult;
 				}

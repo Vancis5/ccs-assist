@@ -12,7 +12,41 @@
 - **College Admission Test (CAT) Cut-Off**: Incoming first-year students must obtain a passing rate of at least 75% on the CAT for direct entry into BSIT or BSCS.
 - **Ladderized Pathway for ACT**: Applicants with CAT scores below 75% are enrolled in the 2-Year Associate in Computer Technology (ACT) program. They may shift to BSIT or BSCS after the first semester provided they achieve a Grade Point Average (GPA) of at least 2.25.
 - **Prerequisites for 4th Year Standing**: No student may enroll in the 4th year without completing and passing all Physical Education subjects (PATHFit 1 to 4) and NSTP (NSTP 11 and 12).
-- **Theology Requirement for Graduation**: Candidates for graduation from a 4-year degree must complete 24 units of Theology (8 sequential courses, 3 units each).
+- **Theology Requirement for Graduation**: Candidates for graduation from a 4-year degree (BSIT, BSCS) must complete 24 units of Theology (8 sequential courses, 3 units each, from Theo 1a to Theo 4b).
+
+## Theology & Religious Studies Curriculum (24 Units / 8 Courses)
+Saint Joseph College is a Catholic educational institution under the Diocese of Maasin. All 4-year degree candidates in the College of Computer Studies (BSIT and BSCS) are required to complete **24 units of Theology** (8 sequential courses, 3 units each) as a mandatory requirement for graduation:
+| Course Code | Course Title | Year & Semester | Units |
+| :--- | :--- | :--- | :--- |
+| **Theo 1a** | Old Testament | 1st Year — 1st Semester | 3 |
+| **Theo 1b** | New Testament | 1st Year — 2nd Semester | 3 |
+| **Theo 2a** | Christology | 2nd Year — 1st Semester | 3 |
+| **Theo 2b** | Mariology | 2nd Year — 2nd Semester | 3 |
+| **Theo 3a** | Christian Morality | 3rd Year — 1st Semester | 3 |
+| **Theo 3b** | The Commandments | 3rd Year — 2nd Semester | 3 |
+| **Theo 4a** | Introduction to Pastoral Life / Basic Ecclesial Communities (BEC) | Summer Term (Incoming 4th Year) | 3 |
+| **Theo 4b** | Pastoral Exposure | 4th Year — 1st Semester | 3 |
+
+*Note: Theology courses must be taken in sequence (Theo 1a through Theo 4b). Completion of all 24 units is strictly required for graduation clearance.*
+
+## General Education (GE) & Institutional Requirements
+All undergraduate degree programs in CCS include the standard CHED General Education and institutional mandated subjects:
+| Course Code | Course Title | Description / Focus | Units |
+| :--- | :--- | :--- | :--- |
+| **GE 1** | Understanding the Self | Identity, psychology, self-development | 3 |
+| **GE 2** | Readings in Philippine History | Historical documents and national perspective | 3 |
+| **GE 3** | Mathematics in the Modern World | Practical mathematical tools and statistics | 3 |
+| **GE 4** | Purposive Communication | Professional, multimodal writing and speaking | 3 |
+| **GE 5** | Science, Technology, and Society (STS) | Impact of technology on human society | 3 |
+| **GE 6** | The Contemporary World | Globalization and international systems | 3 |
+| **GE 7** | Art Appreciation | Visual, musical, and performing arts | 3 |
+| **GE 8** | Ethics | Moral philosophy and decision making | 3 |
+| **GE 9** | Life and Works of Rizal | Mandated study of Dr. Jose Rizal | 3 |
+| **GE EL 1** | Living in the IT Era | Information literacy and digital tools | 3 |
+| **GE EL 2** | Gender and Society | Gender equality and social dynamics | 3 |
+| **GE EL 3** | Great Books | World literature and classical philosophy | 3 |
+| **PATHFit 1–4**| Physical Activities Toward Health and Fitness | Movement, Fitness, Sports, Dance (2 units each) | 8 |
+| **NSTP 11 & 12**| National Service Training Program | Civic Welfare / ROTC training (3 units each) | 6 |
 
 ## Bachelor of Science in Information Technology (BSIT) Overview
 - **Duration**: 4 Years (8 Semesters + 1 Summer Term)
@@ -100,18 +134,17 @@
 - **4th Year — 2nd Semester (6 Units | 1 Subject)**:
   - IT 403: IT Internship / On-the-Job Training (486 hrs) (6 units)
 
-## Bachelor of Science in Computer Science (BSCS)
-- **Duration**: 4 Years
+## Bachelor of Science in Computer Science (BSCS) Overview & Curriculum
+- **Duration**: 4 Years (8 Semesters + 1 Summer Term)
 - **Description**: Emphasizes algorithms, computational theory, artificial intelligence, software engineering, and mathematical structures.
 - **Entry & Retention**: Requires at least 75% on the CAT and maintenance of a 2.25 GWA in 1st and 2nd year professional computing subjects for admission to 3rd year.
 - **Degree Culmination**: Original CS Computing Research / Thesis Project.
-- **Curriculum by Year & Semester**:
-  - **4th Year — 1st Semester (9 Units | 3 Subjects)**:
-    - CS 401: CS Capstone Project 2 (3 units)
-    - CS 402: Social Issues and Professional Practice (3 units)
-    - CS Elective 2: CS Track Elective 2 (3 units)
-  - **4th Year — 2nd Semester (6 Units | 1 Subject)**:
-    - CS 403: Practicum / Industry Internship (500 hrs) (6 units)
+- **Curriculum Highlights by Year**:
+  - **1st Year**: Introduction to Computing (CS 101), Computer Programming 1 & 2 (CS 102/112), Discrete Structures (CS 113), GE Subjects, Theo 1a (Old Testament), Theo 1b (New Testament), PATHFit 1 & 2, NSTP 11 & 12.
+  - **2nd Year**: Data Structures & Algorithms (CS 201), Object-Oriented Programming (CS 202), Computer Organization & Architecture, Automata Theory and Formal Languages, Theo 2a (Christology), Theo 2b (Mariology), PATHFit 3 & 4.
+  - **3rd Year**: Design & Analysis of Algorithms, Operating Systems, Software Engineering 1 & 2, Programming Languages, Artificial Intelligence, Theo 3a (Christian Morality), Theo 3b (The Commandments), CS Thesis / Capstone 1 & Theo 4a (Summer).
+  - **4th Year — 1st Semester**: CS 401: CS Capstone Project 2 (3 units), CS 402: Social Issues and Professional Practice (3 units), CS Elective 2 (3 units), Theo 4b: Pastoral Exposure (3 units).
+  - **4th Year — 2nd Semester**: CS 403: Practicum / Industry Internship (500 hrs) (6 units).
 
 ## Associate in Computer Technology (ACT)
 - **Duration**: 2 Years (4 Semesters, Ladderized)
