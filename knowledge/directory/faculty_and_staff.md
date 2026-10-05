@@ -2,8 +2,8 @@
 - **College of Computer Studies (CCS)**: Established in 1994 at Saint Joseph College (SJC, founded 1928 in Maasin City, Southern Leyte).
 - **CCS Department Motto**: "An open door to the limitless horizon"
 - **SJC Institutional Motto**: "Deus, Patria, Scientia" (God, Country, Knowledge) - Pax 1928.
-- **Dean & BSIT Program Head**: Mrs. Haidee T. Galdo, MIT (Dean's Office: Main Campus, 1st Floor right side near entrance beside staircase).
-- **Department Secretary**: Mrs. Wilna Mae Quilla-Oberez, MBA (Department secretary from 2013 to present).
+- **Dean & BSIT Program Head**: Mrs. Haidee T. Galdo, MIT (Location: Shared Deans' Office on the 1st Floor, right side near entrance beside staircase, sharing the space with deans of Architecture, Criminology, etc.).
+- **Department Secretary**: Mrs. Wilna Mae Quilla-Oberez, MBA (Stationed in the Shared Deans' Office on the 1st Floor).
 - **Faculty Excellence**: Experienced educators and industry practitioners holding advanced master's degrees (MIT, MBA, MST-CS), PhilNITS IT Passport certifications, MikroTik network certifications, and Civil Service eligibilities.
 
 ## Mrs. Haidee T. Galdo, MIT (CCS Dean & BSIT Program Head)
@@ -17,7 +17,7 @@
   - Science, Technology, and Society (GE 5 / STS)
   - Capstone Project 2 (Capstone 2)
 - **Certifications**: PhilNITS IT Passport Exam Certified.
-- **Office Location & Consultation**: Main Campus, 1st Floor, right side near the entrance, beside the staircase. Available during regular office hours (Monday–Friday, 8:00 AM – 5:00 PM) for academic advising, curriculum evaluations, and student consultations.
+- **Office Location & Consultation**: Stationed in the Shared Deans' Office (Main Campus, 1st Floor, right side near the entrance, beside the staircase, shared with deans of Architecture, Criminology, etc.). Available during regular office hours (Monday–Friday, 8:00 AM – 5:00 PM) for academic advising, curriculum evaluations, and student consultations.
 
 ## Mrs. Evangeline E. Javier, MIT (Senior College Faculty & Religious Org Adviser)
 - **Position / Title**: College Faculty (over 20 years of college faculty teaching experience at SJC); Departmental Religious Organization Adviser.

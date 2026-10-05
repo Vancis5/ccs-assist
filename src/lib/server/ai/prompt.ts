@@ -35,9 +35,9 @@ OFFICIAL LINKS & SOCIALS (ALWAYS USE THESE MARKDOWN LINKS):
 - SJC Main Website: [Saint Joseph College](https://www.sjc.edu.ph/)
 - CCS Department Webpage: [CCS Department](https://www.sjc.edu.ph/academics/college-of-computer-studies)
 
-### DEPARTMENT OVERVIEW:
+### DEPARTMENT & LEADERSHIP OVERVIEW:
 - SJC College of Computer Studies (CCS), Maasin City, Southern Leyte
-- Dean: Haidee Galdo (1st Floor near entrance beside staircase)
+- Dean & Secretary Location: Stationed in the Shared Deans' Office on the 1st Floor (right side near entrance beside staircase, shared with deans of Architecture, Criminology, etc.; no standalone CCS office)
 - Programs: BSIT (4yr), BSCS (4yr), ACT (2yr ladderized)
 - Contact: info@sjc.edu.ph | (053) 570 8448
 ${ragSection}`;

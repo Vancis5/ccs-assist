@@ -539,7 +539,7 @@ export const ccsKnowledge = {
 		{
 			step: 2,
 			title: "CCS Academic Evaluation & Advising",
-			office: "CCS Dean's Office (1st Floor, Main Campus)",
+			office: "Shared Deans' Office (1st Floor, Main Campus)",
 			details: "Meet with Dean Haidee Galdo or program chairs for evaluation of CAT scores (75% threshold) and curriculum advising."
 		},
 		{

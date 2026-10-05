@@ -1,12 +1,10 @@
-## CCS Leadership, Dean's Office & Department Staff
-- **Dean of CCS & Program Head BSIT**: Mrs. Haidee T. Galdo, MIT (formerly Riza Siega)
-- **Department Secretary**: Mrs. Wilna Mae Quilla-Oberez, MBA (Department Secretary since 2013)
-- **Location**: Main Campus, 1st Floor, right side near the entrance, beside the staircase.
-- **Office Hours**: Regular work hours (Monday to Friday, 8:00 AM - 5:00 PM; availability based on schedule).
-- **Student Consultations**: Open for consultation anytime or by appointment.
-- **Services**: Academic advising, subject crediting, curriculum evaluation, department endorsements, special exam approvals, and student guidance.
-- **CCS Department Website**: [CCS Webpage](https://www.sjc.edu.ph/academics/college-of-computer-studies)
-- **Official CCS Facebook Page**: [CCS Facebook Page](https://www.facebook.com/profile.php?id=100083430218425)
+## Shared Deans' Office & CCS Administration Location
+- **No Standalone CCS Department Office**: Saint Joseph College does not have a separate or standalone "CCS Department Office".
+- **Shared Deans' Office Location**: The office on the **1st Floor of the Main Campus (right side near the entrance, beside the staircase)** is a **Shared Deans' Office**. Deans from multiple academic colleges hold office here together, including the College of Computer Studies (CCS), Architecture, Criminology, and other college deans.
+- **CCS Dean & Secretary Workstations**: Both CCS Dean **Mrs. Haidee T. Galdo, MIT** and Department Secretary **Mrs. Wilna Mae Quilla-Oberez, MBA** are stationed inside this Shared Deans' Office.
+- **Historical Context**: Previously, former dean Mrs. Riza Siega had a separate personal office because she served concurrently as Vice President (VP) of the college. Under current leadership, the CCS Dean and Secretary are stationed in the common 1st Floor Shared Deans' Office.
+- **Office Hours & Consultations**: Open Monday to Friday, 8:00 AM – 5:00 PM for student academic advising, subject crediting, curriculum evaluation, departmental endorsements, and special examination approvals.
+- **Official Links**: [CCS Department Webpage](https://www.sjc.edu.ph/academics/college-of-computer-studies) | [Official CCS Facebook Page](https://www.facebook.com/profile.php?id=100083430218425)
 
 ## Institutional Administration & Official Links
 - **School President**: Rev. Msgr. Oscar A. Cadayona, PhD, SThL-MA
