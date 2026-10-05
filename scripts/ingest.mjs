@@ -41,6 +41,25 @@ export function extractChunks() {
 	return chunks;
 }
 
+export function syncChunksFile() {
+	const chunks = extractChunks();
+	const targetPath = path.resolve(process.cwd(), 'src/lib/server/rag/chunks.ts');
+	const fileContent = `// AUTO-GENERATED from knowledge/*.md - DO NOT EDIT DIRECTLY
+// To update, edit files in knowledge/ and run: node scripts/ingest.mjs --sync-chunks
+
+export interface KnowledgeChunk {
+	id: string;
+	category: 'academics' | 'policy' | 'directory' | 'campus';
+	content: string;
+}
+
+export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = ${JSON.stringify(chunks, null, '\t')};
+`;
+	fs.writeFileSync(targetPath, fileContent, 'utf-8');
+	console.log(`[chunks.ts] Synced ${chunks.length} chunks from /knowledge to src/lib/server/rag/chunks.ts`);
+	return chunks;
+}
+
 async function getEmbedding(text, accountId, apiToken) {
 	const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${EMBEDDING_MODEL}`;
 	const res = await fetch(url, {
@@ -70,7 +89,7 @@ async function run() {
 	const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
 	console.log('Starting ingestion pipeline...');
-	const chunks = extractChunks();
+	const chunks = syncChunksFile();
 	console.log(`Found ${chunks.length} knowledge chunks.`);
 
 	if (chunks.length === 0) {
