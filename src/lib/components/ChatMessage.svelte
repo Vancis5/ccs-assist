@@ -10,6 +10,11 @@
 			table(token) {
 				const html = (this.constructor as any).prototype.table.call(this, token);
 				return `<div class="table-container">${html}</div>`;
+			},
+			link(token) {
+				const text = this.parser.parseInline(token.tokens);
+				const title = token.title ? ` title="${token.title}"` : '';
+				return `<a href="${token.href}" target="_blank" rel="noopener noreferrer"${title}>${text}</a>`;
 			}
 		}
 	});
@@ -259,6 +264,23 @@
 		color: #e4e4e7;
 		font-size: 0.9375rem;
 		line-height: 1.65;
+	}
+	:global(.prose-minimal a) {
+		color: #FA4615;
+		font-weight: 500;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		text-decoration-thickness: 1.5px;
+		text-decoration-color: rgba(250, 70, 21, 0.45);
+		transition: color 0.15s ease, text-decoration-color 0.15s ease;
+		word-break: break-word;
+	}
+	:global(.prose-minimal a:hover) {
+		color: #ff6a3d;
+		text-decoration-color: #ff6a3d;
+	}
+	:global(.prose-minimal a:active) {
+		color: #ea3a0a;
 	}
 	:global(.prose-minimal p) {
 		margin-bottom: 0.75rem;

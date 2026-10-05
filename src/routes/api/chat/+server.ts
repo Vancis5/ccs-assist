@@ -71,8 +71,8 @@ export const POST: RequestHandler = async ({ request, platform, getClientAddress
 		let topScore = 0;
 
 		if (queryText && platform?.env && !isGreeting(queryText)) {
-			// 3a. Score the question on its own first
-			let result = await retrieveRelevantContext(platform.env, queryText, 5);
+			// 3a. Score the question on its own first (topK = 2 for token efficiency)
+			let result = await retrieveRelevantContext(platform.env, queryText, 2);
 
 			// 3b. Short follow-ups (e.g. "what about the second one?") get a second try that includes
 			// the previous user turn, but only if they clear the stricter follow-up threshold
@@ -82,7 +82,7 @@ export const POST: RequestHandler = async ({ request, platform, getClientAddress
 				const followUp = await retrieveRelevantContext(
 					platform.env,
 					`${extractMessageText(prevUserMessage).slice(-100)} ${queryText}`,
-					5
+					2
 				);
 				if (followUp.ok && followUp.topScore >= FOLLOWUP_THRESHOLD) {
 					result = followUp;

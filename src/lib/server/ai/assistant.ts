@@ -38,8 +38,8 @@ export function createFixedRefusalResponse(message: string): Response {
 
 /**
  * Streams assistant response with multi-tier failover:
- * 1. Groq primary model (qwen/qwen3.8-27b)
- * 2. Groq fallback models (openai/gpt-oss-120b, openai/gpt-oss-20b)
+ * 1. Groq primary model (llama-3.3-70b-versatile)
+ * 2. Groq fallback models (llama-3.1-8b-instant [30k TPM], qwen/qwen3.8-27b)
  * 3. Cloudflare Workers AI binding (@cf/meta/llama-3.1-8b-instruct)
  */
 export async function streamAssistantResponse({
@@ -49,8 +49,8 @@ export async function streamAssistantResponse({
 	ragContext = '',
 	ai
 }: AssistantStreamOptions): Promise<Response> {
-	// Keep rolling context window (last 6 messages / 3 turns)
-	const trimmedMessages = Array.isArray(messages) ? messages.slice(-6) : [];
+	// Keep rolling context window lean (last 4 messages / 2 turns to minimize token load)
+	const trimmedMessages = Array.isArray(messages) ? messages.slice(-4) : [];
 	const normalizedMessages = normalizeMessages(trimmedMessages);
 	const systemPrompt = getSystemPrompt(ragContext);
 

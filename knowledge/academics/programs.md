@@ -4,6 +4,7 @@
 - **Dean**: Haidee Galdo (formerly Riza Siega)
 - **Location**: Main Campus, 1st Floor, right side near the entrance, beside the staircase.
 - **Accreditation & Affiliations**: PAASCU Accredited, CEAP Member, CHED Recognized.
+- **Official Links**: [CCS Department Website](https://www.sjc.edu.ph/academics/college-of-computer-studies) | [SJC Student Portal](https://online.sjc.edu.ph/enrollment/?content=enrollment) | [SJC Moodle LMS](https://lms.sjc.edu.ph/login/index.php) | [CCS Facebook Page](https://www.facebook.com/profile.php?id=100083430218425)
 - **Degrees Offered**:
   - Bachelor of Science in Information Technology (BSIT) - 4 Years
   - Bachelor of Science in Computer Science (BSCS) - 4 Years

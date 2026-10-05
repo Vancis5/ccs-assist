@@ -50,7 +50,12 @@ export const ccsKnowledge = {
 			phone: "(053) 570 8448",
 			email: "info@sjc.edu.ph",
 			dpo: "dpo@sjc.edu.ph",
-			facebook: "https://facebook.com/sjc2028"
+			sjcFacebook: "https://www.facebook.com/sjc2028",
+			ccsFacebook: "https://www.facebook.com/profile.php?id=100083430218425",
+			schoolWebsite: "https://www.sjc.edu.ph/",
+			ccsWebsite: "https://www.sjc.edu.ph/academics/college-of-computer-studies",
+			studentPortal: "https://online.sjc.edu.ph/enrollment/?content=enrollment",
+			moodleLms: "https://lms.sjc.edu.ph/login/index.php"
 		},
 		brandColors: {
 			primary: "#FA4615", // CCS Orange
@@ -331,7 +336,7 @@ export const ccsKnowledge = {
 			step: 3,
 			title: "Subject Advising & Portal Encoding",
 			office: "CCS Department / Student Portal",
-			details: "Select and encode prescribed semester subjects following prerequisites in the curriculum."
+			details: "Select and encode prescribed semester subjects on the [SJC Student Portal](https://online.sjc.edu.ph/enrollment/?content=enrollment) following prerequisites in the curriculum."
 		},
 		{
 			step: 4,

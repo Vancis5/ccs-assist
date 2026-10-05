@@ -6,14 +6,19 @@
 - **Office Hours**: Regular work hours (Monday to Friday, 8:00 AM - 5:00 PM; availability based on schedule).
 - **Student Consultations**: Open for consultation anytime or by appointment.
 - **Services**: Academic advising, subject crediting, curriculum evaluation, department endorsements, special exam approvals, and student guidance.
+- **CCS Department Website**: [CCS Webpage](https://www.sjc.edu.ph/academics/college-of-computer-studies)
+- **Official CCS Facebook Page**: [CCS Facebook Page](https://www.facebook.com/profile.php?id=100083430218425)
 
-## Institutional Administration
+## Institutional Administration & Official Links
 - **School President**: Rev. Msgr. Oscar A. Cadayona, PhD, SThL-MA
 - **Institution**: Saint Joseph College (SJC), Main Campus, Tunga-tunga, Maasin City, Southern Leyte, Philippines.
 - **Trunkline / Phone**: (053) 570 8448
 - **Official Institutional Email**: info@sjc.edu.ph
 - **Data Protection Officer**: dpo@sjc.edu.ph
-- **Official Facebook Page**: [facebook.com/sjc2028](https://facebook.com/sjc2028)
+- **Official School Website**: [Saint Joseph College](https://www.sjc.edu.ph/)
+- **Official SJC Facebook Page**: [SJC Facebook](https://www.facebook.com/sjc2028)
+- **Student Portal (Enrollment & Grades)**: [SJC Student Portal](https://online.sjc.edu.ph/enrollment/?content=enrollment)
+- **SJC Moodle LMS (Online Learning Platform)**: [SJC Moodle LMS](https://lms.sjc.edu.ph/login/index.php)
 
 ## Key Student Support & Administrative Offices
 - **Registrar & Admissions Office (Ground Floor, Admin Bldg)**:
@@ -26,4 +31,4 @@
 - **Guidance & Placement Services**:
   - Mandatory 1st year second-semester psychological evaluation, career placement, and personal counseling.
 - **Information & Orientation Services / SITO**:
-  - Campus network access, student portal issues, and computer lab room reservations.
+  - Campus network access, [SJC Student Portal](https://online.sjc.edu.ph/enrollment/?content=enrollment) access and troubleshooting, and computer lab room reservations.

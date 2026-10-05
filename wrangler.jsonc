@@ -14,16 +14,19 @@
 		{
 			"binding": "DB",
 			"database_name": "ccs-assist-db",
-			"database_id": "6f8d6e91-eab3-45c2-ad3a-4d48d7685eaa"
+			"database_id": "6f8d6e91-eab3-45c2-ad3a-4d48d7685eaa",
+			"remote": true
 		}
 	],
 	"vectorize": [
 		{
 			"binding": "VECTORIZE",
-			"index_name": "ccs-assist-index"
+			"index_name": "ccs-assist-index",
+			"remote": true
 		}
 	],
 	"ai": {
-		"binding": "AI"
+		"binding": "AI",
+		"remote": true
 	}
 }
