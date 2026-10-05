@@ -78,12 +78,32 @@
 	const text = $derived(extractMessageText(message));
 	const isUser = $derived(message.role === 'user');
 
+	const isRawHtmlOrServerError = $derived.by(() => {
+		if (typeof text !== 'string') return false;
+		const trimmed = text.trim();
+		return (
+			trimmed.startsWith('<!DOCTYPE html>') ||
+			trimmed.startsWith('<html') ||
+			trimmed.includes('<!DOCTYPE') ||
+			trimmed.includes('<body') ||
+			trimmed.includes('Worker exceeded resource limits') ||
+			trimmed.includes('Internal Server Error')
+		);
+	});
+
+	const displayContent = $derived.by(() => {
+		if (isRawHtmlOrServerError) {
+			return 'Something went wrong, please try again.';
+		}
+		return text;
+	});
+
 	const htmlContent = $derived.by(() => {
 		if (isUser) return '';
 		try {
-			return markdownParser.parse(text || '') as string;
+			return markdownParser.parse(displayContent || '') as string;
 		} catch {
-			return text;
+			return displayContent;
 		}
 	});
 

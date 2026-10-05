@@ -1,7 +1,6 @@
-import { createGroq } from '@ai-sdk/groq';
-import { streamText, convertToModelMessages, createUIMessageStream, createUIMessageStreamResponse } from 'ai';
+import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
 import { env } from '$env/dynamic/private';
-import { normalizeMessages, extractMessageText } from '$lib/messages';
+import { extractMessageText } from '$lib/messages';
 import { getSystemPrompt } from './prompt';
 
 export interface AssistantStreamOptions {
@@ -51,7 +50,6 @@ export async function streamAssistantResponse({
 }: AssistantStreamOptions): Promise<Response> {
 	// Keep rolling context window lean (last 4 messages / 2 turns to minimize token load)
 	const trimmedMessages = Array.isArray(messages) ? messages.slice(-4) : [];
-	const normalizedMessages = normalizeMessages(trimmedMessages);
 	const systemPrompt = getSystemPrompt(ragContext);
 
 	const modelsToTry = modelId ? [modelId, ...FALLBACK_MODELS.filter((m) => m !== modelId)] : FALLBACK_MODELS;
@@ -78,45 +76,87 @@ export async function streamAssistantResponse({
 
 			// 1. Try Groq provider models first (if API key available)
 			if (apiKey) {
-				const groq = createGroq({ apiKey });
-				const modelMessages = await convertToModelMessages(normalizedMessages);
 				let lastFailureTimestamp: number | null = null;
 				let lastFailedModel: string | null = null;
+				const formattedMessages = [
+					{ role: 'system', content: systemPrompt },
+					...trimmedMessages.map((m: any) => ({
+						role: m.role === 'assistant' ? 'assistant' : 'user',
+						content: extractMessageText(m)
+					}))
+				];
 
 				for (const currentModel of modelsToTry) {
 					const modelStartTime = performance.now();
 					try {
 						console.log(`[ai] [${new Date().toISOString()}] Attempting model: ${currentModel}`);
-						const result = streamText({
-							model: groq(currentModel),
-							system: systemPrompt,
-							messages: modelMessages,
-							temperature: 0.6,
-							maxOutputTokens: 2048,
-							maxRetries: 0
+						const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+							method: 'POST',
+							headers: {
+								Authorization: `Bearer ${apiKey}`,
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({
+								model: currentModel,
+								messages: formattedMessages,
+								temperature: 0.6,
+								max_tokens: 1024,
+								stream: true
+							})
 						});
 
-						for await (const part of result.fullStream) {
-							if (part.type === 'text-delta') {
-								if (!streamedAnyChunk) {
-									const now = performance.now();
-									const ttft = now - modelStartTime;
-									if (lastFailureTimestamp !== null) {
-										const switchDuration = now - lastFailureTimestamp;
-										console.log(
-											`[ai timing] [${new Date().toISOString()}] Failover from ${lastFailedModel} -> ${currentModel} took ${switchDuration.toFixed(0)}ms to first token (model TTFT: ${ttft.toFixed(0)}ms)`
-										);
-									} else {
-										console.log(
-											`[ai timing] [${new Date().toISOString()}] First token from ${currentModel} in ${ttft.toFixed(0)}ms`
-										);
+						if (!res.ok) {
+							const errJson: any = await res.json().catch(() => ({}));
+							throw new Error(errJson?.error?.message || `HTTP ${res.status} ${res.statusText}`);
+						}
+
+						if (!res.body) {
+							throw new Error('No response body from Groq API');
+						}
+
+						const reader = res.body.getReader();
+						const decoder = new TextDecoder();
+						let buffer = '';
+
+						while (true) {
+							const { done, value } = await reader.read();
+							if (done) break;
+
+							buffer += decoder.decode(value, { stream: true });
+							const lines = buffer.split('\n');
+							buffer = lines.pop() || '';
+
+							for (const line of lines) {
+								const trimmed = line.trim();
+								if (trimmed.startsWith('data: ')) {
+									const dataStr = trimmed.slice(6).trim();
+									if (dataStr === '[DONE]') break;
+									try {
+										const parsed = JSON.parse(dataStr);
+										const delta = parsed.choices?.[0]?.delta?.content;
+										if (delta) {
+											if (!streamedAnyChunk) {
+												const now = performance.now();
+												const ttft = now - modelStartTime;
+												if (lastFailureTimestamp !== null) {
+													const switchDuration = now - lastFailureTimestamp;
+													console.log(
+														`[ai timing] [${new Date().toISOString()}] Failover from ${lastFailedModel} -> ${currentModel} took ${switchDuration.toFixed(0)}ms to first token (model TTFT: ${ttft.toFixed(0)}ms)`
+													);
+												} else {
+													console.log(
+														`[ai timing] [${new Date().toISOString()}] First token from ${currentModel} in ${ttft.toFixed(0)}ms`
+													);
+												}
+											}
+											startText();
+											writer.write({ type: 'text-delta', delta, id: messageId });
+											streamedAnyChunk = true;
+										}
+									} catch {
+										// Ignore partial JSON chunks
 									}
 								}
-								startText();
-								writer.write({ type: 'text-delta', delta: part.text, id: messageId });
-								streamedAnyChunk = true;
-							} else if (part.type === 'error') {
-								throw part.error;
 							}
 						}
 
@@ -126,7 +166,6 @@ export async function streamAssistantResponse({
 
 						console.log(`[ai] [${new Date().toISOString()}] Successfully answered using model: ${currentModel}`);
 						endText();
-						// Successfully finished streaming
 						return;
 					} catch (err: any) {
 						lastFailureTimestamp = performance.now();
@@ -136,7 +175,6 @@ export async function streamAssistantResponse({
 							err?.message || err
 						);
 						if (streamedAnyChunk) {
-							// If already sent tokens to client, cannot switch models mid-flight
 							endText();
 							return;
 						}

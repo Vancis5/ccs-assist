@@ -17,7 +17,22 @@
 
 	const chat = new Chat({
 		transport: new DefaultChatTransport({
-			api: '/api/chat'
+			api: '/api/chat',
+			fetch: async (url, init) => {
+				const response = await fetch(url, init);
+				if (!response.ok) {
+					const isRateLimit = response.status === 429;
+					const friendlyMessage = isRateLimit
+						? 'The server is experiencing high traffic. Please wait a moment and try again.'
+						: 'Something went wrong, please try again.';
+					return new Response(friendlyMessage, {
+						status: response.status,
+						statusText: isRateLimit ? 'Too Many Requests' : 'Internal Server Error',
+						headers: { 'content-type': 'text/plain' }
+					});
+				}
+				return response;
+			}
 		})
 	});
 
@@ -494,15 +509,15 @@
 			{/if}
 
 			{#if chat.error && chat.messages.length > 0}
-				{@const isRateLimit = chat.error.message?.toLowerCase().includes('rate limit') || chat.error.message?.includes('429')}
+				{@const isRateLimit = chat.error.message?.toLowerCase().includes('rate limit') || chat.error.message?.includes('429') || (chat.error as any)?.statusCode === 429}
 				<div class="my-4 p-3 rounded-xl bg-red-950/30 border border-red-800/30 text-red-200 text-xs flex items-center justify-between gap-3">
 					<div class="flex items-center gap-2">
 						<AlertCircle class="w-4 h-4 text-red-400 shrink-0" />
 						<span>
 							{#if isRateLimit}
-								Groq API rate limit reached. All fallback models are currently busy. Please wait a moment and try again.
+								The server is experiencing high traffic. Please wait a moment and try again.
 							{:else}
-								{chat.error.message || 'An error occurred while generating response.'}
+								Something went wrong, please try again.
 							{/if}
 						</span>
 					</div>
