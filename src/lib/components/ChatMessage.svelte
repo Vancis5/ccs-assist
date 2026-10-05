@@ -1,8 +1,9 @@
-<script lang="ts">
+<script module lang="ts">
 	import { Marked } from 'marked';
-	import { Copy, Check, RotateCcw } from 'lucide-svelte';
-	import { extractMessageText } from '$lib/messages';
 
+	// ⚡ Bolt: Extract markdown parser to a `<script module>` block to act as a singleton.
+	// In Svelte 5, instantiating heavy, stateless objects in a normal `<script>` block
+	// recreates them for every component instance, causing memory/CPU overhead in lists.
 	const markdownParser = new Marked({
 		breaks: true,
 		gfm: true,
@@ -13,6 +14,11 @@
 			}
 		}
 	});
+</script>
+
+<script lang="ts">
+	import { Copy, Check, RotateCcw } from 'lucide-svelte';
+	import { extractMessageText } from '$lib/messages';
 
 	let {
 		message,
