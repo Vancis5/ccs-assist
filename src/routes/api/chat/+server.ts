@@ -51,14 +51,16 @@ export const POST: RequestHandler = async ({ request, platform, getClientAddress
 		}
 
 		for (const m of messages) {
-			const text = extractMessageText(m);
-			if (text.length > MAX_MESSAGE_LENGTH) {
-				return new Response(
-					JSON.stringify({
-						error: `Message content exceeds the allowed limit of ${MAX_MESSAGE_LENGTH} characters.`
-					}),
-					{ status: 400, headers: { 'Content-Type': 'application/json' } }
-				);
+			if (m.role === 'user') {
+				const text = extractMessageText(m);
+				if (text.length > MAX_MESSAGE_LENGTH) {
+					return new Response(
+						JSON.stringify({
+							error: `Message content exceeds the allowed limit of ${MAX_MESSAGE_LENGTH} characters.`
+						}),
+						{ status: 400, headers: { 'Content-Type': 'application/json' } }
+					);
+				}
 			}
 		}
 
