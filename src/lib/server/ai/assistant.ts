@@ -80,20 +80,38 @@ export async function streamAssistantResponse({
 			if (apiKey) {
 				const groq = createGroq({ apiKey });
 				const modelMessages = await convertToModelMessages(normalizedMessages);
+				let lastFailureTimestamp: number | null = null;
+				let lastFailedModel: string | null = null;
 
 				for (const currentModel of modelsToTry) {
+					const modelStartTime = performance.now();
 					try {
-						console.log(`[ai] Attempting model: ${currentModel}`);
+						console.log(`[ai] [${new Date().toISOString()}] Attempting model: ${currentModel}`);
 						const result = streamText({
 							model: groq(currentModel),
 							system: systemPrompt,
 							messages: modelMessages,
 							temperature: 0.6,
-							maxOutputTokens: 2048
+							maxOutputTokens: 2048,
+							maxRetries: 0
 						});
 
 						for await (const part of result.fullStream) {
 							if (part.type === 'text-delta') {
+								if (!streamedAnyChunk) {
+									const now = performance.now();
+									const ttft = now - modelStartTime;
+									if (lastFailureTimestamp !== null) {
+										const switchDuration = now - lastFailureTimestamp;
+										console.log(
+											`[ai timing] [${new Date().toISOString()}] Failover from ${lastFailedModel} -> ${currentModel} took ${switchDuration.toFixed(0)}ms to first token (model TTFT: ${ttft.toFixed(0)}ms)`
+										);
+									} else {
+										console.log(
+											`[ai timing] [${new Date().toISOString()}] First token from ${currentModel} in ${ttft.toFixed(0)}ms`
+										);
+									}
+								}
 								startText();
 								writer.write({ type: 'text-delta', delta: part.text, id: messageId });
 								streamedAnyChunk = true;
@@ -106,12 +124,17 @@ export async function streamAssistantResponse({
 							throw new Error(`Model ${currentModel} returned 0 output tokens.`);
 						}
 
-						console.log(`[ai] Successfully answered using model: ${currentModel}`);
+						console.log(`[ai] [${new Date().toISOString()}] Successfully answered using model: ${currentModel}`);
 						endText();
 						// Successfully finished streaming
 						return;
 					} catch (err: any) {
-						console.warn(`[ai fallback] Groq model ${currentModel} error (attempting fallback):`, err?.message || err);
+						lastFailureTimestamp = performance.now();
+						lastFailedModel = currentModel;
+						console.warn(
+							`[ai fallback] [${new Date().toISOString()}] Groq model ${currentModel} failed after ${(performance.now() - modelStartTime).toFixed(0)}ms:`,
+							err?.message || err
+						);
 						if (streamedAnyChunk) {
 							// If already sent tokens to client, cannot switch models mid-flight
 							endText();
