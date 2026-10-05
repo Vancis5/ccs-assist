@@ -76,6 +76,8 @@ export interface RetrievalResult {
 	context: string;
 	topScore: number;
 	matchCount: number;
+	/** true only when Vectorize was actually queried; false on missing bindings or errors */
+	ok: boolean;
 }
 
 /**
@@ -92,7 +94,7 @@ export async function retrieveRelevantContext(
 	topK = 5
 ): Promise<RetrievalResult> {
 	if (!env?.DB || !env?.VECTORIZE || !env?.AI) {
-		return { context: '', topScore: 0, matchCount: 0 };
+		return { context: '', topScore: 0, matchCount: 0, ok: false };
 	}
 
 	try {
@@ -106,7 +108,7 @@ export async function retrieveRelevantContext(
 		})) as any;
 
 		if (!matches?.matches || matches.matches.length === 0) {
-			return { context: '', topScore: 0, matchCount: 0 };
+			return { context: '', topScore: 0, matchCount: 0, ok: true };
 		}
 
 		const topScore: number = matches.matches[0]?.score ?? 0;
@@ -120,7 +122,7 @@ export async function retrieveRelevantContext(
 		const { results } = await stmt.bind(...ids).all<{ id: string; category: string; content: string }>();
 
 		if (!results || results.length === 0) {
-			return { context: '', topScore, matchCount: 0 };
+			return { context: '', topScore, matchCount: 0, ok: true };
 		}
 
 		// Keep order aligned with Vectorize ranking score
@@ -138,10 +140,11 @@ export async function retrieveRelevantContext(
 		return {
 			context,
 			topScore,
-			matchCount: orderedChunks.length
+			matchCount: orderedChunks.length,
+			ok: true
 		};
 	} catch (err) {
 		console.warn('RAG retrieval failed, continuing with default prompt context:', err);
-		return { context: '', topScore: 0, matchCount: 0 };
+		return { context: '', topScore: 0, matchCount: 0, ok: false };
 	}
 }

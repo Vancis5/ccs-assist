@@ -9,6 +9,7 @@ export interface CCSProgram {
 		year: string;
 		firstSemester: string[];
 		secondSemester: string[];
+		summer?: string[];
 	}[];
 }
 
@@ -39,345 +40,387 @@ export const ccsKnowledge = {
 		name: "Saint Joseph College",
 		acronym: "SJC",
 		location: "Tunga-tunga, Maasin City, Southern Leyte, Philippines",
+		founded: 1928,
+		president: "Rev. Msgr. Oscar A. Cadayona, PhD, SThL-MA",
 		department: "College of Computer Studies (CCS)",
-		tagline: "Empowering Future Tech Innovators with Christian Values and Technical Excellence",
+		dean: "Haidee Galdo (formerly Riza Siega)",
+		deanOfficeLocation: "Main Campus, 1st Floor, right side near the entrance, beside the staircase",
+		tagline: "Deus, Patria, Scientia (God, Country, Knowledge)",
+		contact: {
+			phone: "(053) 570 8448",
+			email: "info@sjc.edu.ph",
+			dpo: "dpo@sjc.edu.ph",
+			facebook: "https://facebook.com/sjc2028"
+		},
 		brandColors: {
 			primary: "#FA4615", // CCS Orange
 			accentSend: "#C23811",
 			green: "#147A0D",
 			yellow: "#E3CD2C"
-		}
+		},
+		coreValues: [
+			"God-Centeredness",
+			"Excellence",
+			"Integrity",
+			"Stewardship",
+			"Service"
+		],
+		accreditations: ["PAASCU Accredited", "CEAP Member", "CHED Recognized"]
 	},
-	faculty: [
-		{
-			name: "Dr. Raymund P. Libarnes, DIT",
-			title: "Dean, College of Computer Studies",
-			specialization: "Enterprise Systems Architecture, Database Management Systems, Software Engineering",
-			office: "CCS Dean's Office, 2nd Floor, CCS Building",
-			consultation: "Monday - Friday, 1:00 PM - 4:00 PM"
-		},
-		{
-			name: "Engr. Mark Anthony E. Cadayong, MIT",
-			title: "Program Chair, Bachelor of Science in Information Technology (BSIT)",
-			specialization: "Network Administration, CISCO Technologies, Information Assurance & Cybersecurity",
-			office: "Faculty Office 201, 2nd Floor, CCS Building",
-			consultation: "Monday / Wednesday / Friday, 9:00 AM - 11:30 AM"
-		},
-		{
-			name: "Prof. Jonathan M. Perez, MSCS",
-			title: "Program Chair, Bachelor of Science in Computer Science (BSCS)",
-			specialization: "Algorithms & Complexity, Machine Learning, Artificial Intelligence, Python/C++ Programming",
-			office: "Faculty Office 202, 2nd Floor, CCS Building",
-			consultation: "Tuesday / Thursday, 10:00 AM - 12:00 PM"
-		},
-		{
-			name: "Inst. Mary Grace T. Alinsub, MIT",
-			title: "Instructor & Computer Laboratory Coordinator",
-			specialization: "Web Systems & Technologies, Full-Stack Web Development, UI/UX Design, Human-Computer Interaction",
-			office: "Faculty Office 203, 2nd Floor, CCS Building",
-			consultation: "Monday / Wednesday / Friday, 1:30 PM - 3:30 PM"
-		},
-		{
-			name: "Inst. Paul Christian D. Tan",
-			title: "Instructor",
-			specialization: "Mobile Application Development (Android/Flutter), Object-Oriented Programming (Java), Data Structures",
-			office: "Faculty Office 203, 2nd Floor, CCS Building",
-			consultation: "Tuesday / Thursday, 1:00 PM - 3:00 PM"
-		}
-	] as FacultyMember[],
+	leadership: {
+		dean: "Haidee Galdo (formerly Riza Siega)",
+		office: "Main Campus, 1st Floor, right side near the entrance, beside the staircase",
+		hours: "Regular office hours (Monday - Friday, 8:00 AM - 5:00 PM)",
+		consultation: "Available anytime during office hours or by appointment"
+	},
 	programs: [
 		{
-			name: "Bachelor of Science in Computer Science",
-			code: "BSCS",
-			duration: "4 Years",
-			description: "Focuses on the theoretical foundations of computing, algorithm design, software engineering, intelligence systems, and data structures.",
+			name: "Bachelor of Science in Information Technology",
+			code: "BSIT",
+			duration: "4 Years (8 Semesters + 1 Summer Term)",
+			totalUnits: "~167 Units",
+			description: "Focuses on Business & Data Analytics, Systems Integration, Web Technologies (HTML/CSS/JS/PHP with XAMPP, SQL, and Python/Django in 3rd Year), Networking, Cybersecurity, and Enterprise Data Management.",
 			careerOpportunities: [
-				"Software Engineer / Systems Developer",
-				"Data Scientist / AI Specialist",
-				"Algorithm Engineer",
-				"Systems Analyst",
-				"Research & Development Scientist"
+				"Business & Data Analytics Specialist",
+				"Full-Stack Web & Mobile Developer",
+				"Network & Systems Administrator",
+				"Database & Enterprise Data Administrator",
+				"IT Project Manager & Systems Analyst"
 			],
 			curriculumHighlights: [
-				"Data Structures & Algorithms",
-				"Object-Oriented Programming (Java / Python / C++)",
-				"Artificial Intelligence & Machine Learning",
-				"Software Engineering & Architecture",
-				"Operating Systems & Compiler Design"
+				"Business Analytics & Analytics Modeling",
+				"Web Systems & Technologies (PHP/MySQL/XAMPP, Python/Django)",
+				"Networks & Communications 1 & 2",
+				"Systems Integration and Architecture",
+				"Information Assurance and Security",
+				"Capstone Project 1 (Summer) & Capstone Project 2 (4th Year 1st Sem)",
+				"Practicum / OJT Industry Internship"
 			],
 			curriculumByYear: [
 				{
 					year: "1st Year",
-					firstSemester: ["CS 111 - Introduction to Computing", "CS 112 - Fundamentals of Programming", "CS 113 - Discrete Structures 1", "GE 1 - Purposive Communication", "GE 2 - Understanding the Self", "PE 1 - Physical Activities", "NSTP 1"],
-					secondSemester: ["CS 121 - Intermediate Computer Programming", "CS 122 - Discrete Structures 2", "GE 3 - Readings in Philippine History", "GE 4 - Ethics", "PE 2 - Rhythmic Activities", "NSTP 2"]
+					firstSemester: [
+						"IT 101 - Introduction to Computing (3 units)",
+						"IT 102 - Computer Programming 1 (3 units)",
+						"Math En - Math Enrichment (3 units)",
+						"GE 1 - Understanding the Self (3 units)",
+						"GE 2 - Readings in the Philippine History (3 units)",
+						"GE EL 1 - Living in the IT Era (3 units)",
+						"Theo 1a - Old Testament (3 units)",
+						"PATHFit 1 - Movement Competency Training (2 units)",
+						"NSTP 11 - National Service Training Program 1 (3 units)"
+					],
+					secondSemester: [
+						"IT 111 - Networks and Communications 1 (3 units)",
+						"IT 112 - Computer Programming 2 (3 units)",
+						"IT 113 - Discrete Structures (3 units)",
+						"GE 3 - Mathematics in the Modern World (3 units)",
+						"GE 4 - Purposive Communication (3 units)",
+						"GE 5 - Science, Technology, and Society (3 units)",
+						"GE EL 2 - Gender and Society (3 units)",
+						"Theo 1b - New Testament (3 units)",
+						"PathFit 2 - Exercise-based Fitness Activities (2 units)",
+						"NSTP 12 - National Service Training Program 2 (3 units)"
+					]
 				},
 				{
 					year: "2nd Year",
-					firstSemester: ["CS 211 - Data Structures and Algorithms", "CS 212 - Object-Oriented Programming", "CS 213 - Computer Organization and Architecture", "GE 5 - Art Appreciation", "GE 6 - Science, Technology, and Society", "PE 3 - Individual/Dual Sports"],
-					secondSemester: ["CS 221 - Design and Analysis of Algorithms", "CS 222 - Operating Systems", "CS 223 - Information Management (Database Systems)", "CS 224 - Web Development", "PE 4 - Team Sports"]
+					firstSemester: [
+						"IT 201 - Information Management (3 units)",
+						"IT 202 - Data Structures & Algorithms (3 units)",
+						"IT 203 - Web Systems and Technologies 1 (3 units)",
+						"IT 204 - Platform Technologies (3 units)",
+						"GE 6 - The Contemporary World (3 units)",
+						"GE 7 - Art Appreciation (3 units)",
+						"GE EL 3 - Great Books (3 units)",
+						"Theo 2a - Christology (3 units)",
+						"PathFit 3 - Sports (2 units)"
+					],
+					secondSemester: [
+						"IT 211 - Object - Oriented Programming (3 units)",
+						"IT 212 - Human Computer Interaction (3 units)",
+						"IT 213 - Application Dev & Emerging Tech (3 units)",
+						"IT 214 - Information Management 2 (3 units)",
+						"IT 215 - Systems Analysis and Design (3 units)",
+						"GE 8 - Ethics (3 units)",
+						"GE 9 - Life and Works of Rizal (3 units)",
+						"Theo 2b - Mariology (3 units)",
+						"PathFit 4 - Dance (2 units)"
+					]
 				},
 				{
 					year: "3rd Year",
-					firstSemester: ["CS 311 - Automata Theory and Formal Languages", "CS 312 - Software Engineering 1", "CS 313 - Artificial Intelligence", "CS ELEC 1 - Machine Learning & Neural Networks", "GE 7 - Technopreneurship"],
-					secondSemester: ["CS 321 - Software Engineering 2", "CS 322 - Compiler Design", "CS 323 - Methods of Research in Computing", "CS ELEC 2 - Natural Language Processing", "GE 8 - The Contemporary World"]
+					firstSemester: [
+						"IT 301 - Information Assurance and Security (3 units)",
+						"IT 302 - Systems Integration and Architecture 1 (3 units)",
+						"IT 303 - Networking 2 (3 units)",
+						"IT 304 - Quantitative Methods (3 units)",
+						"IT 305 - Web Systems and Technologies 2 (3 units)",
+						"IT 306 - Business Analytics (3 units)",
+						"IT 307 - Enterprise Data Management (3 units)",
+						"Theo 3a - Christian Morality (3 units)"
+					],
+					secondSemester: [
+						"IT 311 - Analytic Tools and Techniques (3 units)",
+						"IT 312 - Analytics Modeling (3 units)",
+						"IT 313 - Social Issues and Professional Practice (3 units)",
+						"IT 314 - Systems Admin and Maintenance (3 units)",
+						"IT 315 - Integrative Programming and Tech 1 (3 units)",
+						"IT EL 1 - IT Elective 1 (3 units)",
+						"IT EL 2 - IT Elective 2 (3 units)",
+						"Theo 3b - The Commandments (3 units)"
+					],
+					summer: [
+						"Capstone 1 - Capstone Project 1 (3 units)",
+						"Theo 4a - Intro to Pastoral Life / BEC (3 units)"
+					]
 				},
 				{
 					year: "4th Year",
-					firstSemester: ["CS 411 - CS Thesis 1", "CS 412 - Information Assurance and Security", "CS ELEC 3 - Cloud Computing & Distributed Systems", "GE 9 - Social and Professional Issues in Computing"],
-					secondSemester: ["CS 421 - CS Thesis 2", "CS 422 - Practicum / Industry Internship (486-500 Hours)"]
+					firstSemester: [
+						"Capstone 2 - Capstones Project 2 (3 units)",
+						"IT 401 - Technopreneurship (3 units)",
+						"IT 402 - Analytics Application (3 units)",
+						"Pro En - Professional Enhancement (3 units, Bonzel Hall)",
+						"IT EL 3 - IT Elective 3 (3 units)",
+						"IT EL 4 - IT Elective 4 (3 units)",
+						"Theo 4b - Pastoral Exposure (3 units)"
+					],
+					secondSemester: [
+						"Practicum / OJT Industry Internship (486-500 Hours)"
+					]
 				}
 			]
 		},
 		{
-			name: "Bachelor of Science in Information Technology",
-			code: "BSIT",
+			name: "Bachelor of Science in Computer Science",
+			code: "BSCS",
 			duration: "4 Years",
-			description: "Focuses on practical implementation, deployment, management, and security of computer systems, networks, web, and enterprise technologies.",
+			description: "Focuses on theoretical foundations of computing, algorithm complexity, software engineering, intelligence systems, and computational theory culminating in a Thesis project.",
 			careerOpportunities: [
-				"Full-Stack Web / Mobile App Developer",
-				"Network & Systems Administrator",
-				"Database Administrator (DBA)",
-				"Cybersecurity Analyst",
-				"IT Project Manager & Support Lead"
+				"Software Engineer & Systems Developer",
+				"AI / Machine Learning Engineer",
+				"Algorithms & Research Scientist",
+				"Systems Analyst"
 			],
 			curriculumHighlights: [
-				"Web Systems and Technologies",
-				"Mobile Application Development",
-				"Database Management Systems & SQL",
-				"Network Administration & CISCO Technologies",
-				"Information Assurance & Security"
-			],
-			curriculumByYear: [
-				{
-					year: "1st Year",
-					firstSemester: ["IT 111 - Introduction to Computing", "IT 112 - Computer Programming 1", "GE 1 - Purposive Communication", "GE 2 - Mathematics in the Modern World", "GE 3 - Understanding the Self", "PE 1 - Physical Activities", "NSTP 1"],
-					secondSemester: ["IT 121 - Computer Programming 2", "IT 122 - Discrete Mathematics for IT", "GE 4 - Living in the IT Era", "GE 5 - Readings in Philippine History", "PE 2 - Rhythmic Activities", "NSTP 2"]
-				},
-				{
-					year: "2nd Year",
-					firstSemester: ["IT 211 - Data Structures and Algorithms", "IT 212 - Object-Oriented Programming", "IT 213 - Networking 1 (CISCO Fundamentals)", "IT 214 - Platform Technologies", "PE 3 - Individual/Dual Sports"],
-					secondSemester: ["IT 221 - Database Management Systems", "IT 222 - Networking 2 (Routing and Switching)", "IT 223 - Web Systems and Technologies 1", "IT 224 - Systems Analysis and Design", "PE 4 - Team Sports"]
-				},
-				{
-					year: "3rd Year",
-					firstSemester: ["IT 311 - Web Systems and Technologies 2", "IT 312 - Mobile Applications Development", "IT 313 - Information Assurance and Security 1", "IT 314 - Systems Integration and Architecture", "IT 315 - Integrative Programming & Technologies"],
-					secondSemester: ["IT 321 - Information Assurance and Security 2", "IT 322 - Advanced Database Systems", "IT 323 - Capstone Project and Research 1", "IT ELEC 1 - Enterprise Cloud & DevOps", "GE 7 - Technopreneurship"]
-				},
-				{
-					year: "4th Year",
-					firstSemester: ["IT 411 - Capstone Project and Research 2 (Implementation & Defense)", "IT 412 - Systems Administration and Maintenance", "IT ELEC 2 - Cybersecurity Incident Response", "GE 9 - Social and Professional Issues in IT"],
-					secondSemester: ["IT 421 - Practicum / Industry Internship (486-500 Hours)"]
-				}
+				"Discrete Structures & Automata Theory",
+				"Design and Analysis of Algorithms",
+				"Artificial Intelligence & Machine Learning",
+				"Compiler Design & Operating Systems",
+				"CS Thesis Research 1 & 2"
 			]
 		},
 		{
 			name: "Associate in Computer Technology",
 			code: "ACT",
 			duration: "2 Years (Ladderized)",
-			description: "A ladderized 2-year program equipping students with foundational computing skills, hardware servicing, office productivity, and basic coding. Can ladderize into BSIT or BSCS.",
+			description: "A 2-year program providing foundational computing skills, hardware servicing, office productivity, and programming fundamentals. Ladderizes into BSIT/BSCS with a 2.25 GPA requirement.",
 			careerOpportunities: [
 				"Computer Technician / Hardware Support",
 				"Junior Web Developer",
 				"IT Support Staff",
-				"Data Encoder / Technical Assistant"
+				"Data Encoder"
 			],
 			curriculumHighlights: [
 				"Computer Hardware Servicing",
 				"Foundations of Programming",
-				"Productivity Tools and Office Automation",
+				"Productivity Tools & Office Automation",
 				"Basic Networking & Cable Crimping"
 			]
 		}
 	],
 	facilities: [
 		{
-			name: "Programming & Software Engineering Lab",
-			location: "CCS Building, 2nd Floor",
-			description: "Equipped with high-performance desktop rigs, dual monitors for coding, modern IDEs, and local server environments.",
+			name: "Computer Laboratories (Rooms 407, 408, 409)",
+			location: "SJC Main Campus, 4th Floor",
+			description: "Air-conditioned labs for coding, networking, analytics, and software development.",
 			guidelines: [
+				"Open during designated class hours and lab schedules.",
+				"Supervised by assigned student assistants and lab in-charge.",
 				"No food or open drink containers allowed inside.",
-				"Always log in and log out on the laboratory log sheet.",
-				"Save projects to personal cloud / git repository; local storage is wiped regularly."
+				"No unauthorized altering of desktop or network settings."
 			]
 		},
 		{
-			name: "CISCO & Networking Laboratory",
-			location: "CCS Building, 2nd Floor",
-			description: "Specialized lab equipped with CISCO routers, switches, patch panels, crimping stations, and server racks for hands-on network topologies.",
+			name: "Integrated Learning & Laboratory Center (ILLC)",
+			location: "SJC Main Campus, Ground Floor",
+			description: "Specialized lab for web systems, emerging technologies, and systems integration courses.",
 			guidelines: [
-				"Wear ESD safety gear when handling internal components.",
-				"Return all patch cables, crimpers, and testers to equipment cabinets after use.",
-				"Do not modify live campus networking configurations."
+				"Sign the logbook upon entry and exit.",
+				"Maintain neatness of workstations and report any hardware issues immediately."
 			]
 		},
 		{
-			name: "Multimedia & Design Studio",
-			location: "CCS Building, 3rd Floor",
-			description: "Dedicated to UI/UX design, game development, rendering, graphic design, and audio-visual production.",
+			name: "Bonzel Hall",
+			location: "SJC Main Campus",
+			description: "Auditorium venue used for Professional Enhancement lectures, tech seminars, symposiums, and major department assemblies.",
 			guidelines: [
-				"Handle graphics tablets and studio peripherals with utmost care.",
-				"Book studio time through the lab custodian 24 hours in advance."
+				"Follow proper auditorium etiquette and prescribed dress code."
 			]
 		}
 	],
 	academicPolicies: {
+		retentionPolicy: "To qualify for admission to the 3rd year in BSIT and BSCS, students must complete all 1st and 2nd year professional courses with an average rating of at least 2.25. This 2.25 average rating must be maintained. A student who fails in more than three (3) subjects is advised to shift to another program.",
+		catRequirement: "Incoming freshmen must obtain a passing rate of at least 75% on the College Admission Test (CAT) for direct entry into BSIT/BSCS. Applicants with CAT scores below 75% enroll in the 2-Year ACT program and can shift to BSIT/BSCS after 1st sem with a 2.25 GPA.",
+		theologyRequirement: "All 4-year degree candidates must complete 24 units of Theology (Theo 1a to Theo 4b). 2-year ACT candidates complete 12 units.",
+		peAndNstpGate: "No student is allowed to enroll in the 4th year unless all Physical Education courses (PATHFit 1-4) and NSTP (11-12) are fully completed and passed.",
+		attendancePolicy: "Reporting 15 minutes late, leaving 15 minutes early, or incurring 3 consecutive tardy marks equals 1 absence. Incurring 10 absences in full in-person classes (or 5 absences in HyFlex) results in an automatic drop with a permanent rating of FA (Failure due to excessive absences).",
+		examPolicy: "Four major examinations per semester: Pre-mid, Midterm, Prefinal, and Final. Official Exam Permit from the Bursar's Office is required.",
+		dressCode: "Customized official SJC uniform on Mon/Tue/Thu/Fri. Wednesdays are wash days (CCS Departmental Polo Shirt). Saturdays require Department/Org polo shirt or modest semi-formal/formal attire covering the knees. Official Intern Uniform is required during OJT.",
 		gradingScale: [
-			{ grade: "1.00", percentage: "97 - 100%", description: "Excellent" },
-			{ grade: "1.25", percentage: "94 - 96%", description: "Superior" },
-			{ grade: "1.50", percentage: "91 - 93%", description: "Very Good" },
-			{ grade: "1.75", percentage: "88 - 90%", description: "Good" },
-			{ grade: "2.00", percentage: "85 - 87%", description: "Satisfactory (Retention threshold for major subjects)" },
-			{ grade: "2.25", percentage: "82 - 84%", description: "Fair" },
-			{ grade: "2.50", percentage: "80 - 81%", description: "Passed" },
-			{ grade: "2.75", percentage: "76 - 79%", description: "Passed" },
-			{ grade: "3.00", percentage: "75%", description: "Passing Grade" },
+			{ grade: "1.00", percentage: "98% - 100%", description: "Excellent (Summa Cum Laude interval)" },
+			{ grade: "1.25", percentage: "95% - 97%", description: "Very Good" },
+			{ grade: "1.50", percentage: "92% - 94%", description: "Very Good (Magna Cum Laude interval)" },
+			{ grade: "1.75", percentage: "89% - 91%", description: "Good (Cum Laude interval)" },
+			{ grade: "2.00", percentage: "86% - 88%", description: "Good (Dean's Lister interval)" },
+			{ grade: "2.25", percentage: "83% - 85%", description: "Good (CCS 3rd Year Retention Threshold)" },
+			{ grade: "2.50", percentage: "80% - 82%", description: "Fair" },
+			{ grade: "2.75", percentage: "77% - 79%", description: "Fair" },
+			{ grade: "3.00", percentage: "75% - 76%", description: "Passed (Minimum Passing Grade)" },
 			{ grade: "5.00", percentage: "Below 75%", description: "Failed" },
-			{ grade: "INC", percentage: "N/A", description: "Incomplete (1 year compliance window)" },
-			{ grade: "DRP", percentage: "N/A", description: "Officially Dropped" }
-		],
-		retentionPolicy: "To maintain good standing in BSCS and BSIT, students must achieve a minimum grade of 2.0 (85%) in all prerequisite programming and major subjects. Students falling below 2.0 are placed under department academic probation or advised into remedial coursework.",
-		practicumHours: "BSIT and BSCS students complete a minimum of 486 to 500 hours of on-the-job training (OJT) / internship in accredited tech firms, government agencies, or local enterprises during their final semester.",
-		capstoneThesis: "BSCS candidates complete an original Thesis project addressing an algorithmic or computing challenge. BSIT candidates develop an enterprise-ready Capstone project with client deployment."
+			{ grade: "NC", percentage: "N/A", description: "No Credit (Final exam missed; 2-week compliance window)" },
+			{ grade: "W", percentage: "N/A", description: "Officially Withdrawn" },
+			{ grade: "FW", percentage: "N/A", description: "Failure due to unofficial withdrawal" },
+			{ grade: "FA", percentage: "N/A", description: "Failure due to excessive absences (10+ absences)" }
+		]
+	},
+	feeStructure: {
+		tuitionPerUnit: "₱524.00 (₱1,572.00 per 3-unit subject)",
+		semestralTuition: "₱11,000 - ₱14,300 (depending on unit load: 21-29 units)",
+		labFeePerCourse: "₱1,262.00 per laboratory course (e.g., IT 401, IT 402, Capstone 2, IT Electives)",
+		miscFees: {
+			lms: "₱750.00",
+			registration: "₱660.00",
+			library: "₱299.00",
+			energy: "₱250.00",
+			prisaa: "₱200.00",
+			medicalDental: "₱188.00",
+			researchExtension: "₱150.00",
+			printings: "₱150.00",
+			spiritualServices: "₱1,425.00",
+			loyaltyDay: "₱450.00",
+			paascuCeap: "₱75.00",
+			studentOrg: "₱56.00",
+			acquaintanceParty: "₱40.00"
+		},
+		scholarships: [
+			"Academic Scholarship: Full (1.00-1.20), 3/4 (1.21-1.40), 1/2 (1.41-1.60)",
+			"Diocesan Grant (Josephinian 50% discount for private diocesan school alumni)",
+			"Diocesan School Alumni (70% discount)",
+			"Sogod / Baybay / Out-of-town Residents (40% discount)",
+			"SJC Senior High School Alumni (20% discount)",
+			"FCSO President (100% full tuition discount)",
+			"Government Subsidies: UniFAST / TES, CHED Grants, DOST-SEI"
+		]
 	},
 	enrollmentProcess: [
 		{
 			step: 1,
-			title: "Admissions & Credential Verification",
-			office: "SJC Registrar & Admissions (Ground Floor, Admin Bldg)",
-			details: "Submit Form 138/SF9, Certificate of Good Moral Character, PSA Birth Certificate (or Transcript of Records & Honorable Dismissal for transferees) for credential check and student number assignment."
+			title: "Admissions & CAT Screening",
+			office: "Registrar & Admissions Office (Ground Floor, Admin Bldg)",
+			details: "Submit Form 138/SF9, Good Moral Certificate, and PSA Birth Certificate (or TOR & Honorable Dismissal for transferees) and complete the College Admission Test (CAT)."
 		},
 		{
 			step: 2,
-			title: "CCS Department Academic Evaluation",
-			office: "CCS Dean's Office (2nd Floor, CCS Bldg)",
-			details: "Present your evaluation slip to Dean Dr. Raymund P. Libarnes or the respective Program Chair (Engr. Cadayong for BSIT, Prof. Perez for BSCS) for prerequisite verification and curriculum evaluation."
+			title: "CCS Academic Evaluation & Advising",
+			office: "CCS Dean's Office (1st Floor, Main Campus)",
+			details: "Meet with Dean Haidee Galdo or program chairs for evaluation of CAT scores (75% threshold) and curriculum advising."
 		},
 		{
 			step: 3,
-			title: "Subject Advising & Encoding",
-			office: "CCS Faculty Office (2nd Floor, CCS Bldg)",
-			details: "Assigned program adviser verifies your curriculum checklist and encodes the semester subjects/schedule into the campus enrollment system."
+			title: "Subject Advising & Portal Encoding",
+			office: "CCS Department / Student Portal",
+			details: "Select and encode prescribed semester subjects following prerequisites in the curriculum."
 		},
 		{
 			step: 4,
-			title: "Assessment & Fee Settlement",
-			office: "SJC Finance / Cashier Office (Ground Floor, Admin Bldg)",
-			details: "Receive tuition and laboratory fee assessment. Validate CHED/UniFAST scholarship status or pay the required down payment."
+			title: "Fee Assessment & Settlement",
+			office: "Finance & Bursar's Office (Ground Floor, Admin Bldg)",
+			details: "Receive tuition and lab fee assessment slip. Settle required fees or apply verified scholarships (Josephinian 50%, UniFAST/TES, CHED)."
 		},
 		{
 			step: 5,
-			title: "Registration Confirmation & Student ID",
-			office: "Registrar's Office & Student Affairs Services (SAS)",
-			details: "Obtain official stamped Certificate of Registration (COR). Validate student ID for library and computer laboratory access."
+			title: "Official Registration & Examination Permit",
+			office: "Registrar's Office & Cashier",
+			details: "Claim stamped official Certificate of Registration (COR) and student ID validation."
 		}
 	] as EnrollmentStep[],
 	studentLife: {
 		organizations: [
-			"CCS Student Council (CCSSC) - The apex governing body representing all computing students at SJC",
-			"Society of Information Technology Enthusiasts (SITE) - Official department organization for BSIT majors",
-			"Association of Computer Science Innovators (ACSI) - Official department organization for BSCS majors"
+			"College of Computer Studies (CCS) Student Body - Departmental Curricular Organization",
+			"Philippine Society of Information Technology Students (PSITS) - Official Co-Curricular Student Org recognized under SASO",
+			"Federation of College Student Organizations (FCSO) - Apex Student Governing Body",
+			"The Josephinian (JMAG) - Official School Publication"
 		],
 		annualEvents: [
-			"CCS Week / Tech Summit (annual seminars, workshops, and exhibitions)",
-			"SJC Hackathon & Programming Competition",
-			"IT Olympics & E-Sports Tournament",
-			"Project Pitching & Capstone Expo"
+			"CCS Departmental Days & Tech Summit",
+			"Acquaintance Party & Social Orientation",
+			"Loyalty Day & Family Run",
+			"PRISAA Athletic & Cultural Competitions",
+			"SJC Hackathons & Project Pitching Exhibitions"
 		]
 	},
-	faqs: [
-		{
-			question: "Where is the CCS Dean's Office located?",
-			answer: "The CCS Dean's Office is located on the 2nd Floor of the CCS Building at Saint Joseph College main campus in Tunga-tunga, Maasin City. Office hours are Monday through Friday, 8:00 AM to 5:00 PM."
-		},
-		{
-			question: "Who is the Dean of the College of Computer Studies?",
-			answer: "Dr. Raymund P. Libarnes, DIT is the Dean of the College of Computer Studies. His office is located on the 2nd Floor of the CCS Building, with consultation hours Monday through Friday from 1:00 PM to 4:00 PM."
-		},
-		{
-			question: "How do I enroll in BSCS or BSIT?",
-			answer: "Enrollment follows 5 steps: 1) Submit credentials to the Registrar, 2) Get curriculum evaluation at the CCS Dean's Office (2nd Floor), 3) Program Chair advises and encodes subjects, 4) Settle assessment at Finance/Cashier, and 5) Claim stamped COR from Registrar."
-		},
-		{
-			question: "What are the laptop / PC requirements for CCS students?",
-			answer: "While campus computer laboratories are fully accessible during class hours and open lab sessions, students are recommended to have a laptop with at least an Intel Core i5 / AMD Ryzen 5 processor, 16GB RAM, and 512GB SSD for development and virtual machines."
-		},
-		{
-			question: "What is the retention grade requirement for CCS majors?",
-			answer: "Students in BSCS and BSIT must maintain a grade of at least 2.0 (85%) in all prerequisite programming and major subjects to remain in good standing."
-		}
-	],
 	starterPrompts: [
 		{
 			tag: 'Academics',
-			title: 'Academic Programs & Degrees',
-			desc: 'BSCS, BSIT, and ACT specializations & careers',
-			query: 'What programs are offered by the College of Computer Studies?'
+			title: 'BSIT Curriculum & Analytics',
+			desc: 'Full subjects per year, summer capstone, and data analytics track',
+			query: 'What subjects are taken in 1st to 4th year in BSIT?'
 		},
 		{
 			tag: 'Directory',
-			title: 'CCS Faculty & Dean',
-			desc: "Dean Dr. Libarnes, Program Chairs, and consultation hours",
-			query: "Who is the Dean and who are the faculty members in CCS?"
+			title: 'CCS Dean & Location',
+			desc: "Dean Haidee Galdo, 1st floor office near entrance, and office hours",
+			query: "Who is the Dean of CCS and where is the Dean's Office located?"
 		},
 		{
 			tag: 'Policy',
-			title: 'Retention & Grading Standards',
-			desc: '2.0 (85%) retention threshold and PH grading scale',
-			query: 'What are the retention policies and grading scale for CCS students?'
+			title: 'Retention & 2.25 GWA',
+			desc: 'CAT 75% cutoff, 2.25 GWA for 3rd year, and >3 failures shifting rule',
+			query: 'What are the retention policies and CAT admission requirements for CCS?'
 		},
 		{
-			tag: 'Admissions',
-			title: 'Enrollment Step-by-Step',
-			desc: '5-step process from admissions to COR validation',
-			query: 'What are the exact steps to enroll in BSCS or BSIT at CCS?'
-		},
-		{
-			tag: 'Curriculum',
-			title: 'BSCS & BSIT Subjects',
-			desc: 'Year-by-year and semester subjects list',
-			query: 'What subjects are taken in 1st and 2nd year for BSIT and BSCS?'
+			tag: 'Tuition',
+			title: 'Tuition & Lab Fees',
+			desc: '₱524/unit, ₱1,262 per lab, and Josephinian 50% discount',
+			query: 'How much is the tuition and laboratory fees per semester in CCS?'
 		},
 		{
 			tag: 'Campus',
-			title: 'Computer Lab Guidelines',
-			desc: 'CISCO network, software labs, and studio rules',
-			query: 'What facilities and computer laboratories are available in CCS?'
+			title: 'Labs & Software Tools',
+			desc: '4th floor rooms 407-409, ILLC, TextPad 7, VS Code, and XAMPP',
+			query: 'What computer laboratories and software tools are used in CCS?'
 		},
 		{
-			tag: 'Internship',
-			title: 'OJT & Practicum Hours',
-			desc: '486 to 500 hours industry internship requirements',
-			query: 'What are the OJT and internship requirements for BSIT and BSCS students?'
+			tag: 'Uniform',
+			title: 'Dress Code & Wash Days',
+			desc: 'Mon/Tue/Thu/Fri uniform, Wed & Sat departmental polo wash days',
+			query: 'What are the uniform and dress code rules for CCS students?'
 		},
 		{
-			tag: 'Research',
-			title: 'Capstone & Thesis Projects',
-			desc: 'BSCS thesis & BSIT enterprise capstone guidelines',
-			query: 'What is the difference between BSCS thesis and BSIT capstone projects?'
+			tag: 'Capstone',
+			title: 'Capstone 1 & 2 Timeline',
+			desc: 'Summer Capstone 1 to 4th Year 1st Sem Capstone 2 sequence',
+			query: 'When do BSIT students start Capstone 1 and Capstone 2?'
 		},
 		{
-			tag: 'Hardware',
-			title: 'Recommended Laptop Specs',
-			desc: 'CPU, RAM, and SSD recommendations for coding',
-			query: 'What laptop specifications are recommended for CCS students?'
+			tag: 'Theology',
+			title: 'Theology 24-Unit Track',
+			desc: '8-course requirement from Theo 1a (Old Testament) to Theo 4b',
+			query: 'What Theology subjects are required to graduate from SJC CCS?'
 		},
 		{
 			tag: 'Student Life',
-			title: 'CCS Student Organizations',
-			desc: 'SITE, ACSI, and CCS Student Council',
-			query: 'What student organizations and clubs can CCS students join?'
+			title: 'PSITS & Campus Events',
+			desc: 'PSITS organization, CCS Days, Acquaintance Party, and Loyalty Day',
+			query: 'What student organizations and annual events exist in CCS?'
 		},
 		{
-			tag: 'Events',
-			title: 'Hackathons & Tech Summit',
-			desc: 'Annual CCS Week, coding contests, and esports',
-			query: 'What annual events, hackathons, and competitions happen in CCS?'
-		},
-		{
-			tag: 'Networking',
-			title: 'CISCO & Networking Lab',
-			desc: 'Hardware routers, switches, and patch panels',
-			query: 'What equipment and tools are available in the CISCO networking lab?'
+			tag: 'Ladderized',
+			title: 'ACT 2-Year to BSIT',
+			desc: 'How Associate in Computer Technology ladderizes into BSIT/BSCS',
+			query: 'How does the 2-year ACT program ladderize into BSIT or BSCS?'
 		}
 	]
 };

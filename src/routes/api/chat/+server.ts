@@ -2,25 +2,45 @@ import { streamAssistantResponse, createFixedRefusalResponse } from '$lib/server
 import { retrieveRelevantContext } from '$lib/server/rag';
 import { extractMessageText } from '$lib/messages';
 import { env } from '$env/dynamic/private';
+import { rateLimit, clientKey, tooManyRequests } from '$lib/server/rateLimit';
 import type { RequestHandler } from './$types';
 
 const MAX_MESSAGE_LENGTH = 1000;
+const MAX_MESSAGES = 30;
+const RATE_LIMIT = 20; // requests
+const RATE_WINDOW_MS = 60_000; // per minute, per client
+
+// Standalone questions must clear this bar. Tune with scripts/scope-test.mjs
 const SIMILARITY_THRESHOLD = 0.35;
+// Short follow-ups ("what about the second one?") borrow the previous question for retrieval,
+// so they must clear a HIGHER bar. Otherwise "write me a poem" rides on the previous topic.
+const FOLLOWUP_THRESHOLD = 0.5;
+const FOLLOWUP_MAX_WORDS = 6;
 
 const CASUAL_GREETINGS = new Set([
 	'hi', 'hello', 'hey', 'sup', 'yo', 'good morning', 'good afternoon', 'good evening',
-	'kumusta', 'musta', 'hmmm', 'who are you', 'what can you do', 'help', 'test'
+	'kumusta', 'musta', 'hmmm', 'who are you', 'what can you do', 'help', 'test',
+	'thanks', 'thank you', 'ok', 'okay'
 ]);
 
+// Exact-match only. The old "length <= 4" shortcut let any 4-char message skip the scope gate.
 function isGreeting(text: string): boolean {
 	const cleaned = text.toLowerCase().trim().replace(/[?!.,]/g, '');
-	return CASUAL_GREETINGS.has(cleaned) || cleaned.length <= 4;
+	return CASUAL_GREETINGS.has(cleaned);
 }
 
-export const POST: RequestHandler = async ({ request, platform }) => {
+export const POST: RequestHandler = async ({ request, platform, getClientAddress }) => {
+	const limited = rateLimit(`chat:${clientKey(request, getClientAddress)}`, RATE_LIMIT, RATE_WINDOW_MS);
+	if (!limited.ok) return tooManyRequests(limited.retryAfterSec);
+
 	try {
 		const body = (await request.json()) as any;
-		const messages = body?.messages;
+		// Only user/assistant turns are accepted, so a client cannot inject its own "system" message
+		const messages = Array.isArray(body?.messages)
+			? body.messages
+					.filter((m: any) => m?.role === 'user' || m?.role === 'assistant')
+					.slice(-MAX_MESSAGES)
+			: body?.messages;
 
 		// 1. Input validation
 		if (!Array.isArray(messages) || messages.length === 0) {
@@ -51,19 +71,32 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 		let topScore = 0;
 
 		if (queryText && platform?.env && !isGreeting(queryText)) {
-			// Include immediate prior user turn to resolve conversational pronouns (e.g. "what about the second one?")
-			const prevUserMessage = userMessages.length > 1 ? userMessages[userMessages.length - 2] : null;
-			const contextAwareQuery = prevUserMessage
-				? `${extractMessageText(prevUserMessage).slice(-100)} ${queryText}`
-				: queryText;
+			// 3a. Score the question on its own first
+			let result = await retrieveRelevantContext(platform.env, queryText, 5);
 
-			const result = await retrieveRelevantContext(platform.env, contextAwareQuery, 5);
+			// 3b. Short follow-ups (e.g. "what about the second one?") get a second try that includes
+			// the previous user turn, but only if they clear the stricter follow-up threshold
+			const prevUserMessage = userMessages.length > 1 ? userMessages[userMessages.length - 2] : null;
+			const wordCount = queryText.split(/\s+/).length;
+			if (result.ok && result.topScore < SIMILARITY_THRESHOLD && prevUserMessage && wordCount <= FOLLOWUP_MAX_WORDS) {
+				const followUp = await retrieveRelevantContext(
+					platform.env,
+					`${extractMessageText(prevUserMessage).slice(-100)} ${queryText}`,
+					5
+				);
+				if (followUp.ok && followUp.topScore >= FOLLOWUP_THRESHOLD) {
+					result = followUp;
+				}
+			}
+
 			ragContext = result.context;
 			topScore = result.topScore;
+			console.log(`[scope] score=${topScore.toFixed(3)} ok=${result.ok} q="${queryText.slice(0, 60)}"`);
 
-			// 3. Strict deterministic scope enforcement via Vectorize similarity score
-			// If top similarity score is below threshold, reject immediately without calling LLM
-			if (result.matchCount > 0 && topScore < SIMILARITY_THRESHOLD) {
+			// 3c. Strict deterministic scope enforcement via Vectorize similarity score.
+			// result.ok is false when retrieval errored, in which case we fall through to the
+			// prompt guardrails instead of refusing everything. Zero matches on a healthy query IS a refusal.
+			if (result.ok && topScore < SIMILARITY_THRESHOLD) {
 				return createFixedRefusalResponse(
 					"I only answer questions regarding the College of Computer Studies at Saint Joseph College, including our BSCS, BSIT, and ACT programs, faculty, curriculum, enrollment, lab policies, and student organizations."
 				);

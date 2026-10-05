@@ -1,14 +1,33 @@
-# CCS Campus Facilities & Student Life
+# Campus Facilities, Computer Laboratories & Student Life
 
-## Computer Laboratories & Guidelines
-- **Programming & Software Engineering Lab**: Located on the 2nd Floor, CCS Building. High-performance desktop computers, dual monitors, modern IDEs, local servers. Rules: No food or open drink containers allowed; always sign the lab logbook; save files to cloud/git as local disk storage is wiped periodically.
-- **CISCO & Networking Laboratory**: Located on the 2nd Floor, CCS Building. Specialized lab equipped with CISCO routers, switches, patch panels, crimping stations, and rackmount servers. Rules: Wear ESD safety gear when handling exposed hardware; return patch cables, crimpers, and testers to equipment cabinets; do not modify live campus networking configurations.
-- **Multimedia & Design Studio**: Located on the 3rd Floor, CCS Building. Dedicated space for UI/UX design, game development, rendering, graphic design, and audio-visual production. Equipped with graphics tablets and studio peripherals. Book studio access 24 hours in advance with lab custodian.
+## Computer Laboratories & Campus Facilities
+- **Laboratories (4th Floor, Rooms 407–409)**: Fully air-conditioned computer laboratories equipped for programming, networking, database management, and systems administration.
+- **ILLC Laboratory (Ground Floor)**: Integrated Learning and Laboratory Center utilized for web development, emerging technologies, and systems integration courses.
+- **Bonzel Hall**: Multi-purpose auditorium/hall utilized for Professional Enhancement courses, tech symposiums, department assemblies, and major institutional events.
+- **Laboratory Usage & Policies**:
+  - Open during designated laboratory schedules and class hours.
+  - Working students and laboratory coordinators supervise equipment and logbook sign-ins.
+  - Food, open drinks, and tampering with network or desktop configurations are strictly prohibited.
 
-## Hardware & Laptop Recommendations
-- Recommended student laptop specifications: Intel Core i5 or AMD Ryzen 5 (or higher), 16GB RAM minimum, 512GB NVMe SSD for running IDEs, docker containers, and virtual machines.
-- Campus laboratories are fully accessible during class sessions and open laboratory periods.
+## Software Environment & Coding Tools
+- **Introductory Programming (1st & 2nd Year)**: Java developed primarily with **TextPad 7** (for foundational syntax, OOP, and data structures).
+- **Web & Database Development (2nd & 3rd Year)**: HTML5, CSS3, JavaScript, PHP, and SQL using the **XAMPP stack** (Apache & MySQL).
+- **Backend & Emerging Tech (3rd Year)**: **Python** and **Django framework** for advanced web development and data analytics.
+- **General IDEs & Editors**: **VS Code**, **Notepad++**, and database management interfaces.
+- **Operating Systems**: Windows 10 transitioning into Windows 11 enterprise configurations.
 
-## Student Organizations & Events
-- **Organizations**: CCS Student Council (supreme student governing body of the department), Society of Information Technology Enthusiasts (SITE), Association of Computer Science Innovators (ACSI).
-- **Annual Events**: CCS Week / Tech Summit, SJC Hackathon & Programming Competition, IT Olympics & E-Sports Tournaments, Project Pitching & Capstone Expo.
+## Student Laptop & Hardware Recommendations
+- **Requirement Status**: Not strictly mandatory for freshmen, but strongly encouraged by 3rd and 4th year for Capstone Projects and advanced development.
+- **Recommended Hardware**: Budget-friendly or secondhand laptops (e.g., Lenovo ThinkPad, Dell Latitude in the ₱18,000 - ₱30,000 range) capable of smoothly executing VS Code, NodeJS, and local server environments.
+
+## Student Organizations & Campus Life
+- **Department & Co-Curricular Orgs**:
+  - **College of Computer Studies (CCS) Student Body**: Departmental curricular organization.
+  - **Philippine Society of Information Technology Students (PSITS)**: Official co-curricular student organization recognized under SASO for computing majors.
+  - **Federation of College Student Organizations (FCSO)**: Apex student governing coalition.
+  - **The Josephinian**: Official campus student publication.
+- **Department Traditions & Annual Events**:
+  - **CCS Departmental Days & Tech Events**: Coding competitions, seminars, project showcases.
+  - **Acquaintance Party & Socials**: Department social orientation and team-building.
+  - **Loyalty Day & Family Run**: SJC institutional community traditions.
+  - **PRISAA Meet**: Inter-school athletic and cultural competitions.

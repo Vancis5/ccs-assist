@@ -1,38 +1,105 @@
 # Academic Programs & Curriculum
 
-## Bachelor of Science in Computer Science (BSCS)
-- **Duration**: 4 Years
-- **Program Chair**: Prof. Jonathan M. Perez, MSCS
-- **Description**: Focuses on theoretical foundations of computing, algorithm design, software engineering, intelligence systems, and data structures.
-- **Career Pathways**: Software Engineer, Systems Developer, Data Scientist, AI Specialist, Algorithm Engineer, Systems Analyst, Research & Development Scientist.
-- **Curriculum by Year**:
-  - Year 1: Intro to Computing (CS 111), Fundamentals of Programming (CS 112), Discrete Structures 1 (CS 113), Intermediate Computer Programming (CS 121), Discrete Structures 2 (CS 122).
-  - Year 2: Data Structures & Algorithms (CS 211), OOP (CS 212), Computer Org & Architecture (CS 213), Design & Analysis of Algorithms (CS 221), Operating Systems (CS 222), Database Systems (CS 223), Web Development (CS 224).
-  - Year 3: Automata Theory (CS 311), Software Engineering 1 & 2 (CS 312/321), Artificial Intelligence (CS 313), Compiler Design (CS 322), Machine Learning, Research Methods (CS 323).
-  - Year 4: CS Thesis 1 & 2 (CS 411/421), Information Assurance & Security (CS 412), Cloud Computing, Industry Practicum / OJT (486-500 Hours).
-- **Capstone/Thesis**: Original Thesis project addressing an algorithmic or computing theoretical challenge.
+## College of Computer Studies Overview
+- **Dean**: Haidee Galdo (formerly Riza Siega)
+- **Location**: Main Campus, 1st Floor, right side near the entrance, beside the staircase.
+- **Accreditation & Affiliations**: PAASCU Accredited, CEAP Member, CHED Recognized.
+- **Degrees Offered**:
+  - Bachelor of Science in Information Technology (BSIT) - 4 Years
+  - Bachelor of Science in Computer Science (BSCS) - 4 Years
+  - Associate in Computer Technology (ACT) - 2 Years (Ladderized into BSIT/BSCS)
+
+## Admission & Program Entry Requirements
+- **College Admission Test (CAT) Cut-Off**: Incoming first-year students must obtain a passing rate of at least 75% on the CAT for direct entry into BSIT or BSCS.
+- **Ladderized Pathway for ACT**: Applicants with CAT scores below 75% are enrolled in the 2-Year Associate in Computer Technology (ACT) program. They may shift to BSIT or BSCS after the first semester provided they achieve a Grade Point Average (GPA) of at least 2.25.
+- **Prerequisites for 4th Year Standing**: No student may enroll in the 4th year without completing and passing all Physical Education subjects (PATHFit 1 to 4) and NSTP (NSTP 11 and 12).
+- **Theology Requirement for Graduation**: Candidates for graduation from a 4-year degree must complete 24 units of Theology (8 sequential courses, 3 units each).
 
 ## Bachelor of Science in Information Technology (BSIT)
+- **Duration**: 4 Years (8 Semesters + 1 Summer Term)
+- **Specialization / Focus**: Business Analytics & Data Analytics, Systems Integration, Web Systems (HTML, CSS, JavaScript, PHP with XAMPP, SQL, and Python/Django in 3rd Year), Networking & Communications, Cybersecurity, and Enterprise Data Management.
+- **Total Units**: ~167 Units
+- **Curriculum by Year & Semester**:
+  - **1st Year — 1st Semester (26 Units | 9 Subjects)**:
+    - IT 101: Introduction to Computing (3 units)
+    - IT 102: Computer Programming 1 (3 units)
+    - Math En: Math Enrichment (3 units)
+    - GE 1: Understanding the Self (3 units)
+    - GE 2: Readings in the Philippine History (3 units)
+    - GE EL 1: Living in the IT Era (3 units)
+    - Theo 1a: Old Testament (3 units)
+    - PATHFit 1: Movement Competency Training (2 units)
+    - NSTP 11: National Service Training Program 1 (3 units)
+  - **1st Year — 2nd Semester (29 Units | 10 Subjects)**:
+    - IT 111: Networks and Communications 1 (3 units)
+    - IT 112: Computer Programming 2 (3 units)
+    - IT 113: Discrete Structures (3 units)
+    - GE 3: Mathematics in the Modern World (3 units)
+    - GE 4: Purposive Communication (3 units)
+    - GE 5: Science, Technology, and Society (3 units)
+    - GE EL 2: Gender and Society (3 units)
+    - Theo 1b: New Testament (3 units)
+    - PathFit 2: Exercise-based Fitness Activities (2 units)
+    - NSTP 12: National Service Training Program 2 (3 units)
+  - **2nd Year — 1st Semester (26 Units | 9 Subjects)**:
+    - IT 201: Information Management (3 units)
+    - IT 202: Data Structures & Algorithms (3 units)
+    - IT 203: Web Systems and Technologies 1 (3 units)
+    - IT 204: Platform Technologies (3 units)
+    - GE 6: The Contemporary World (3 units)
+    - GE 7: Art Appreciation (3 units)
+    - GE EL 3: Great Books (3 units)
+    - Theo 2a: Christology (3 units)
+    - PathFit 3: Sports (2 units)
+  - **2nd Year — 2nd Semester (26 Units | 9 Subjects)**:
+    - IT 211: Object - Oriented Programming (3 units)
+    - IT 212: Human Computer Interaction (3 units)
+    - IT 213: Application Dev & Emerging Tech (3 units)
+    - IT 214: Information Management 2 (3 units)
+    - IT 215: Systems Analysis and Design (3 units)
+    - GE 8: Ethics (3 units)
+    - GE 9: Life and Works of Rizal (3 units)
+    - Theo 2b: Mariology (3 units)
+    - PathFit 4: Dance (2 units)
+  - **3rd Year — 1st Semester (24 Units | 8 Subjects)**:
+    - IT 301: Information Assurance and Security (3 units)
+    - IT 302: Systems Integration and Architecture 1 (3 units)
+    - IT 303: Networking 2 (3 units)
+    - IT 304: Quantitative Methods (3 units)
+    - IT 305: Web Systems and Technologies 2 (3 units)
+    - IT 306: Business Analytics (3 units)
+    - IT 307: Enterprise Data Management (3 units)
+    - Theo 3a: Christian Morality (3 units)
+  - **3rd Year — 2nd Semester (24 Units | 8 Subjects)**:
+    - IT 311: Analytic Tools and Techniques (3 units)
+    - IT 312: Analytics Modeling (3 units)
+    - IT 313: Social Issues and Professional Practice (3 units)
+    - IT 314: Systems Admin and Maintenance (3 units)
+    - IT 315: Integrative Programming and Tech 1 (3 units)
+    - IT EL 1: IT Elective 1 (3 units)
+    - IT EL 2: IT Elective 2 (3 units)
+    - Theo 3b: The Commandments (3 units)
+  - **Summer Term (Incoming 4th Year | 6 Units)**:
+    - Capstone 1: Capstone Project 1 (3 units)
+    - Theo 4a: Intro to Pastoral Life / BEC (3 units)
+  - **4th Year — 1st Semester (21 Units | 7 Subjects)**:
+    - Capstone 2: Capstones Project 2 (3 units)
+    - IT 401: Technopreneurship (3 units)
+    - IT 402: Analytics Application (3 units)
+    - Pro En: Professional Enhancement (3 units, held in Bonzel Hall)
+    - IT EL 3: IT Elective 3 (3 units)
+    - IT EL 4: IT Elective 4 (3 units)
+    - Theo 4b: Pastoral Exposure (3 units)
+  - **4th Year — 2nd Semester**:
+    - Practicum / Industry Internship (OJT)
+
+## Bachelor of Science in Computer Science (BSCS)
 - **Duration**: 4 Years
-- **Program Chair**: Engr. Mark Anthony E. Cadayong, MIT
-- **Description**: Focuses on practical implementation, deployment, management, and security of computer systems, networks, web, and enterprise technologies.
-- **Career Pathways**: Full-Stack Web / Mobile App Developer, Network & Systems Administrator, Database Administrator (DBA), Cybersecurity Analyst, IT Project Manager & Support Lead.
-- **Curriculum by Year**:
-  - Year 1: Intro to Computing (IT 111), Computer Programming 1 & 2 (IT 112/121), Discrete Math for IT (IT 122), Living in the IT Era.
-  - Year 2: Data Structures & Algorithms (IT 211), OOP (IT 212), Networking 1 (CISCO Fundamentals - IT 213), Platform Tech (IT 214), DBMS (IT 221), Networking 2 (Routing & Switching - IT 222), Web Systems 1 (IT 223), Systems Analysis & Design (IT 224).
-  - Year 3: Web Systems 2 (IT 311), Mobile App Dev (IT 312), Info Assurance & Security 1 & 2 (IT 313/321), Systems Integration (IT 314), Capstone Project 1 (IT 323), Cloud & DevOps.
-  - Year 4: Capstone Project 2 (IT 411 - Implementation & Defense), Systems Administration (IT 412), Cybersecurity Incident Response, Industry Practicum / OJT (486-500 Hours).
-- **Capstone/Thesis**: Enterprise-ready Capstone project with client deployment and practical utility.
+- **Description**: Emphasizes algorithms, computational theory, artificial intelligence, software engineering, and mathematical structures.
+- **Entry & Retention**: Requires at least 75% on the CAT and maintenance of a 2.25 GWA in 1st and 2nd year professional computing subjects for admission to 3rd year.
+- **Degree Culmination**: Original CS Computing Research / Thesis Project.
 
 ## Associate in Computer Technology (ACT)
-- **Duration**: 2 Years (Ladderized into BSIT or BSCS)
-- **Description**: Equips students with foundational computing skills, hardware servicing, office productivity, and basic coding.
-- **Career Pathways**: Computer Technician, Hardware Support, Junior Web Developer, IT Support Staff, Data Encoder.
-- **Curriculum Highlights**: Computer Hardware Servicing, Foundations of Programming, Productivity Tools and Office Automation, Basic Networking & Cable Crimping.
-
-## Enrollment Steps for CCS Students
-1. **Admissions & Credential Verification**: Submit Form 138/SF9, Good Moral, PSA Birth Certificate (or TOR for transferees) at Registrar & Admissions (Ground Floor, Admin Bldg).
-2. **CCS Department Academic Evaluation**: Present credentials to Dean Dr. Raymund P. Libarnes or Program Chairs (2nd Floor, CCS Bldg) for curriculum and prerequisite evaluation.
-3. **Subject Advising & Encoding**: Assigned faculty adviser evaluates curriculum checklist and encodes semester subjects.
-4. **Assessment & Fee Settlement**: Proceed to Finance/Cashier Office for tuition assessment and scholarship (CHED/UniFAST) verification or down payment.
-5. **Registration Confirmation & ID**: Return to Registrar for official stamped Certificate of Registration (COR) and student ID activation.
+- **Duration**: 2 Years (Ladderized)
+- **Description**: Equips students with foundational computing skills, hardware servicing, office productivity, and programming fundamentals.
+- **Ladderization**: Students completing the 2-year curriculum or reaching a 2.25 GPA after 1st sem can transition seamlessly into the 3rd year of BSIT or BSCS.

@@ -1,7 +1,23 @@
 import { env } from '$env/dynamic/private';
+import { rateLimit, clientKey, tooManyRequests } from '$lib/server/rateLimit';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ request, platform }) => {
+const MAX_AUDIO_BYTES = 3 * 1024 * 1024; // ~3 MB, far above a normal voice question
+const RATE_LIMIT = 10; // requests
+const RATE_WINDOW_MS = 60_000; // per minute, per client
+
+export const POST: RequestHandler = async ({ request, platform, getClientAddress }) => {
+	const limited = rateLimit(`transcribe:${clientKey(request, getClientAddress)}`, RATE_LIMIT, RATE_WINDOW_MS);
+	if (!limited.ok) return tooManyRequests(limited.retryAfterSec);
+
+	const declaredSize = Number(request.headers.get('content-length') ?? 0);
+	if (declaredSize > MAX_AUDIO_BYTES + 64 * 1024) {
+		return new Response(JSON.stringify({ error: 'Audio file is too large.' }), {
+			status: 413,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	}
+
 	try {
 		const apiKey = platform?.env?.GROQ_API_KEY || env.GROQ_API_KEY || process.env.GROQ_API_KEY;
 		if (!apiKey) {
@@ -17,6 +33,13 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 		if (!audioFile || !(audioFile instanceof Blob)) {
 			return new Response(JSON.stringify({ error: 'Audio file is required' }), {
 				status: 400,
+				headers: { 'Content-Type': 'application/json' }
+			});
+		}
+
+		if (audioFile.size > MAX_AUDIO_BYTES) {
+			return new Response(JSON.stringify({ error: 'Audio file is too large.' }), {
+				status: 413,
 				headers: { 'Content-Type': 'application/json' }
 			});
 		}
