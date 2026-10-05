@@ -127,7 +127,7 @@ All undergraduate degree programs in CCS include the standard CHED General Educa
   - Capstone 2: Capstones Project 2 (3 units)
   - IT 401: Technopreneurship (3 units)
   - IT 402: Analytics Application (3 units)
-  - Pro En: Professional Enhancement (3 units, held in Bonzel Hall)
+  - Pro En: Professional Enhancement (3 units)
   - IT EL 3: IT Elective 3 (3 units)
   - IT EL 4: IT Elective 4 (3 units)
   - Theo 4b: Pastoral Exposure (3 units)

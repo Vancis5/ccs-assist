@@ -1,11 +1,16 @@
-## Computer Laboratories & Campus Facilities
-- **Laboratories (4th Floor, Rooms 407–409)**: Fully air-conditioned computer laboratories equipped for programming, networking, database management, and systems administration.
-- **ILLC Laboratory (Ground Floor)**: Integrated Learning and Laboratory Center utilized for web development, emerging technologies, and systems integration courses.
-- **Bonzel Hall**: Multi-purpose auditorium/hall utilized for Professional Enhancement courses, tech symposiums, department assemblies, and major institutional events.
+## Computer Laboratories, Classrooms & Campus Facilities
+- **Computer Laboratories (4th Floor, Rooms 407–409)**: Fully air-conditioned computer laboratories equipped for programming, networking, database management, and systems administration. Students do **not** need to logbook when using Rooms 407–409.
+- **ILLC Laboratory (Ground Floor)**: Integrated Learning and Laboratory Center; fully air-conditioned; utilized for web systems, emerging technologies, and systems integration courses.
+- **Lecture Classrooms (4th Floor, Rooms 421 & 422)**: Regular classrooms utilized for CCS classes and lectures when subjects do not require computer or workstation use.
+- **Cantabo Canticum Novum Mini Theater (CCN-MT) & School Chapel (Ground Floor)**:
+  - Newly constructed modern facility located on the ground level of the SJC Main Campus, blessed by Maasin Bishop Precioso Cantillas (Chairman, Board of Trustees). Replaces the outdated Bonzel Hall for large events (though large events are rare).
+  - Named after His Excellency's episcopal motto, which means *"I will sing a new song to the Lord."*
+  - Serves as a venue for learning, artistic expression, dialogue, tech symposiums, department assemblies, and cultural formation—where the gifts and talents of the SJCEF community may be cultivated and shared to enrich both minds and hearts.
+  - The adjacent **School Chapel** on the ground level serves as the spiritual heart of the school, set apart for prayer and worship (#JosephiniansTranscend).
 - **Laboratory Usage & Policies**:
   - Open during designated laboratory schedules and class hours.
-  - Working students and laboratory coordinators supervise equipment and logbook sign-ins.
-  - Food, open drinks, and tampering with network or desktop configurations are strictly prohibited.
+  - Working students and laboratory coordinators supervise equipment maintenance and room readiness.
+  - Food, open drink containers, and unauthorized altering of desktop or network configurations are strictly prohibited inside all laboratories.
 
 ## Software Environment & Coding Tools
 - **Introductory Programming (1st & 2nd Year)**: Java developed primarily with **TextPad 7** (for foundational syntax, OOP, and data structures).

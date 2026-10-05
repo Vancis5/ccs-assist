@@ -443,10 +443,9 @@ export const ccsKnowledge = {
 		{
 			name: "Computer Laboratories (Rooms 407, 408, 409)",
 			location: "SJC Main Campus, 4th Floor",
-			description: "Air-conditioned labs for coding, networking, analytics, and software development.",
+			description: "Fully air-conditioned computer laboratories for programming, networking, databases, and systems administration.",
 			guidelines: [
-				"Open during designated class hours and lab schedules.",
-				"Supervised by assigned student assistants and lab in-charge.",
+				"Logbook sign-in is NOT required for Rooms 407-409.",
 				"No food or open drink containers allowed inside.",
 				"No unauthorized altering of desktop or network settings."
 			]
@@ -454,18 +453,25 @@ export const ccsKnowledge = {
 		{
 			name: "Integrated Learning & Laboratory Center (ILLC)",
 			location: "SJC Main Campus, Ground Floor",
-			description: "Specialized lab for web systems, emerging technologies, and systems integration courses.",
+			description: "Fully air-conditioned specialized lab for web systems, emerging technologies, and systems integration courses.",
 			guidelines: [
-				"Sign the logbook upon entry and exit.",
 				"Maintain neatness of workstations and report any hardware issues immediately."
 			]
 		},
 		{
-			name: "Bonzel Hall",
-			location: "SJC Main Campus",
-			description: "Auditorium venue used for Professional Enhancement lectures, tech seminars, symposiums, and major department assemblies.",
+			name: "Lecture Classrooms (Rooms 421 & 422)",
+			location: "SJC Main Campus, 4th Floor",
+			description: "Regular classrooms utilized for CCS classes and lectures that do not require computer workstations.",
 			guidelines: [
-				"Follow proper auditorium etiquette and prescribed dress code."
+				"Keep classrooms clean and orderly after lectures."
+			]
+		},
+		{
+			name: "Cantabo Canticum Novum Mini Theater (CCN-MT) & School Chapel",
+			location: "SJC Main Campus, Ground Level",
+			description: "Newly constructed modern venue blessed by Maasin Bishop Precioso Cantillas (Chairman, Board of Trustees) for learning, artistic expression, dialogue, and cultural formation. Replaces the outdated Bonzel Hall for large events.",
+			guidelines: [
+				"Follow proper etiquette and respect the solemnity of the adjacent School Chapel."
 			]
 		}
 	],
