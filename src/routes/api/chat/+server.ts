@@ -7,7 +7,7 @@ import type { RequestHandler } from './$types';
 
 const MAX_MESSAGE_LENGTH = 1000;
 const MAX_MESSAGES = 30;
-const RATE_LIMIT = 20; // requests
+const RATE_LIMIT = Number(env.CHAT_RATE_LIMIT || process.env.CHAT_RATE_LIMIT || 60); // requests
 const RATE_WINDOW_MS = 60_000; // per minute, per client
 
 // Standalone questions must clear this bar. Tune with scripts/scope-test.mjs

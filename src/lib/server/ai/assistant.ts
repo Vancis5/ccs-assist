@@ -83,6 +83,7 @@ export async function streamAssistantResponse({
 
 				for (const currentModel of modelsToTry) {
 					try {
+						console.log(`[ai] Attempting model: ${currentModel}`);
 						const result = streamText({
 							model: groq(currentModel),
 							system: systemPrompt,
@@ -91,17 +92,26 @@ export async function streamAssistantResponse({
 							maxOutputTokens: 2048
 						});
 
-						for await (const chunk of result.textStream) {
-							startText();
-							writer.write({ type: 'text-delta', delta: chunk, id: messageId });
-							streamedAnyChunk = true;
+						for await (const part of result.fullStream) {
+							if (part.type === 'text-delta') {
+								startText();
+								writer.write({ type: 'text-delta', delta: part.text, id: messageId });
+								streamedAnyChunk = true;
+							} else if (part.type === 'error') {
+								throw part.error;
+							}
 						}
 
+						if (!streamedAnyChunk) {
+							throw new Error(`Model ${currentModel} returned 0 output tokens.`);
+						}
+
+						console.log(`[ai] Successfully answered using model: ${currentModel}`);
 						endText();
 						// Successfully finished streaming
 						return;
 					} catch (err: any) {
-						console.warn(`Groq model ${currentModel} error (attempting fallback):`, err?.message || err);
+						console.warn(`[ai fallback] Groq model ${currentModel} error (attempting fallback):`, err?.message || err);
 						if (streamedAnyChunk) {
 							// If already sent tokens to client, cannot switch models mid-flight
 							endText();
@@ -114,7 +124,7 @@ export async function streamAssistantResponse({
 			// 2. Cloudflare Workers AI Fallback (protects demo against 429 rate limits or key exhaustion)
 			if (ai) {
 				try {
-					console.log(`Flipping to Workers AI backup (${WORKERS_AI_MODEL})...`);
+					console.log(`[ai] Flipping to Workers AI backup (${WORKERS_AI_MODEL})...`);
 					const cfMessages = [
 						{ role: 'system', content: systemPrompt },
 						...trimmedMessages.map((m: any) => ({
@@ -159,10 +169,13 @@ export async function streamAssistantResponse({
 						}
 					}
 
-					endText();
-					return;
+					if (streamedAnyChunk) {
+						console.log(`[ai] Successfully answered using Workers AI: ${WORKERS_AI_MODEL}`);
+						endText();
+						return;
+					}
 				} catch (cfErr: any) {
-					console.error('Workers AI backup fallback error:', cfErr?.message || cfErr);
+					console.error('[ai fallback] Workers AI backup error:', cfErr?.message || cfErr);
 					if (streamedAnyChunk) {
 						endText();
 						return;
@@ -172,6 +185,7 @@ export async function streamAssistantResponse({
 
 			// 3. Final safety refusal if both Groq and Workers AI failed
 			if (!streamedAnyChunk) {
+				console.error('[ai] All AI models and fallbacks exhausted.');
 				startText();
 				writer.write({
 					type: 'text-delta',
