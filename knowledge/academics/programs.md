@@ -91,16 +91,47 @@
     - IT EL 3: IT Elective 3 (3 units)
     - IT EL 4: IT Elective 4 (3 units)
     - Theo 4b: Pastoral Exposure (3 units)
-  - **4th Year — 2nd Semester**:
-    - Practicum / Industry Internship (OJT)
+  - **4th Year — 2nd Semester (6 Units | 1 Subject)**:
+    - IT 403: IT Internship / On-the-Job Training (486 hrs) (6 units)
 
 ## Bachelor of Science in Computer Science (BSCS)
 - **Duration**: 4 Years
 - **Description**: Emphasizes algorithms, computational theory, artificial intelligence, software engineering, and mathematical structures.
 - **Entry & Retention**: Requires at least 75% on the CAT and maintenance of a 2.25 GWA in 1st and 2nd year professional computing subjects for admission to 3rd year.
 - **Degree Culmination**: Original CS Computing Research / Thesis Project.
+- **Curriculum by Year & Semester**:
+  - **4th Year — 1st Semester (9 Units | 3 Subjects)**:
+    - CS 401: CS Capstone Project 2 (3 units)
+    - CS 402: Social Issues and Professional Practice (3 units)
+    - CS Elective 2: CS Track Elective 2 (3 units)
+  - **4th Year — 2nd Semester (6 Units | 1 Subject)**:
+    - CS 403: Practicum / Industry Internship (500 hrs) (6 units)
 
 ## Associate in Computer Technology (ACT)
-- **Duration**: 2 Years (Ladderized)
+- **Duration**: 2 Years (4 Semesters, Ladderized)
+- **Total Units**: 53 Units
 - **Description**: Equips students with foundational computing skills, hardware servicing, office productivity, and programming fundamentals.
 - **Ladderization**: Students completing the 2-year curriculum or reaching a 2.25 GPA after 1st sem can transition seamlessly into the 3rd year of BSIT or BSCS.
+- **Curriculum by Year & Semester**:
+  - **1st Year — 1st Semester (17 Units | 6 Subjects)**:
+    - ACT 101: Introduction to Computing & Hardware (3 units)
+    - ACT 102: Computer Logic & Programming 1 (3 units)
+    - GE 1: Understanding the Self (3 units)
+    - GE 3: Mathematics in the Modern World (3 units)
+    - PATHFIT 1: Movement Competency Training (2 units)
+    - NSTP 11: National Service Training Program 1 (3 units)
+  - **1st Year — 2nd Semester (14 Units | 5 Subjects)**:
+    - ACT 103: Computer Programming 2 (3 units)
+    - ACT 104: PC Maintenance & Troubleshooting (3 units)
+    - GE 4: Purposive Communication (3 units)
+    - PATHFIT 2: Fitness Activities (2 units)
+    - NSTP 12: National Service Training Program 2 (3 units)
+  - **2nd Year — 1st Semester (11 Units | 4 Subjects)**:
+    - ACT 201: Web Development Essentials (3 units)
+    - ACT 202: Networking Fundamentals (3 units)
+    - ACT 203: Database Management Systems (3 units)
+    - PATHFIT 3: Sports Competency (2 units)
+  - **2nd Year — 2nd Semester (11 Units | 3 Subjects)**:
+    - ACT 204: Systems Integration Project (3 units)
+    - ACT 205: Technical Internship (300 Hours) (6 units)
+    - PATHFIT 4: Outdoor Fitness (2 units)

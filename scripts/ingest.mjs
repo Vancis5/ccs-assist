@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { execSync } from 'node:child_process';
 
 const KNOWLEDGE_DIR = path.resolve(process.cwd(), 'knowledge');
@@ -86,7 +87,18 @@ async function getEmbedding(text, accountId, apiToken) {
 
 async function run() {
 	const accountId = process.env.CLOUDFLARE_ACCOUNT_ID || 'ae8367eef8225481b514037ca1061ade';
-	const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+	let apiToken = process.env.CLOUDFLARE_API_TOKEN;
+
+	if (!apiToken) {
+		const configPath = path.join(os.homedir(), '.config/.wrangler/config/default.toml');
+		if (fs.existsSync(configPath)) {
+			const content = fs.readFileSync(configPath, 'utf-8');
+			const match = content.match(/oauth_token\s*=\s*"([^"]+)"/);
+			if (match) {
+				apiToken = match[1];
+			}
+		}
+	}
 
 	console.log('Starting ingestion pipeline...');
 	const chunks = syncChunksFile();

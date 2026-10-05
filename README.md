@@ -71,13 +71,19 @@ flowchart TD
 
 ## Verified College Data
 
-- **Dean & Leadership**: Dr. Raymund P. Libarnes, DIT (CCS Dean). Consultation: Mon–Fri 1:00 PM – 4:00 PM (CCS Dean's Office, 2nd Floor).
-- **Program Chairs**:
-  - Engr. Mark Anthony E. Cadayong, MIT (BSIT Program Chair)
-  - Prof. Jonathan M. Perez, MSCS (BSCS Program Chair)
-- **Retention & Grading**: Major subjects require a minimum grade of **2.0 (85%)** for retention. (Full Philippine grading scale: 1.0 = 97–100%, 2.0 = 85–87%, 2.5 = 80–81%, 3.0 = 75% passing).
-- **Curriculum**: Year-by-year and semester-by-semester subjects for BSCS, BSIT, and ACT.
-- **Enrollment**: 5-step official workflow: Admissions $\to$ CCS Dean's Evaluation $\to$ Advising $\to$ Cashier $\to$ COR.
+- **Dean & Leadership**: Haidee Galdo (formerly Riza Siega), CCS Dean. Office: Main Campus, 1st Floor, right side near the entrance, beside the staircase. Hours: Monday–Friday, 8:00 AM – 5:00 PM.
+- **Institutional Leadership**: Rev. Msgr. Oscar A. Cadayona, PhD, SThL-MA (School President).
+- **Academic Programs**:
+  - Bachelor of Science in Information Technology (BSIT) — 4 Years (Business & Data Analytics track)
+  - Bachelor of Science in Computer Science (BSCS) — 4 Years
+  - Associate in Computer Technology (ACT) — 2 Years (Ladderized into BSIT/BSCS)
+- **Retention & Academic Policies**:
+  - **3rd Year Retention Threshold**: To qualify for admission to the 3rd year in BSIT and BSCS, students must complete all 1st and 2nd year professional courses with an average rating of at least **2.25 (83–85%)**. This average rating must be maintained.
+  - **Failing Limit**: A student who fails in more than three (3) subjects is advised to shift to another program.
+  - **CAT Screening**: Passing rate of at least 75% on the College Admission Test (CAT) for direct entry into BSIT/BSCS. Applicants with CAT scores below 75% enroll in the 2-Year ACT program and can shift to BSIT/BSCS after the 1st semester with a 2.25 GPA.
+  - **Grading Scale**: 1.00 = 98–100% (Excellent), 1.25 = 95–97%, 1.50 = 92–94%, 1.75 = 89–91%, 2.00 = 86–88% (Dean's Lister), 2.25 = 83–85% (3rd Year Retention Threshold), 2.50 = 80–82%, 2.75 = 77–79%, 3.00 = 75–76% (Passing), 5.00 = Below 75% (Failed).
+- **Curriculum & Prerequisites**: Complete year-by-year subject breakdown for BSIT, BSCS, and ACT. 24 units of Theology required for graduation; completion of PATHFit 1–4 and NSTP 11–12 required for 4th year standing.
+- **Enrollment**: 5-step official workflow: Admissions & CAT Screening $\to$ CCS Academic Evaluation (Dean's Office, 1st Floor) $\to$ Subject Advising & Portal Encoding $\to$ Fee Assessment & Settlement (Finance/Bursar) $\to$ Official Registration (COR) & ID Validation.
 
 ---
 

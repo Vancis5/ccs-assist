@@ -192,7 +192,7 @@ export const ccsKnowledge = {
 						"Theo 4b - Pastoral Exposure (3 units)"
 					],
 					secondSemester: [
-						"Practicum / OJT Industry Internship (486-500 Hours)"
+						"IT 403 - IT Internship / On-the-Job Training (486 hrs) (6 units)"
 					]
 				}
 			]
@@ -213,25 +213,76 @@ export const ccsKnowledge = {
 				"Design and Analysis of Algorithms",
 				"Artificial Intelligence & Machine Learning",
 				"Compiler Design & Operating Systems",
-				"CS Thesis Research 1 & 2"
+				"CS Thesis Research 1 & 2",
+				"CS 403 - Practicum / Industry Internship (500 hrs) (6 units)"
+			],
+			curriculumByYear: [
+				{
+					year: "4th Year",
+					firstSemester: [
+						"CS 401 - CS Capstone Project 2 (3 units)",
+						"CS 402 - Social Issues and Professional Practice (3 units)",
+						"CS Elective 2 - CS Track Elective 2 (3 units)"
+					],
+					secondSemester: [
+						"CS 403 - Practicum / Industry Internship (500 hrs) (6 units)"
+					]
+				}
 			]
 		},
 		{
 			name: "Associate in Computer Technology",
 			code: "ACT",
-			duration: "2 Years (Ladderized)",
-			description: "A 2-year program providing foundational computing skills, hardware servicing, office productivity, and programming fundamentals. Ladderizes into BSIT/BSCS with a 2.25 GPA requirement.",
+			duration: "2 Years (4 Semesters, Ladderized)",
+			totalUnits: "53 Units",
+			description: "A 2-year practical technical program providing foundational computing skills, hardware servicing, office productivity, programming, and technical internship. Ladderizes into BSIT/BSCS with a 2.25 GPA requirement.",
 			careerOpportunities: [
 				"Computer Technician / Hardware Support",
 				"Junior Web Developer",
 				"IT Support Staff",
+				"Database & Network Support Assistant",
 				"Data Encoder"
 			],
 			curriculumHighlights: [
-				"Computer Hardware Servicing",
-				"Foundations of Programming",
-				"Productivity Tools & Office Automation",
-				"Basic Networking & Cable Crimping"
+				"Introduction to Computing & Hardware (ACT 101)",
+				"PC Maintenance & Troubleshooting (ACT 104)",
+				"Web Development Essentials & Database Systems (ACT 201, ACT 203)",
+				"Systems Integration Project (ACT 204)",
+				"Technical Internship (300 Hours, ACT 205)"
+			],
+			curriculumByYear: [
+				{
+					year: "1st Year",
+					firstSemester: [
+						"ACT 101 - Introduction to Computing & Hardware (3 units)",
+						"ACT 102 - Computer Logic & Programming 1 (3 units)",
+						"GE 1 - Understanding the Self (3 units)",
+						"GE 3 - Mathematics in the Modern World (3 units)",
+						"PATHFIT 1 - Movement Competency Training (2 units)",
+						"NSTP 11 - National Service Training Program 1 (3 units)"
+					],
+					secondSemester: [
+						"ACT 103 - Computer Programming 2 (3 units)",
+						"ACT 104 - PC Maintenance & Troubleshooting (3 units)",
+						"GE 4 - Purposive Communication (3 units)",
+						"PATHFIT 2 - Fitness Activities (2 units)",
+						"NSTP 12 - National Service Training Program 2 (3 units)"
+					]
+				},
+				{
+					year: "2nd Year",
+					firstSemester: [
+						"ACT 201 - Web Development Essentials (3 units)",
+						"ACT 202 - Networking Fundamentals (3 units)",
+						"ACT 203 - Database Management Systems (3 units)",
+						"PATHFIT 3 - Sports Competency (2 units)"
+					],
+					secondSemester: [
+						"ACT 204 - Systems Integration Project (3 units)",
+						"ACT 205 - Technical Internship (300 Hours) (6 units)",
+						"PATHFIT 4 - Outdoor Fitness (2 units)"
+					]
+				}
 			]
 		}
 	],

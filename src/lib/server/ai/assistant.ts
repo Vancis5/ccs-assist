@@ -175,7 +175,7 @@ export async function streamAssistantResponse({
 				startText();
 				writer.write({
 					type: 'text-delta',
-					delta: "I'm experiencing high server traffic at the moment. Please try again shortly or visit the CCS Dean's Office on the 2nd Floor.",
+					delta: "I'm experiencing high server traffic at the moment. Please try again shortly or visit the CCS Dean's Office on the 1st Floor.",
 					id: messageId
 				});
 				endText();
