@@ -16,9 +16,15 @@ export interface CCSProgram {
 export interface FacultyMember {
 	name: string;
 	title: string;
-	specialization: string;
-	office: string;
-	consultation: string;
+	role: string;
+	undergraduate?: string;
+	postGraduate?: string;
+	subjectsHandled?: string[];
+	certifications?: string[];
+	experience?: string;
+	office?: string;
+	consultation?: string;
+	achievements?: string[];
 }
 
 export interface CCSFacility {
@@ -41,11 +47,14 @@ export const ccsKnowledge = {
 		acronym: "SJC",
 		location: "Tunga-tunga, Maasin City, Southern Leyte, Philippines",
 		founded: 1928,
+		ccsFounded: 1994,
 		president: "Rev. Msgr. Oscar A. Cadayona, PhD, SThL-MA",
 		department: "College of Computer Studies (CCS)",
 		dean: "Haidee Galdo (formerly Riza Siega)",
 		deanOfficeLocation: "Main Campus, 1st Floor, right side near the entrance, beside the staircase",
+		departmentSecretary: "Mrs. Wilna Mae Quilla-Oberez, MBA",
 		tagline: "Deus, Patria, Scientia (God, Country, Knowledge)",
+		departmentMotto: "An open door to the limitless horizon",
 		contact: {
 			phone: "(053) 570 8448",
 			email: "info@sjc.edu.ph",
@@ -73,11 +82,155 @@ export const ccsKnowledge = {
 		accreditations: ["PAASCU Accredited", "CEAP Member", "CHED Recognized"]
 	},
 	leadership: {
-		dean: "Haidee Galdo (formerly Riza Siega)",
+		dean: "Mrs. Haidee T. Galdo, MIT (formerly Riza Siega)",
 		office: "Main Campus, 1st Floor, right side near the entrance, beside the staircase",
 		hours: "Regular office hours (Monday - Friday, 8:00 AM - 5:00 PM)",
 		consultation: "Available anytime during office hours or by appointment"
 	},
+	facultyAndStaff: [
+		{
+			name: "Mrs. Haidee T. Galdo, MIT",
+			title: "Dean, College of Computer Studies & BSIT Program Head",
+			role: "Dean / Program Head / College Faculty",
+			undergraduate: "BS Computer Science - Southwestern University, Cebu City",
+			postGraduate: "Master in Information Technology (MIT) - Asian College Foundation / Asian Development Foundation College",
+			subjectsHandled: [
+				"Data Structures and Algorithms",
+				"Computer Programming (Java)",
+				"Algorithm and Complexity",
+				"Science, Technology, and Society (STS)",
+				"Capstone 2"
+			],
+			certifications: ["PhilNITS IT Passport Exam Certified"],
+			office: "Main Campus, 1st Floor, right side near the entrance, beside the staircase",
+			consultation: "Regular office hours (Monday - Friday, 8:00 AM - 5:00 PM) or by appointment"
+		},
+		{
+			name: "Mrs. Evangeline E. Javier, MIT",
+			title: "Senior College Faculty & Religious Org Adviser",
+			role: "College Faculty",
+			undergraduate: "BS Computer Science - Saint Joseph College",
+			postGraduate: "Master in Information Technology (MIT) - Asian Development Foundation College",
+			experience: "More than 20 years college faculty at SJC",
+			subjectsHandled: [
+				"Business Analytics",
+				"Enterprise Data Management",
+				"System Integration and Architecture 1",
+				"Introduction to Computing",
+				"Science, Technology, and Society (STS)",
+				"Analytics Application",
+				"Information Management"
+			],
+			certifications: ["MikroTik Network Certificate (Networking)", "PhilNITS IT Passport Exam Certified"]
+		},
+		{
+			name: "Mrs. Yvonne Tenio, MIT",
+			title: "College Faculty",
+			role: "College Faculty",
+			undergraduate: "BS Computer Science - University of San Jose - Recoletos (USJ-R), Cebu City",
+			postGraduate: "Master in Information Technology (MIT) - Asian Development Foundation College",
+			subjectsHandled: [
+				"IT 204 - Platform Technologies",
+				"IT 304 - Quantitative Methods",
+				"IT EL 3 - IT Elective 3",
+				"IT 301 - Information Assurance and Security",
+				"GE 5 - Science, Technology, and Society (STS)",
+				"GE EL 1 - Living in the IT Era"
+			],
+			certifications: [
+				"CSC Certificate of Eligibility - Career Service Professional and Career Service Sub-Professional",
+				"Quipper Faculty Training Certified",
+				"PhilNITS IT Passport Exam Certified"
+			]
+		},
+		{
+			name: "Mrs. Wilna Mae Quilla-Oberez, MBA",
+			title: "Department Secretary",
+			role: "CCS Department Secretary (2013 - present)",
+			undergraduate: "BS in Business Administration major in Financial Management",
+			postGraduate: "Master in Business Administration (MBA)"
+		},
+		{
+			name: "Mr. Marnuld F. Climaco, MST-CS",
+			title: "Senior Computer Instructor",
+			role: "Computer Instructor (1998 - present)",
+			undergraduate: "BS Computer Science - University of San Jose - Recoletos (USJ-R)",
+			postGraduate: "Master of Science in Teaching - Major in Computer Science (MST-CS) / MIT",
+			experience: "Computer Operator (1994-95, Philphos Isabel, Leyte); Computer Instructor (1996-97, College of Maasin); Computer Instructor (1997-98, Southern Leyte Computer Institute); Instructor (1998-present, SJC)",
+			subjectsHandled: [
+				"Computer Computing / Introduction to Computing",
+				"Networking",
+				"Human Computer Interaction (HCI)",
+				"Systems Administration and Maintenance"
+			],
+			certifications: ["MikroTik Network Certificate (Networking)", "PhilNITS IT Passport Exam Certified"]
+		},
+		{
+			name: "Mr. Leonardo E. Hoyla",
+			title: "Computer Instructor, System Software Developer & EDP Head",
+			role: "Instructor / EDP Head / Developer",
+			undergraduate: "BS Computer Science - Southwestern University; Nautical - Philippine Merchant Marine School (PMMS)",
+			experience: "System Software Developer (University of Cebu); MIS (Prince Warehouse Clubs); Data Controller (Data Solutions Inc.); EDP Head & Developer (SJC)",
+			achievements: ["Core developer of the official Saint Joseph College Portal"],
+			subjectsHandled: [
+				"Computer Programming (Java, PHP, Visual Basic)",
+				"Web Systems and Technologies"
+			],
+			certifications: [
+				"Visual Basic - Southwestern University",
+				"SOLAS (Safety of Life at Sea) - PMMS"
+			]
+		},
+		{
+			name: "Mr. Jonathan F. Tse, MBA",
+			title: "College Faculty & IT Certification Reviewer",
+			role: "Faculty / IT Certification Reviewer / Businessman",
+			undergraduate: "BS Computer Engineering - University of San Carlos (Magna Cum Laude)",
+			postGraduate: "Master of Business Administration (MBA) - Ateneo Graduate School of Business",
+			experience: "Almost 20 years in software development at a Japanese company (Vice President for Cebu Operations)",
+			achievements: [
+				"President SJC Alumni Foundation (3 years)",
+				"Chief of Staff of Rotary International District 3860",
+				"PhilNITS IT Passport Exam: Highest score among 1,612 examinees across all 6 IT PEC countries"
+			],
+			subjectsHandled: ["IT Certification Exam Review"]
+		},
+		{
+			name: "Mr. Nelson Garde",
+			title: "Head Technician / Solar Manager",
+			role: "Technical Operations & Campus Solar Manager"
+		},
+		{
+			name: "Mr. Noel Buenasaga",
+			title: "Assistant IT Technical Staff & Instructor",
+			role: "Technical Staff / Instructor",
+			undergraduate: "BS Computer Science - Saint Joseph College",
+			subjectsHandled: ["CS Elective", "System Fundamentals", "Network Management"]
+		},
+		{
+			name: "Mr. Angelo Cortel",
+			title: "Part-time Teacher",
+			role: "Part-time Faculty",
+			undergraduate: "BS Information Technology - Saint Joseph College",
+			subjectsHandled: ["Web Systems and Technologies 2"]
+		},
+		{
+			name: "Mr. Anthony Ejercito",
+			title: "Head IT Technical Staff",
+			role: "Head IT Technical Staff",
+			undergraduate: "BS Computer Science"
+		},
+		{
+			name: "Ms. Dandielle Fate Monter",
+			title: "Computer Instructor",
+			role: "Faculty / Instructor"
+		},
+		{
+			name: "Mr. Joseph Demiao",
+			title: "School Information Technology Officer (SITO)",
+			role: "School IT Officer (SITO)"
+		}
+	],
 	programs: [
 		{
 			name: "Bachelor of Science in Information Technology",
@@ -477,6 +630,18 @@ export const ccsKnowledge = {
 			title: 'ACT 2-Year to BSIT',
 			desc: 'How Associate in Computer Technology ladderizes into BSIT/BSCS',
 			query: 'How does the 2-year ACT program ladderize into BSIT or BSCS?'
+		},
+		{
+			tag: 'Faculty',
+			title: 'CCS Faculty & Instructors',
+			desc: 'Dean Haidee Galdo, Mrs. Javier, Mrs. Tenio, Mr. Climaco, and Mr. Hoyla',
+			query: 'Who are the CCS faculty members and what subjects do they handle?'
+		},
+		{
+			tag: 'Directory',
+			title: 'Department Secretary & Staff',
+			desc: 'Mrs. Wilna Mae Quilla-Oberez, SITO Joseph Demiao, and tech staff',
+			query: 'Who is the CCS department secretary and who are the technical staff?'
 		}
 	]
 };

@@ -71,21 +71,21 @@ export const POST: RequestHandler = async ({ request, platform, getClientAddress
 		let topScore = 0;
 
 		if (queryText && platform?.env && !isGreeting(queryText)) {
-			// 3a. Score the question on its own first (topK = 2 for token efficiency)
-			let result = await retrieveRelevantContext(platform.env, queryText, 2);
-
-			// 3b. Short follow-ups (e.g. "what about the second one?") get a second try that includes
-			// the previous user turn, but only if they clear the stricter follow-up threshold
+			// 3. For short follow-ups (<= 6 words like "3rd year?"), include previous turn for semantic clarity
 			const prevUserMessage = userMessages.length > 1 ? userMessages[userMessages.length - 2] : null;
 			const wordCount = queryText.split(/\s+/).length;
-			if (result.ok && result.topScore < SIMILARITY_THRESHOLD && prevUserMessage && wordCount <= FOLLOWUP_MAX_WORDS) {
-				const followUp = await retrieveRelevantContext(
-					platform.env,
-					`${extractMessageText(prevUserMessage).slice(-100)} ${queryText}`,
-					2
-				);
-				if (followUp.ok && followUp.topScore >= FOLLOWUP_THRESHOLD) {
-					result = followUp;
+			const retrievalQuery =
+				prevUserMessage && wordCount <= FOLLOWUP_MAX_WORDS
+					? `${extractMessageText(prevUserMessage).slice(-150)} ${queryText}`
+					: queryText;
+
+			let result = await retrieveRelevantContext(platform.env, retrievalQuery, 3);
+
+			// If contextualized search didn't clear threshold, try standalone query as fallback
+			if (result.ok && result.topScore < SIMILARITY_THRESHOLD && retrievalQuery !== queryText) {
+				const standaloneResult = await retrieveRelevantContext(platform.env, queryText, 3);
+				if (standaloneResult.ok && standaloneResult.topScore > result.topScore) {
+					result = standaloneResult;
 				}
 			}
 

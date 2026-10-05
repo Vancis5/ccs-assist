@@ -1,5 +1,3 @@
-# CCS & SJC Academic Policies, Grading, and Scholarships
-
 ## College of Computer Studies Retention & Academic Standing
 - **Admission to 3rd Year BSIT / BSCS**: Students must complete all prescribed 1st and 2nd year professional computing courses with an average rating of at least **2.25**. This 2.25 average rating must be maintained.
 - **Failing Limit & Shifting**: Any student who fails in more than three (3) subjects shall be advised to shift to another course.

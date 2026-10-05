@@ -640,10 +640,10 @@
 			rgba(9, 10, 13, 0.35) 75%,
 			rgba(9, 10, 13, 0) 100%
 		);
-		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
-		mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
-		-webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+		backdrop-filter: blur(20px);
+		-webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+		mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
 	}
 
 	.bottom-dock-blur {
@@ -654,10 +654,10 @@
 			rgba(9, 10, 13, 0.3) 75%,
 			rgba(9, 10, 13, 0) 100%
 		);
-		backdrop-filter: blur(16px);
 		-webkit-backdrop-filter: blur(16px);
-		mask-image: linear-gradient(to top, black 0%, black 55%, transparent 100%);
-		-webkit-mask-image: linear-gradient(to top, black 0%, black 55%, transparent 100%);
+		backdrop-filter: blur(16px);
+		-webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 55%, rgba(0, 0, 0, 0) 100%);
+		mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 55%, rgba(0, 0, 0, 0) 100%);
 	}
 
 	:global(.intro-fade-in-header header) {

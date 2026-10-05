@@ -1,5 +1,3 @@
-# Campus Facilities, Computer Laboratories & Student Life
-
 ## Computer Laboratories & Campus Facilities
 - **Laboratories (4th Floor, Rooms 407–409)**: Fully air-conditioned computer laboratories equipped for programming, networking, database management, and systems administration.
 - **ILLC Laboratory (Ground Floor)**: Integrated Learning and Laboratory Center utilized for web development, emerging technologies, and systems integration courses.
