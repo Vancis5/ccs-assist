@@ -64,7 +64,7 @@ The Finance & Bursar's Office assesses tuition and laboratory fees per semester 
 - **2.75** = 77% - 79% (Fair)
 - **3.00** = 75% - 76% (Passed / Minimum Passing Grade)
 - **5.00** = Below 75% (Failed)
-- **NC** = No Credit (Given when final exam is missed and standing is unsatisfactory; compliance window within 2 weeks after rating sheet submission)
+- **NC** = No Credit (Given when final exam is missed and standing is unsatisfactory; can be changed into its Final Grade within 2 weeks after rating sheet submission, otherwise NC is considered as the Final Grade)
 - **W** = Officially Withdrawn (Complied with official withdrawal processing)
 - **FW** = Failure due to Unofficial Withdrawal (Stopped attending without official notice)
 - **FA** = Failure due to Excessive Absences (Exceeded maximum allowed class absences)
