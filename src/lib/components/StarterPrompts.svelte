@@ -23,7 +23,7 @@
 
 		// Staggered exit completes in ~280ms (4 cards * 40ms + 160ms exit duration)
 		setTimeout(() => {
-			prompts = getRandomStarterSuggestions(4);
+			prompts = getRandomStarterSuggestions(4, prompts.map((p) => p.query));
 			generation++;
 			isShuffling = false;
 		}, 280);

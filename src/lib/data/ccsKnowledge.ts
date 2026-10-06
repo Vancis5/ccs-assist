@@ -579,75 +579,195 @@ export const ccsKnowledge = {
 	starterPrompts: [
 		{
 			tag: 'Academics',
-			title: 'BSIT Curriculum & Analytics',
-			desc: 'Full subjects per year, summer capstone, and data analytics track',
-			query: 'What subjects are taken in 1st to 4th year in BSIT?'
+			title: 'The 4-Year BSIT Roadmap',
+			desc: 'From 1st year fundamentals all the way to analytics modeling',
+			query: 'What subjects are taken from 1st to 4th year in BSIT?'
 		},
 		{
-			tag: 'Directory',
-			title: 'CCS Dean & Location',
-			desc: "Dean Haidee Galdo, 1st floor office near entrance, and office hours",
-			query: "Who is the Dean of CCS and where is the Dean's Office located?"
+			tag: 'Curriculum',
+			title: 'Theoretical Foundations',
+			desc: 'Automata, algorithms, and how CS differs from IT',
+			query: 'What subjects and specializations are covered in the BSCS curriculum?'
 		},
 		{
 			tag: 'Policy',
-			title: 'Retention & 2.25 GWA',
-			desc: 'CAT 75% cutoff, 2.25 GWA for 3rd year, and >3 failures shifting rule',
-			query: 'What are the retention policies and CAT admission requirements for CCS?'
+			title: 'The 3rd Year Retention Gate',
+			desc: 'The exact GWA required to stay in the program without shifting',
+			query: 'What are the retention policies and minimum GPA to reach 3rd year in CCS?'
 		},
 		{
 			tag: 'Tuition',
-			title: 'Tuition & Lab Fees',
-			desc: '₱524/unit, ₱1,262 per lab, and Josephinian 50% discount',
-			query: 'How much is the tuition and laboratory fees per semester in CCS?'
+			title: 'Semester Tuition & Lab Costs',
+			desc: 'Per-unit tuition rates, lab fees, and total semestral estimates',
+			query: 'How much is the tuition and laboratory fee breakdown per semester in CCS?'
 		},
 		{
-			tag: 'Campus',
-			title: 'Labs & Software Tools',
-			desc: '4th floor rooms 407-409, ILLC, TextPad 7, VS Code, and XAMPP',
-			query: 'What computer laboratories and software tools are used in CCS?'
+			tag: 'Discounts',
+			title: 'Slashing Your Tuition',
+			desc: 'Diocesan alumni grants, location discounts, and honor tiers',
+			query: 'What scholarships, diocesan discounts, and tuition subsidies are available for CCS students?'
 		},
 		{
-			tag: 'Uniform',
-			title: 'Dress Code & Wash Days',
-			desc: 'Mon/Tue/Thu/Fri uniform, Wed & Sat departmental polo wash days',
-			query: 'What are the uniform and dress code rules for CCS students?'
-		},
-		{
-			tag: 'Capstone',
-			title: 'Capstone 1 & 2 Timeline',
-			desc: 'Summer Capstone 1 to 4th Year 1st Sem Capstone 2 sequence',
-			query: 'When do BSIT students start Capstone 1 and Capstone 2?'
-		},
-		{
-			tag: 'Theology',
-			title: 'Theology 24-Unit Track',
-			desc: '8-course requirement from Theo 1a (Old Testament) to Theo 4b',
-			query: 'What Theology subjects are required to graduate from SJC CCS?'
-		},
-		{
-			tag: 'Student Life',
-			title: 'PSITS & Campus Events',
-			desc: 'PSITS organization, CCS Days, Acquaintance Party, and Loyalty Day',
-			query: 'What student organizations and annual events exist in CCS?'
-		},
-		{
-			tag: 'Ladderized',
-			title: 'ACT 2-Year to BSIT',
-			desc: 'How Associate in Computer Technology ladderizes into BSIT/BSCS',
-			query: 'How does the 2-year ACT program ladderize into BSIT or BSCS?'
+			tag: 'Directory',
+			title: "Finding the Dean's Desk",
+			desc: 'Who leads the department and where to consult on campus',
+			query: "Who is the Dean of CCS and where is the Dean's Office located?"
 		},
 		{
 			tag: 'Faculty',
-			title: 'CCS Faculty & Instructors',
-			desc: 'Dean Haidee Galdo, Mrs. Javier, Mrs. Tenio, Mr. Climaco, and Mr. Hoyla',
-			query: 'Who are the CCS faculty members and what subjects do they handle?'
+			title: 'The Faces Behind Your Classes',
+			desc: 'Instructors handling programming, networking, and analytics',
+			query: 'Who are the CCS faculty members and what subjects do they teach?'
 		},
 		{
 			tag: 'Directory',
 			title: 'Department Secretary & Staff',
-			desc: 'Mrs. Wilna Mae Quilla-Oberez, SITO Joseph Demiao, and tech staff',
-			query: 'Who is the CCS department secretary and who are the technical staff?'
+			desc: 'Who assists with enrollments, department paperwork, and lab tech',
+			query: 'Who is the CCS department secretary and who handles IT technical support?'
+		},
+		{
+			tag: 'Uniform',
+			title: 'Dress Code & Wash Days',
+			desc: 'Which days require uniforms and what’s allowed on wash days',
+			query: 'What are the uniform guidelines, wash days, and dress code rules for CCS students?'
+		},
+		{
+			tag: 'Policy',
+			title: 'The 10-Absence Drop Rule',
+			desc: 'How tardiness stacks up and the cutoff that leads to an FA mark',
+			query: 'What is the attendance policy and how many absences lead to an FA grade in CCS?'
+		},
+		{
+			tag: 'Academics',
+			title: 'Latin Honors & Grading Cutoffs',
+			desc: 'Exact percentage ranges from 1.00 down to the passing line',
+			query: 'What is the official grading scale and percentage breakdown in Saint Joseph College?'
+		},
+		{
+			tag: 'Capstone',
+			title: 'The Capstone Gauntlet',
+			desc: 'When project defense begins and why summer term is crucial',
+			query: 'When do students start Capstone 1 and Capstone 2, and what are the prerequisites?'
+		},
+		{
+			tag: 'Internship',
+			title: 'The Practicum Requirement',
+			desc: 'Required industry hours, internship uniforms, and deployment rules',
+			query: 'How many hours are required for the CCS practicum or OJT internship?'
+		},
+		{
+			tag: 'Policy',
+			title: 'The 4th Year Gatekeeper',
+			desc: 'Non-major subjects that will block your graduation if neglected',
+			query: 'What requirements and subjects block students from enrolling in 4th year CCS?'
+		},
+		{
+			tag: 'Theology',
+			title: 'The 24-Unit Theo Sequence',
+			desc: 'Why every 4-year candidate takes 8 religious formation courses',
+			query: 'What Theology subjects are required to graduate from CCS at SJC?'
+		},
+		{
+			tag: 'Ladderized',
+			title: 'The 2-Year Backdoor',
+			desc: 'Starting in ACT and bridging straight into a 4-year BSIT degree',
+			query: 'How does the 2-year Associate in Computer Technology program ladderize into BSIT?'
+		},
+		{
+			tag: 'Admissions',
+			title: 'The CAT Entrance Score',
+			desc: 'The passing percentage needed for direct entry into BSIT or BSCS',
+			query: 'What score is required on the College Admission Test (CAT) to enter CCS directly?'
+		},
+		{
+			tag: 'Admissions',
+			title: 'The 5-Step Enrollment Run',
+			desc: 'Navigating from admission screening to getting your stamped COR',
+			query: 'What are the steps to enroll in CCS from evaluation to final registration?'
+		},
+		{
+			tag: 'Campus',
+			title: '4th Floor Lab Guidelines',
+			desc: 'Workstation rules, environment setup, and logbook expectations',
+			query: 'What are the computer laboratories on the 4th floor and what rules must students follow?'
+		},
+		{
+			tag: 'Campus',
+			title: 'Ground Floor Tech Lab',
+			desc: 'The specialized space used for emerging technologies and web development',
+			query: 'What is the ILLC laboratory and what classes are conducted there?'
+		},
+		{
+			tag: 'Campus',
+			title: 'The Modern Event Hall',
+			desc: 'The campus venue that replaced Bonzel Hall for major gatherings',
+			query: 'Where is the Cantabo Canticum Novum Mini Theater and what is it used for?'
+		},
+		{
+			tag: 'Tech Stack',
+			title: 'Software & Dev Tools Used',
+			desc: 'The editors, web stacks, and database engines used in class',
+			query: 'What programming languages, software, and development tools are used in CCS classes?'
+		},
+		{
+			tag: 'Certifications',
+			title: 'International IT Certification',
+			desc: 'The Japanese-standard IT Passport exam review handled by faculty',
+			query: 'What is the PhilNITS IT Passport certification and does CCS offer review for it?'
+		},
+		{
+			tag: 'History',
+			title: 'Who Coded the SJC Portal?',
+			desc: 'The faculty member and developer behind the official campus system',
+			query: 'Who developed the Saint Joseph College online portal and what is their role in CCS?'
+		},
+		{
+			tag: 'Student Life',
+			title: 'Student Orgs & Leadership',
+			desc: 'Co-curricular bodies representing IT students across the college',
+			query: 'What student organizations are active in the College of Computer Studies?'
+		},
+		{
+			tag: 'Student Life',
+			title: 'Department Days & Hackathons',
+			desc: 'Tech summits, project exhibitions, and departmental competitions',
+			query: 'What annual events and tech competitions happen in CCS throughout the school year?'
+		},
+		{
+			tag: 'Academics',
+			title: 'The 4-Exam Gauntlet',
+			desc: 'The major examination periods each semester and required permits',
+			query: 'What are the four major examinations each semester and what permit is required?'
+		},
+		{
+			tag: 'Policy',
+			title: 'Handling NC & Missed Finals',
+			desc: 'The strict compliance window before an incomplete mark hardens',
+			query: 'What does an NC grade mean and how much time do students have to complete it?'
+		},
+		{
+			tag: 'Heritage',
+			title: 'The CCS Origin Story',
+			desc: 'When the department was founded and the core values that guide it',
+			query: 'When was the CCS department founded and what is its official motto and history?'
+		},
+		{
+			tag: 'Discounts',
+			title: 'Regional Student Grants',
+			desc: 'Special tuition deductions for students traveling from neighboring towns',
+			query: 'Are there tuition discounts for students from Sogod, Baybay, or other areas outside Maasin?'
+		},
+		{
+			tag: 'Careers',
+			title: 'IT Specialist vs Developer',
+			desc: 'Comparing the career trajectories between the two computing degrees',
+			query: 'What is the difference in career opportunities between BSIT and BSCS?'
+		},
+		{
+			tag: 'Academics',
+			title: 'From HTML to Full-Stack',
+			desc: 'How web technologies evolve from basic scripting to Python and Django',
+			query: 'What web development technologies and frameworks are taught across the years in BSIT?'
 		}
 	]
 };
@@ -668,8 +788,12 @@ export function getStarterSuggestions(): StarterPrompt[] {
 	return ccsKnowledge.starterPrompts;
 }
 
-export function getRandomStarterSuggestions(count = 4): StarterPrompt[] {
-	const pool = [...ccsKnowledge.starterPrompts];
+export function getRandomStarterSuggestions(count = 4, excludeQueries: string[] = []): StarterPrompt[] {
+	const excludeSet = new Set(excludeQueries);
+	let pool = ccsKnowledge.starterPrompts.filter((p) => !excludeSet.has(p.query));
+	if (pool.length < count) {
+		pool = [...ccsKnowledge.starterPrompts];
+	}
 	for (let i = pool.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		[pool[i], pool[j]] = [pool[j], pool[i]];
