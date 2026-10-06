@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { Chat } from '@ai-sdk/svelte';
 	import { DefaultChatTransport } from 'ai';
-	import { ArrowUp, Square, AlertCircle, Mic, Loader2 } from 'lucide-svelte';
+	import { ArrowUp, ArrowDown, Square, AlertCircle, Mic, Loader2 } from 'lucide-svelte';
 	import ChatHeader from '$lib/components/ChatHeader.svelte';
 	import ChatMessage from '$lib/components/ChatMessage.svelte';
 	import StarterPrompts from '$lib/components/StarterPrompts.svelte';
@@ -41,7 +41,6 @@
 	let textareaRef: HTMLTextAreaElement | null = $state(null);
 	let isBursting = $state(false);
 	let burstKey = $state(0);
-	let autoFollowStream = $state(true);
 	let prevMessageCount = $state(0);
 	let isMobile = $state(false);
 	let isInputFocused = $state(false);
@@ -72,8 +71,8 @@
 	function checkScrollBottom() {
 		if (!messagesContainer) return;
 		const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
-		// Within 12px counts as at bottom
-		isScrolledToBottom = scrollHeight - scrollTop - clientHeight <= 12;
+		// Within 20px counts as at bottom (accounting for mobile touch & sub-pixel scaling)
+		isScrolledToBottom = scrollHeight - scrollTop - clientHeight <= 20;
 	}
 
 	function handleScroll() {
@@ -86,12 +85,6 @@
 		setTimeout(() => {
 			isBursting = false;
 		}, 850);
-	}
-
-	function handleWheel(e: WheelEvent) {
-		if (e.deltaY < 0) {
-			autoFollowStream = false;
-		}
 	}
 
 	async function putLatestUserMessageAtTop() {
@@ -119,27 +112,15 @@
 	}
 
 	function positionUserMessage() {
-		autoFollowStream = true;
 		putLatestUserMessageAtTop();
-		setTimeout(putLatestUserMessageAtTop, 50);
-		setTimeout(putLatestUserMessageAtTop, 180);
 	}
 
-	function handleStreamScroll() {
-		if (!messagesContainer || !autoFollowStream) return;
-		const assistantEls = messagesContainer.querySelectorAll('.assistant-msg-container');
-		const latestAssistantEl = assistantEls[assistantEls.length - 1] as HTMLElement | undefined;
-		if (!latestAssistantEl) return;
-
-		const rect = latestAssistantEl.getBoundingClientRect();
-		const bottomThreshold = window.innerHeight - 150;
-		if (rect.bottom > bottomThreshold) {
-			const diff = rect.bottom - bottomThreshold;
-			messagesContainer.scrollBy({
-				top: diff,
-				behavior: 'smooth'
-			});
-		}
+	function scrollToBottom() {
+		if (!messagesContainer) return;
+		messagesContainer.scrollTo({
+			top: messagesContainer.scrollHeight,
+			behavior: 'smooth'
+		});
 	}
 
 	function updatePaddingAfterResponse() {
@@ -162,17 +143,11 @@
 			return;
 		}
 
-		const userRect = latestUserEl.getBoundingClientRect();
-		const lastMsgRect = lastMsgEl.getBoundingClientRect();
-
-		const userTop = messagesContainer.scrollTop + (userRect.top - containerRect.top);
-		const targetTop = Math.max(0, userTop - 85);
 		const marginBottom = parseFloat(window.getComputedStyle(lastMsgEl).marginBottom) || 24;
-		const contentBottom = messagesContainer.scrollTop + (lastMsgRect.bottom - containerRect.top) + marginBottom;
+		const contentBottom = messagesContainer.scrollTop + (lastMsgEl.getBoundingClientRect().bottom - containerRect.top) + marginBottom;
 
-		const targetScroll = autoFollowStream ? messagesContainer.scrollTop : targetTop;
 		const dockHeight = 144;
-		const requiredPadding = Math.round((targetScroll + clientHeight) - contentBottom);
+		const requiredPadding = Math.round((messagesContainer.scrollTop + clientHeight) - contentBottom);
 
 		if (requiredPadding > dockHeight) {
 			shortPaddingPx = requiredPadding;
@@ -200,8 +175,8 @@
 
 	$effect(() => {
 		const _ = lastMessageContent;
-		if (isStreaming && lastMessage?.role === 'assistant') {
-			handleStreamScroll();
+		if (browser && messagesContainer) {
+			checkScrollBottom();
 		}
 	});
 
@@ -286,6 +261,9 @@
 		input = '';
 		if (textareaRef) {
 			textareaRef.style.height = 'auto';
+			if (isMobile) {
+				textareaRef.blur();
+			}
 		}
 
 		positionUserMessage();
@@ -313,7 +291,6 @@
 		triggerVibration();
 		responsePaddingState = 'large';
 		shortPaddingPx = null;
-		autoFollowStream = true;
 
 		// Ensure we target a valid message
 		const targetId = messageId ?? chat.messages[chat.messages.length - 1]?.id;
@@ -332,7 +309,6 @@
 		(chat as any).state.error = undefined;
 		(chat as any).state.status = 'ready';
 		prevMessageCount = 0;
-		autoFollowStream = true;
 		responsePaddingState = 'dock';
 		shortPaddingPx = null;
 		currentGreetingData = getRandomGreeting(currentGreetingData.index);
@@ -469,7 +445,6 @@
 	<main
 		bind:this={messagesContainer}
 		onscroll={handleScroll}
-		onwheel={handleWheel}
 		onpointerdown={(e) => {
 			if (isInputFocused && textareaRef && !textareaRef.contains(e.target as Node)) {
 				textareaRef.blur();
@@ -533,16 +508,35 @@
 		</div>
 	</main>
 
+	<!-- Bottom Linear Shadow (always present) -->
+	<div class="bottom-dock-shadow fixed inset-x-0 bottom-0 h-40 sm:h-44 z-[15] pointer-events-none"></div>
+
 	<!-- Progressive Blur Gradient (bottom dock area - fades out when scrolled all the way down) -->
 	<div
-		class="fixed inset-x-0 bottom-0 h-40 sm:h-44 z-[15] pointer-events-none transition-opacity duration-300 {isScrolledToBottom ? 'opacity-0' : 'opacity-100'}"
-	>
-		<div class="bottom-dock-blur w-full h-full"></div>
-	</div>
+		class="bottom-dock-blur fixed inset-x-0 bottom-0 h-40 sm:h-44 z-[14] pointer-events-none transition-opacity duration-300 {isScrolledToBottom ? 'opacity-0' : 'opacity-100'}"
+	></div>
 
 	<!-- Edge-to-Edge Floating Input Dock -->
 	<footer class="intro-fade-in-footer pointer-events-none fixed bottom-0 left-0 right-0 w-full pt-16 pb-4 sm:pb-6 px-5 sm:px-6 flex flex-col items-center justify-end z-20">
 		<div class="pointer-events-auto w-full max-w-2xl mx-auto relative">
+			<!-- Scroll to bottom / Latest button -->
+			{#if chat.messages.length > 0}
+				<button
+					type="button"
+					onclick={scrollToBottom}
+					class="absolute -top-11 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center gap-1.5 rounded-full bg-[#14151b]/95 hover:bg-[#1d1f27] backdrop-blur-md border border-white/[0.12] hover:border-white/25 text-zinc-300 hover:text-white shadow-xl shadow-black/60 transition-all duration-200 active:scale-95 cursor-pointer {isStreaming ? 'px-3 py-1 text-xs' : 'w-8 h-8'} {isScrolledToBottom ? 'opacity-0 pointer-events-none translate-y-1' : 'opacity-100 translate-y-0'}"
+					title="Scroll to bottom"
+				>
+					{#if isStreaming}
+						<span class="w-1.5 h-1.5 rounded-full bg-[#FA4615] animate-pulse shrink-0"></span>
+						<span class="text-[11px] font-medium text-zinc-300 whitespace-nowrap">Latest</span>
+						<ArrowDown class="w-3 h-3 text-zinc-400 shrink-0" />
+					{:else}
+						<ArrowDown class="w-3.5 h-3.5 text-zinc-300" />
+					{/if}
+				</button>
+			{/if}
+
 			<!-- Glow & color burst behind prompt dock on send -->
 			{#if isBursting}
 				{#key burstKey}
@@ -661,7 +655,7 @@
 		mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
 	}
 
-	.bottom-dock-blur {
+	.bottom-dock-shadow {
 		background: linear-gradient(
 			0deg,
 			rgba(9, 10, 13, 0.95) 0%,
@@ -669,6 +663,9 @@
 			rgba(9, 10, 13, 0.3) 75%,
 			rgba(9, 10, 13, 0) 100%
 		);
+	}
+
+	.bottom-dock-blur {
 		-webkit-backdrop-filter: blur(16px);
 		backdrop-filter: blur(16px);
 		-webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 55%, rgba(0, 0, 0, 0) 100%);
