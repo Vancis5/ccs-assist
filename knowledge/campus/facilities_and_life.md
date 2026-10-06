@@ -32,7 +32,7 @@
   - **Federation of College Student Organizations (FCSO)**: Apex student governing coalition.
   - **The Josephinian**: Official campus student publication.
 - **Department Traditions & Annual Events**:
-  - **CCS Departmental Days & Tech Events**: Coding competitions, seminars, project showcases.
+  - **CCS Departmental Days & Tech Events**: Annual multi-day celebration (Day 0 to Day 3) featuring physical sports (Basketball, Volleyball, Badminton), mobile esports (CODM, MLBB), academic/tech quiz bowls, Cisco & Robotics launches, PhilNITS blessings, Laro ng Lahi, and culmination variety nights.
   - **Acquaintance Party & Socials**: Department social orientation and team-building.
   - **Loyalty Day & Family Run**: SJC institutional community traditions.
   - **PRISAA Meet**: Inter-school athletic and cultural competitions.
