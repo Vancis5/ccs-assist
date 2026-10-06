@@ -46,7 +46,7 @@
 	let isInputFocused = $state(false);
 	let responsePaddingState = $state<'large' | 'short' | 'dock'>('dock');
 	let shortPaddingPx = $state<number | null>(null);
-	let isScrolledToBottom = $state(true);
+	let canScrollDown = $state(false);
 	let wasStreaming = $state(false);
 
 	const isStreaming = $derived(chat.status === 'streaming' || chat.status === 'submitted');
@@ -68,15 +68,25 @@
 		wasStreaming = isStreaming;
 	});
 
-	function checkScrollBottom() {
-		if (!messagesContainer) return;
-		const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
-		// Within 20px counts as at bottom (accounting for mobile touch & sub-pixel scaling)
-		isScrolledToBottom = scrollHeight - scrollTop - clientHeight <= 20;
+	function updateScrollState() {
+		if (!messagesContainer || chat.messages.length === 0) {
+			canScrollDown = false;
+			return;
+		}
+		const msgEls = messagesContainer.querySelectorAll('.user-msg-container, .assistant-msg-container');
+		const lastMsgEl = msgEls[msgEls.length - 1] as HTMLElement | undefined;
+		if (!lastMsgEl) {
+			canScrollDown = false;
+			return;
+		}
+
+		const lastRect = lastMsgEl.getBoundingClientRect();
+		const dockThreshold = window.innerHeight - (isMobile ? 120 : 130);
+		canScrollDown = lastRect.bottom > dockThreshold;
 	}
 
 	function handleScroll() {
-		checkScrollBottom();
+		updateScrollState();
 	}
 
 	function triggerBurst() {
@@ -156,7 +166,7 @@
 			shortPaddingPx = null;
 			responsePaddingState = 'dock';
 		}
-		checkScrollBottom();
+		updateScrollState();
 	}
 
 	const lastMessage = $derived(chat.messages[chat.messages.length - 1]);
@@ -176,7 +186,7 @@
 	$effect(() => {
 		const _ = lastMessageContent;
 		if (browser && messagesContainer) {
-			checkScrollBottom();
+			updateScrollState();
 		}
 	});
 
@@ -203,6 +213,7 @@
 		mql.addEventListener('change', handler);
 
 		const handleResize = () => {
+			updateScrollState();
 			if (!isStreaming && chat.messages.length > 0 && responsePaddingState === 'short') {
 				updatePaddingAfterResponse();
 			}
@@ -309,6 +320,7 @@
 		(chat as any).state.error = undefined;
 		(chat as any).state.status = 'ready';
 		prevMessageCount = 0;
+		canScrollDown = false;
 		responsePaddingState = 'dock';
 		shortPaddingPx = null;
 		currentGreetingData = getRandomGreeting(currentGreetingData.index);
@@ -513,27 +525,21 @@
 
 	<!-- Progressive Blur Gradient (bottom dock area - fades out when scrolled all the way down) -->
 	<div
-		class="bottom-dock-blur fixed inset-x-0 bottom-0 h-40 sm:h-44 z-[14] pointer-events-none transition-opacity duration-300 {isScrolledToBottom ? 'opacity-0' : 'opacity-100'}"
+		class="bottom-dock-blur fixed inset-x-0 bottom-0 h-40 sm:h-44 z-[14] pointer-events-none transition-opacity duration-300 {canScrollDown ? 'opacity-100' : 'opacity-0'}"
 	></div>
 
 	<!-- Edge-to-Edge Floating Input Dock -->
 	<footer class="intro-fade-in-footer pointer-events-none fixed bottom-0 left-0 right-0 w-full pt-16 pb-4 sm:pb-6 px-5 sm:px-6 flex flex-col items-center justify-end z-20">
 		<div class="pointer-events-auto w-full max-w-2xl mx-auto relative">
-			<!-- Scroll to bottom / Latest button -->
+			<!-- Scroll to bottom button -->
 			{#if chat.messages.length > 0}
 				<button
 					type="button"
 					onclick={scrollToBottom}
-					class="absolute -top-11 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center gap-1.5 rounded-full bg-[#14151b]/95 hover:bg-[#1d1f27] backdrop-blur-md border border-white/[0.12] hover:border-white/25 text-zinc-300 hover:text-white shadow-xl shadow-black/60 transition-all duration-200 active:scale-95 cursor-pointer {isStreaming ? 'px-3 py-1 text-xs' : 'w-8 h-8'} {isScrolledToBottom ? 'opacity-0 pointer-events-none translate-y-1' : 'opacity-100 translate-y-0'}"
+					class="absolute -top-11 left-1/2 -translate-x-1/2 z-30 w-8 h-8 rounded-full flex items-center justify-center bg-[#121318]/95 hover:bg-[#1a1b22] backdrop-blur-md border border-white/[0.08] hover:border-white/20 text-zinc-400 hover:text-white shadow-lg shadow-black/40 transition-all duration-200 active:scale-95 cursor-pointer {canScrollDown ? 'opacity-100 translate-y-0' : 'opacity-0 pointer-events-none translate-y-1'}"
 					title="Scroll to bottom"
 				>
-					{#if isStreaming}
-						<span class="w-1.5 h-1.5 rounded-full bg-[#FA4615] animate-pulse shrink-0"></span>
-						<span class="text-[11px] font-medium text-zinc-300 whitespace-nowrap">Latest</span>
-						<ArrowDown class="w-3 h-3 text-zinc-400 shrink-0" />
-					{:else}
-						<ArrowDown class="w-3.5 h-3.5 text-zinc-300" />
-					{/if}
+					<ArrowDown class="w-3.5 h-3.5" />
 				</button>
 			{/if}
 
