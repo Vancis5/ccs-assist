@@ -31,7 +31,7 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
 	{
 		"id": "academics-programs-5",
 		"category": "academics",
-		"content": "## Bachelor of Science in Information Technology (BSIT) Overview\n- **Duration**: 4 Years (8 Semesters + 1 Summer Term)\n- **Specialization / Focus**: Business Analytics, Systems Integration, Web Systems (HTML, CSS, JavaScript, PHP with XAMPP, SQL, Python/Django in 3rd Year), Networking, Cybersecurity, and Enterprise Data Management.\n- **Total Units**: ~167 Units\n- **Overview**: Prepares students for careers in software engineering, database administration, system integration, analytics, and network infrastructure."
+		"content": "## Bachelor of Science in Information Technology (BSIT) Overview\n- **Duration**: 4 Years (8 Semesters + 1 Summer Term)\n- **Specialization / Focus**: Systems Integration, Web Systems (HTML, CSS, JavaScript, PHP with XAMPP, SQL, Python/Django in 3rd Year), Networking, Cybersecurity, and Enterprise Data Management. (Note: CCS does not offer C# or a Data Science track; Python is used specifically for 3rd year subjects).\n- **Total Units**: ~167 Units\n- **Overview**: Prepares students for careers in software engineering, database administration, system integration, analytics, and network infrastructure."
 	},
 	{
 		"id": "academics-programs-6",
@@ -161,7 +161,7 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
 	{
 		"id": "campus-facilities_and_life-2",
 		"category": "campus",
-		"content": "## Software Environment & Coding Tools\n- **Introductory Programming (1st & 2nd Year)**: Java developed primarily with **TextPad 7** (for foundational syntax, OOP, and data structures).\n- **Web & Database Development (2nd & 3rd Year)**: HTML5, CSS3, JavaScript, PHP, and SQL using the **XAMPP stack** (Apache & MySQL).\n- **Backend & Emerging Tech (3rd Year)**: **Python** and **Django framework** for advanced web development and data analytics.\n- **General IDEs & Editors**: **VS Code**, **Notepad++**, and database management interfaces.\n- **Operating Systems**: Windows 10 transitioning into Windows 11 enterprise configurations."
+		"content": "## Software Environment, Programming Languages & Coding Tools\n- **Core Programming Languages in Curriculum**:\n  - **Java**: Primary language for 1st and 2nd year programming fundamentals, Object-Oriented Programming (OOP), and Data Structures & Algorithms (developed primarily using **TextPad 7**).\n  - **Python**: Used in **3rd Year subjects** (such as advanced backend web development with the **Django framework** and integrative programming). *Python is NOT used for AI or Data Science, and SJC CCS does not offer a Data Science program.*\n  - **Web Technologies & Databases**: HTML5, CSS3, JavaScript, PHP, and SQL using the **XAMPP stack** (Apache & MySQL) for web systems and database subjects.\n- **Languages NOT Offered / NOT Taught**: **C# (C Sharp)** is **NOT** taught or used in the CCS curriculum at SJC.\n- **General IDEs & Editors**: **VS Code**, **Notepad++**, **TextPad 7**, and database management interfaces.\n- **Operating Systems**: Windows 10 transitioning into Windows 11 enterprise configurations."
 	},
 	{
 		"id": "campus-facilities_and_life-3",

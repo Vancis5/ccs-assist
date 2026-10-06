@@ -50,7 +50,7 @@ All undergraduate degree programs in CCS include the standard CHED General Educa
 
 ## Bachelor of Science in Information Technology (BSIT) Overview
 - **Duration**: 4 Years (8 Semesters + 1 Summer Term)
-- **Specialization / Focus**: Business Analytics, Systems Integration, Web Systems (HTML, CSS, JavaScript, PHP with XAMPP, SQL, Python/Django in 3rd Year), Networking, Cybersecurity, and Enterprise Data Management.
+- **Specialization / Focus**: Systems Integration, Web Systems (HTML, CSS, JavaScript, PHP with XAMPP, SQL, Python/Django in 3rd Year), Networking, Cybersecurity, and Enterprise Data Management. (Note: CCS does not offer C# or a Data Science track; Python is used specifically for 3rd year subjects).
 - **Total Units**: ~167 Units
 - **Overview**: Prepares students for careers in software engineering, database administration, system integration, analytics, and network infrastructure.
 

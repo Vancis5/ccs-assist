@@ -12,11 +12,13 @@
   - Working students and laboratory coordinators supervise equipment maintenance and room readiness.
   - Food, open drink containers, and unauthorized altering of desktop or network configurations are strictly prohibited inside all laboratories.
 
-## Software Environment & Coding Tools
-- **Introductory Programming (1st & 2nd Year)**: Java developed primarily with **TextPad 7** (for foundational syntax, OOP, and data structures).
-- **Web & Database Development (2nd & 3rd Year)**: HTML5, CSS3, JavaScript, PHP, and SQL using the **XAMPP stack** (Apache & MySQL).
-- **Backend & Emerging Tech (3rd Year)**: **Python** and **Django framework** for advanced web development and data analytics.
-- **General IDEs & Editors**: **VS Code**, **Notepad++**, and database management interfaces.
+## Software Environment, Programming Languages & Coding Tools
+- **Core Programming Languages in Curriculum**:
+  - **Java**: Primary language for 1st and 2nd year programming fundamentals, Object-Oriented Programming (OOP), and Data Structures & Algorithms (developed primarily using **TextPad 7**).
+  - **Python**: Used in **3rd Year subjects** (such as advanced backend web development with the **Django framework** and integrative programming). *Python is NOT used for AI or Data Science, and SJC CCS does not offer a Data Science program.*
+  - **Web Technologies & Databases**: HTML5, CSS3, JavaScript, PHP, and SQL using the **XAMPP stack** (Apache & MySQL) for web systems and database subjects.
+- **Languages NOT Offered / NOT Taught**: **C# (C Sharp)** is **NOT** taught or used in the CCS curriculum at SJC.
+- **General IDEs & Editors**: **VS Code**, **Notepad++**, **TextPad 7**, and database management interfaces.
 - **Operating Systems**: Windows 10 transitioning into Windows 11 enterprise configurations.
 
 ## Student Laptop & Hardware Recommendations
