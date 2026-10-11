@@ -1,0 +1,3 @@
+## 2024-10-11 - Extracting Heavy Objects in Svelte 5
+**Learning:** In Svelte 5, extracting heavy, stateless objects (like `Marked` markdown parser instances) into `<script module lang="ts">` blocks is a critical performance pattern. Standard `<script>` blocks execute per component instance, causing O(N) instantiation overhead where N is the number of rendered components (e.g., chat messages).
+**Action:** When a component initializes a complex object that doesn't depend on component props or state, extract it to a `<script module>` block to make it a singleton, avoiding unnecessary repeated work across multiple instances. Always remember to add `lang="ts"` to the module block.

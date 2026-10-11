@@ -1,8 +1,9 @@
-<script lang="ts">
+<script module lang="ts">
 	import { Marked } from 'marked';
-	import { Copy, Check, RotateCcw } from 'lucide-svelte';
-	import { extractMessageText } from '$lib/messages';
 
+	// ⚡ Bolt: Extract markdown parser to singleton
+	// Moving Marked initialization to <script module> prevents recreating the parser
+	// for every chat message instance, avoiding O(N) instantiation cost.
 	const markdownParser = new Marked({
 		breaks: true,
 		gfm: true,
@@ -18,6 +19,11 @@
 			}
 		}
 	});
+</script>
+
+<script lang="ts">
+	import { Copy, Check, RotateCcw } from 'lucide-svelte';
+	import { extractMessageText } from '$lib/messages';
 
 	let {
 		message,
