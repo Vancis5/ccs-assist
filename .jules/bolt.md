@@ -1,0 +1,3 @@
+## 2024-05-18 - Heavy Stateless Objects in Svelte 5 Components
+**Learning:** In Svelte 5 components, code inside the standard `<script>` block is executed per component instance. Heavy stateless objects, like markdown parsers (e.g., `Marked`), should not be initialized here as they will be re-instantiated for every component instance (like every single chat message in a long list), leading to memory bloat and unnecessary overhead.
+**Action:** Extract heavy, stateless objects into a `<script module>` block so they run only once per module (as singletons) rather than per instance. Always include the `lang="ts"` attribute (e.g., `<script module lang="ts">`) to prevent build-breaking type checking regressions.
