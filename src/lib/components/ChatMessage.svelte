@@ -1,8 +1,12 @@
-<script lang="ts">
+<script module lang="ts">
 	import { Marked } from 'marked';
-	import { Copy, Check, RotateCcw } from 'lucide-svelte';
-	import { extractMessageText } from '$lib/messages';
 
+	// ⚡ Bolt Performance Optimization:
+	// Extracted the heavy, stateless `Marked` parser instance into a `<script module>` block.
+	// This ensures it is instantiated as a singleton across all `ChatMessage` components,
+	// rather than once per instance. This significantly reduces memory overhead and CPU usage
+	// when rendering long chat threads with many messages.
+	// Expected Impact: O(1) memory instead of O(N) for the parser, faster initial render for lists.
 	const markdownParser = new Marked({
 		breaks: true,
 		gfm: true,
@@ -18,6 +22,11 @@
 			}
 		}
 	});
+</script>
+
+<script lang="ts">
+	import { Copy, Check, RotateCcw } from 'lucide-svelte';
+	import { extractMessageText } from '$lib/messages';
 
 	let {
 		message,
