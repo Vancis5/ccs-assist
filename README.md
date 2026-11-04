@@ -2,6 +2,8 @@
 
 an edge-powered ai assistant for the college of computer studies (ccs) at saint joseph college in maasin city. built so students can get instant answers on retention rules, curriculum prerequisites, dean's office hours, and enrollment steps without digging through handbooks or waiting in line.
 
+> [**live assistant → ccs-assist.pages.dev**](https://ccs-assist.pages.dev)
+
 ## stack
 
 - **sveltekit** (svelte 5 + runes) — reactive chat ui & edge api routes
