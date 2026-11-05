@@ -4,16 +4,12 @@
   --font-sans: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --color-brand-orange: #FA4615;
   --color-brand-orange-hover: #C23811;
-  --color-brand-green: #147A0D;
-  --color-brand-yellow: #E3CD2C;
 }
 
 @layer base {
   :root {
     --brand-orange: #FA4615;
     --brand-orange-hover: #C23811;
-    --brand-green: #147A0D;
-    --brand-yellow: #E3CD2C;
   }
 
   *,

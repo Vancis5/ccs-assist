@@ -724,8 +724,8 @@
 		background: radial-gradient(
 			ellipse 60% 50% at 50% 30%,
 			rgba(250, 70, 21, 0.22) 0%,
-			rgba(250, 70, 21, 0.12) 35%,
-			rgba(227, 205, 44, 0.04) 60%,
+			rgba(250, 70, 21, 0.1) 35%,
+			rgba(250, 70, 21, 0.03) 60%,
 			transparent 75%
 		);
 		filter: blur(72px);
@@ -752,8 +752,8 @@
 		background: radial-gradient(
 			ellipse 80% 65% at center,
 			rgba(250, 70, 21, 0.5) 0%,
-			rgba(227, 205, 44, 0.28) 35%,
-			rgba(20, 122, 13, 0.12) 65%,
+			rgba(250, 70, 21, 0.22) 35%,
+			rgba(194, 56, 17, 0.1) 65%,
 			transparent 75%
 		);
 		filter: blur(24px);

@@ -15,6 +15,12 @@ archive/
 *.patch
 *.tmp
 scripts/.temp_*
+scripts/*capture*.mjs
+*.zip
+*-repomix*.xml
+HCI_*.md
+icons/
+screenshots/
 
 # OS Metadata
 .DS_Store

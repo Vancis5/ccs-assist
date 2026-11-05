@@ -68,9 +68,7 @@ export const ccsKnowledge = {
 		},
 		brandColors: {
 			primary: "#FA4615", // CCS Orange
-			accentSend: "#C23811",
-			green: "#147A0D",
-			yellow: "#E3CD2C"
+			accentSend: "#C23811"
 		},
 		coreValues: [
 			"God-Centeredness",
