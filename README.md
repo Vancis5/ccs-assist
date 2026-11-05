@@ -4,6 +4,8 @@ an edge-powered ai assistant for the college of computer studies (ccs) at saint 
 
 > [**live assistant → ccs-assist.pages.dev**](https://ccs-assist.pages.dev)
 
+![ccs assist preview](preview.png)
+
 ## stack
 
 - **sveltekit** (svelte 5 + runes) — reactive chat ui & edge api routes
