@@ -6,30 +6,129 @@ export const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5';
 const CHUNKS_BY_ID = new Map<string, KnowledgeChunk>(KNOWLEDGE_CHUNKS.map((c) => [c.id, c]));
 
 const STOP_WORDS = new Set([
+	// English
 	'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he',
 	'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'were',
 	'will', 'with', 'what', 'who', 'where', 'when', 'why', 'how', 'much', 'many',
-	'can', 'could', 'should', 'would', 'i', 'you', 'my', 'your', 'about', 'tell', 'me'
+	'can', 'could', 'should', 'would', 'i', 'you', 'my', 'your', 'about', 'tell', 'me',
+
+	// Tagalog & Cebuano particles, pronouns, and question words
+	'ang', 'mga', 'sa', 'ug', 'og', 'ng', 'na', 'ba', 'po', 'opo', 'ho', 'kay', 'ko', 'ka', 'mo', 'mi',
+	'si', 'ni', 'kang', 'para', 'lang', 'ra', 'man', 'din', 'rin', 'daw', 'raw', 'pala', 'kasi',
+	'ung', 'yung', 'nito', 'niyan', 'niyon', 'dito', 'diyan', 'doon', 'diri', 'diha', 'didto',
+	'ako', 'ikaw', 'siya', 'kami', 'tayo', 'kayo', 'sila', 'kita', 'kamo',
+	'nako', 'nimo', 'niya', 'namo', 'nato', 'ninyo', 'nila',
+	'kanako', 'kanimo', 'kaniya', 'kanamo', 'kanato', 'kaninyo', 'kanila',
+	'kinsa', 'unsa', 'asa', 'diin', 'ngano', 'giunsa', 'unsaon', 'pila',
+	'sino', 'ano', 'saan', 'bakit', 'paano', 'kailan', 'ilan', 'gaano'
 ]);
 
 /**
- * Keyword-based retrieval across bundled chunks for fast hybrid fallback.
+ * Domain synonym dictionary mapping Cebuano and Tagalog academic terms
+ * to the English vocabulary used in knowledge base chunks.
+ */
+const DOMAIN_SYNONYMS: Record<string, string[]> = {
+	// Programs & curriculum
+	kurso: ['program', 'degree', 'curriculum', 'course'],
+	kursohon: ['program', 'degree'],
+	tulunghaan: ['school', 'college', 'campus'],
+	paaralan: ['school', 'college', 'campus'],
+
+	// Faculty & leadership
+	dean: ['dean', 'head', 'galdo', 'siega'],
+	dekano: ['dean', 'galdo', 'office'],
+	dekana: ['dean', 'galdo', 'office'],
+	pamunuan: ['dean', 'leadership', 'faculty'],
+	kadagkuan: ['dean', 'leadership', 'faculty'],
+	magtutudlo: ['faculty', 'instructor', 'teacher'],
+	guro: ['faculty', 'instructor', 'teacher'],
+	maestro: ['faculty', 'instructor', 'teacher'],
+	maestra: ['faculty', 'instructor', 'teacher'],
+	propesor: ['faculty', 'professor', 'instructor'],
+	secretary: ['secretary', 'oberez', 'office'],
+	kalihim: ['secretary', 'oberez'],
+
+	// Facilities & locations
+	opisina: ['office', 'deans', 'floor'],
+	buhatan: ['office', 'deans', 'floor'],
+	nahimutangan: ['location', 'floor', 'office'],
+	lokasyon: ['location', 'floor', 'office'],
+	kwarto: ['room', 'laboratory', 'lab'],
+	lawak: ['room', 'laboratory', 'lab'],
+	laboratoryo: ['laboratory', 'lab', 'illc', 'computer'],
+	simbahan: ['chapel', 'canticum', 'novum'],
+	kapilya: ['chapel', 'canticum', 'novum'],
+
+	// Enrollment & admission
+	palista: ['enroll', 'enrollment', 'admission'],
+	pagpalista: ['enroll', 'enrollment', 'admission'],
+	patala: ['enroll', 'enrollment', 'admission'],
+	pagpatala: ['enroll', 'enrollment', 'admission'],
+	enrol: ['enroll', 'enrollment', 'admission'],
+	rehistro: ['registration', 'portal', 'cor'],
+
+	// Fees & scholarships
+	matrikula: ['tuition', 'fee', 'unit'],
+	bayad: ['tuition', 'fee', 'payment'],
+	bayranan: ['tuition', 'fee', 'costs'],
+	diskwento: ['discount', 'scholarship', 'subsidy'],
+	iskolar: ['scholarship', 'grant', 'discount'],
+	iskolarship: ['scholarship', 'grant', 'discount'],
+
+	// Academic policies & rules
+	balaod: ['policy', 'retention', 'rules', 'grade'],
+	patakaran: ['policy', 'retention', 'rules', 'grade'],
+	grado: ['grade', 'gpa', 'rating', 'scale'],
+	marka: ['grade', 'gpa', 'rating'],
+	puntos: ['grade', 'rating', 'gpa'],
+	hagbong: ['fail', 'retention', 'failed', 'fa'],
+	bagsak: ['fail', 'retention', 'failed', 'fa'],
+	absent: ['absence', 'attendance', 'fa'],
+	liban: ['absence', 'attendance', 'fa'],
+	uniporme: ['uniform', 'dress', 'code', 'wash'],
+	sinina: ['uniform', 'dress', 'code', 'wash'],
+	kasuotan: ['uniform', 'dress', 'code', 'wash'],
+
+	// Graduation & Practicum
+	graduwar: ['graduation', 'graduate', 'degree'],
+	gradweyt: ['graduation', 'graduate', 'degree'],
+	pagtapos: ['graduation', 'graduate', 'degree'],
+	ojt: ['internship', 'practicum', 'hours'],
+	praktis: ['internship', 'practicum', 'hours'],
+	teolohiya: ['theology', 'theo', 'curriculum']
+};
+
+/**
+ * Keyword-based retrieval across bundled chunks with Cebuano/Tagalog synonym expansion.
  */
 function getKeywordMatches(query: string, limit = 3): KnowledgeChunk[] {
-	const terms = query
+	const rawTerms = query
 		.toLowerCase()
 		.replace(/[^a-z0-9\s]/g, ' ')
 		.split(/\s+/)
 		.filter((w) => w.length > 1 && !STOP_WORDS.has(w));
 
-	if (terms.length === 0) return [];
+	if (rawTerms.length === 0) return [];
+
+	// Expand search terms with mapped domain concepts
+	const terms = new Set<string>(rawTerms);
+	for (const term of rawTerms) {
+		const synonyms = DOMAIN_SYNONYMS[term];
+		if (synonyms) {
+			for (const s of synonyms) {
+				terms.add(s);
+			}
+		}
+	}
+
+	const termList = Array.from(terms);
 
 	const scored = KNOWLEDGE_CHUNKS.map((chunk) => {
 		const lowerContent = chunk.content.toLowerCase();
 		let score = 0;
 		const firstLine = lowerContent.split('\n')[0];
 
-		for (const term of terms) {
+		for (const term of termList) {
 			if (firstLine.includes(term)) {
 				score += 4; // High weight for header matches
 			}
@@ -45,6 +144,30 @@ function getKeywordMatches(query: string, limit = 3): KnowledgeChunk[] {
 		.sort((a, b) => b.score - a.score)
 		.slice(0, limit)
 		.map((s) => s.chunk);
+}
+
+/**
+ * Expands non-English query terms with English equivalents to maximize
+ * cosine similarity against English-only embedding models like bge-base-en-v1.5.
+ */
+export function expandQueryForEmbedding(query: string): string {
+	const rawTerms = query
+		.toLowerCase()
+		.replace(/[^a-z0-9\s]/g, ' ')
+		.split(/\s+/)
+		.filter((w) => w.length > 1 && !STOP_WORDS.has(w));
+
+	const expansions: string[] = [];
+	for (const term of rawTerms) {
+		const synonyms = DOMAIN_SYNONYMS[term];
+		if (synonyms) {
+			expansions.push(...synonyms);
+		}
+	}
+
+	if (expansions.length === 0) return query;
+	const uniqueExpansions = Array.from(new Set(expansions)).slice(0, 6);
+	return `${query} (${uniqueExpansions.join(' ')})`;
 }
 
 /**
@@ -145,8 +268,9 @@ export async function retrieveRelevantContext(
 
 	if (env?.VECTORIZE && env?.AI) {
 		try {
-			// 1. Embed user query with Workers AI
-			const queryVector = await getEmbedding(env.AI, query);
+			// 1. Embed user query with Workers AI (using term expansion for cross-lingual English embedding)
+			const embeddingQuery = expandQueryForEmbedding(query);
+			const queryVector = await getEmbedding(env.AI, embeddingQuery);
 
 			// 2. Search Vectorize
 			const matches = (await env.VECTORIZE.query(queryVector, {

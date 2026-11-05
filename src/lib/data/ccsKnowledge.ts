@@ -766,6 +766,18 @@ export const ccsKnowledge = {
 			title: 'From HTML to Full-Stack',
 			desc: 'How web technologies evolve from basic scripting to Python and Django',
 			query: 'What web development technologies and frameworks are taught across the years in BSIT?'
+		},
+		{
+			tag: 'Binisaya',
+			title: 'Kinsa ang Dean sa CCS?',
+			desc: 'Asa dapit ang opisina sa dean ug kanus-a pwede makig-consult',
+			query: "Kinsa ang Dean sa CCS ug asa dapit ang Dean's Office nahimutang?"
+		},
+		{
+			tag: 'Tagalog',
+			title: 'Paano Mag-enroll sa CCS?',
+			desc: 'Hakbang sa admission, assessment, at enrollment sa portal',
+			query: 'Paano mag-enroll sa College of Computer Studies sa SJC?'
 		}
 	]
 };

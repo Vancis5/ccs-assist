@@ -18,15 +18,46 @@ const FOLLOWUP_THRESHOLD = 0.5;
 const FOLLOWUP_MAX_WORDS = 6;
 
 const CASUAL_GREETINGS = new Set([
-	'hi', 'hello', 'hey', 'sup', 'yo', 'good morning', 'good afternoon', 'good evening',
-	'kumusta', 'musta', 'hmmm', 'who are you', 'what can you do', 'help', 'test',
-	'thanks', 'thank you', 'ok', 'okay'
+	// English
+	'hi', 'hello', 'hey', 'sup', 'yo', 'good morning', 'good afternoon', 'good evening', 'good day',
+	'who are you', 'what can you do', 'help', 'test', 'thanks', 'thank you', 'ok', 'okay', 'hmmm',
+
+	// Tagalog / Filipino
+	'kamusta', 'kumusta', 'musta',
+	'magandang umaga', 'magandang tanghali', 'magandang hapon', 'magandang gabi', 'magandang araw',
+	'sino ka', 'ano ang kaya mong gawin', 'ano kaya mong gawin', 'ano magagawa mo', 'tulong',
+	'salamat', 'maraming salamat',
+
+	// Cebuano / Bisaya
+	'maayong buntag', 'maayong udto', 'maayong hapon', 'maayong gabii', 'maayong adlaw',
+	'kinsa ka', 'kinsa man ka', 'unsa imo mabuhat', 'unsay imong mabuhat', 'unsay kaya nimo buhaton',
+	'daghang salamat', 'salamat kaayo', 'tabang'
 ]);
 
-// Exact-match only. The old "length <= 4" shortcut let any 4-char message skip the scope gate.
 function isGreeting(text: string): boolean {
-	const cleaned = text.toLowerCase().trim().replace(/[?!.,]/g, '');
+	const cleaned = text
+		.toLowerCase()
+		.trim()
+		.replace(/[?!.,;:]/g, '')
+		.replace(/\b(po|ho|man|ba|diay|kaayo|nga)\b/g, '')
+		.replace(/\s+/g, ' ')
+		.trim();
+
 	return CASUAL_GREETINGS.has(cleaned);
+}
+
+function getRefusalResponse(query: string): string {
+	const lower = query.toLowerCase();
+	const cebPattern = /\b(unsa|kinsa|asa|ngano|giunsa|unsaon|pila|buntag|udto|gabii|kaayo|nako|nimo|namo|kini|kana|kadto|dapit|gani|bahin|ambot|gyud|jud|tuig|daghang salamat)\b/i;
+	const tglPattern = /\b(ano|sino|saan|bakit|paano|kailan|ilan|meron|umaga|tanghali|gabi|natin|namin|kanila|ito|iyan|iyon|tungkol|bawat|naman|talaga|po|opo|maraming salamat)\b/i;
+
+	if (cebPattern.test(lower)) {
+		return "Mga pangutana ra bahin sa College of Computer Studies sa Saint Joseph College (BSCS, BSIT, ACT, faculty, curriculum, enrollment, lab policies, ug student organizations) akong matubag.";
+	}
+	if (tglPattern.test(lower)) {
+		return "Tanging mga katanungan lamang tungkol sa College of Computer Studies sa Saint Joseph College (BSCS, BSIT, ACT, faculty, curriculum, enrollment, lab policies, at student organizations) ang aking sinasagot.";
+	}
+	return "I only answer questions regarding the College of Computer Studies at Saint Joseph College, including our BSCS, BSIT, and ACT programs, faculty, curriculum, enrollment, lab policies, and student organizations.";
 }
 
 export const POST: RequestHandler = async ({ request, platform, getClientAddress }) => {
@@ -99,9 +130,7 @@ export const POST: RequestHandler = async ({ request, platform, getClientAddress
 			// result.ok is false when retrieval errored, in which case we fall through to the
 			// prompt guardrails instead of refusing everything. Zero matches on a healthy query IS a refusal.
 			if (result.ok && topScore < SIMILARITY_THRESHOLD) {
-				return createFixedRefusalResponse(
-					"I only answer questions regarding the College of Computer Studies at Saint Joseph College, including our BSCS, BSIT, and ACT programs, faculty, curriculum, enrollment, lab policies, and student organizations."
-				);
+				return createFixedRefusalResponse(getRefusalResponse(queryText));
 			}
 		}
 

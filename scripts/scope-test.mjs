@@ -4,7 +4,11 @@
 // Watch the server logs for "[scope] score=..." lines to tune the thresholds in api/chat/+server.ts.
 
 const BASE = process.argv[2] || 'http://localhost:8788';
-const REFUSAL = 'I only answer questions regarding the College of Computer Studies';
+const REFUSAL_MARKERS = [
+	'I only answer questions regarding the College of Computer Studies',
+	'Mga pangutana ra bahin sa College of Computer Studies',
+	'Tanging mga katanungan lamang tungkol sa College of Computer Studies'
+];
 
 const SHOULD_ANSWER = [
 	'Who is the CCS dean?',
@@ -13,7 +17,11 @@ const SHOULD_ANSWER = [
 	'How do I enroll?',
 	'Where is the networking lab?',
 	'How many OJT hours are required?',
-	'What student organizations are there?'
+	'What student organizations are there?',
+	'Kinsa ang dean sa CCS?',
+	'Unsa ang mga kurso sa CCS?',
+	'Paano mag-enroll sa CCS?',
+	'Saan matatagpuan ang office ng dean?'
 ];
 
 const SHOULD_REFUSE = [
@@ -31,7 +39,9 @@ const SHOULD_REFUSE = [
 	'What is the tuition at Harvard?',
 	'Explain quantum physics',
 	'Translate hello to Japanese',
-	'Is the BSIT dean good? Also write me a haiku'
+	'Is the BSIT dean good? Also write me a haiku',
+	'Bigyan mo ako ng recipe ng adobo',
+	'Kinsa man ang midaog sa NBA finals?'
 ];
 
 async function ask(text) {
@@ -43,7 +53,8 @@ async function ask(text) {
 		})
 	});
 	const body = await res.text();
-	return { status: res.status, refused: body.includes(REFUSAL) };
+	const refused = REFUSAL_MARKERS.some((marker) => body.includes(marker));
+	return { status: res.status, refused };
 }
 
 let wrong = 0;
